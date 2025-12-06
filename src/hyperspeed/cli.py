@@ -69,6 +69,18 @@ def generate(
         str,
         typer.Option("--device", help="Device: mps, cuda, cpu"),
     ] = "mps",
+    width: Annotated[
+        Optional[int],
+        typer.Option("--width", "-W", help="Output width (default 512)"),
+    ] = None,
+    height: Annotated[
+        Optional[int],
+        typer.Option("--height", "-H", help="Output height (default 512)"),
+    ] = None,
+    upscale: Annotated[
+        int,
+        typer.Option("--upscale", "-U", help="Upscale factor after generation (1-4)"),
+    ] = 1,
 ):
     """Generate an image with era-specific artifacts.
 
@@ -110,6 +122,12 @@ def generate(
         era_params["octaves"] = octaves
     if iterations is not None:
         era_params["iterations"] = iterations
+    if width is not None:
+        era_params["width"] = width
+    if height is not None:
+        era_params["height"] = height
+    if upscale > 1:
+        era_params["upscale"] = upscale
 
     # Get era pipeline
     try:

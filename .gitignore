@@ -47,6 +47,11 @@ models/controlnets/
 # Outputs (generated, not tracked)
 outputs/
 
+# Example images (generated, not tracked)
+examples/*.png
+examples/*.jpg
+examples/*.jpeg
+
 # Jupyter
 .ipynb_checkpoints/
 

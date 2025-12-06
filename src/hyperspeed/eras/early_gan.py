@@ -8,21 +8,23 @@ Both produce outputs that are technically correct but formulaic.
 with profile heads and frontal torsos - neither is trying for naturalism.
 Both optimize for a function, not reality.
 
-Technical approach: Post-processing that applies characteristic GAN artifacts:
-- Uncanny smoothness (over-processed skin)
-- Background void/bleeding (the "gold background" effect)
-- Subtle asymmetry in accessories/features
-- Geometric distortions near edges
-- The slightly clinical color cast
+Technical approach:
+1. Generate an image from prompt using Stable Diffusion
+2. Apply characteristic GAN artifacts as post-processing:
+   - Uncanny smoothness (over-processed skin)
+   - Background void/bleeding (the "gold background" effect)
+   - Asymmetry in features
+   - Geometric distortions near edges
+   - Clinical color cast
 """
 
-from dataclasses import dataclass
+import os
 from pathlib import Path
 from typing import Any, ClassVar
 
 import numpy as np
 import torch
-from PIL import Image, ImageFilter, ImageEnhance, ImageOps
+from PIL import Image, ImageEnhance
 from scipy import ndimage
 
 from hyperspeed.core.artifact_control import ArtifactControl
@@ -67,19 +69,39 @@ class EarlyGANPipeline(EraPipeline):
 
     def __init__(self, model_path: Path | None = None, device: str = "mps"):
         super().__init__(model_path, device)
-        self._model = True  # No model needed, just image processing
+        self._pipe = None
 
     def load_model(self) -> None:
-        """No model to load - this pipeline uses image processing."""
-        pass
+        """Load Stable Diffusion for image generation."""
+        if self._pipe is not None:
+            return
+
+        from diffusers import StableDiffusionPipeline
+
+        # Prevent MPS memory issues
+        os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = "0.0"
+
+        self._pipe = StableDiffusionPipeline.from_pretrained(
+            "runwayml/stable-diffusion-v1-5",
+            torch_dtype=torch.float16,
+            use_safetensors=True,
+        )
+        self._pipe = self._pipe.to(self.device)
+        self._pipe.enable_attention_slicing()
+
+        # Disable NSFW filter (we're making art, not porn)
+        self._pipe.safety_checker = None
+
+        # Mark as loaded
+        self._model = True
 
     def get_default_params(self) -> dict[str, Any]:
         return {
-            "smoothness": 0.5,
-            "void_strength": 0.3,
-            "asymmetry": 0.2,
-            "color_cast": 0.4,
-            "edge_artifacts": 0.3,
+            "smoothness": 0.7,
+            "void_strength": 0.6,
+            "asymmetry": 0.5,
+            "color_cast": 0.6,
+            "edge_artifacts": 0.5,
         }
 
     def generate(
@@ -89,40 +111,66 @@ class EarlyGANPipeline(EraPipeline):
         control: ArtifactControl | None = None,
         **era_params: Any,
     ) -> Image.Image:
-        """Apply Early GAN artifacts to an image.
+        """Generate an image and apply Early GAN artifacts.
 
         Args:
-            prompt: Ignored (this pipeline transforms existing images)
-            source_image: Image to transform. Required.
+            prompt: Text prompt for generation. Required unless source_image provided.
+            source_image: Optional source image (if provided, skips generation)
             control: Artifact control parameters
-            **era_params: smoothness, void_strength, asymmetry, color_cast, edge_artifacts
+            **era_params: smoothness, void_strength, asymmetry, color_cast, edge_artifacts,
+                         num_inference_steps, guidance_scale
 
         Returns:
-            Image with GAN-like artifacts applied
+            Generated image with GAN-like artifacts applied
         """
-        if source_image is None:
-            raise ValueError("Early GAN pipeline requires a source image")
-
         control = control or ArtifactControl()
         params = {**self.get_default_params(), **era_params}
 
-        # Scale parameters by intensity
-        for key in params:
-            params[key] = control.scale_param(params[key], 0, params[key] * 1.5)
+        # Generation parameters
+        num_steps = era_params.get("num_inference_steps", 30)
+        guidance = era_params.get("guidance_scale", 7.5)
 
-        original = source_image.copy()
-        img = source_image.copy()
+        # If no source image, generate one
+        if source_image is None:
+            if prompt is None:
+                raise ValueError("Early GAN pipeline requires a prompt or source image")
 
-        # Set seed for reproducibility
+            self.ensure_loaded()
+
+            # Set up generator for reproducibility
+            generator = None
+            if control.seed is not None:
+                generator = torch.Generator(device=self.device).manual_seed(control.seed)
+
+            # Generate the base image
+            result = self._pipe(
+                prompt=prompt,
+                num_inference_steps=num_steps,
+                guidance_scale=guidance,
+                generator=generator,
+            )
+            img = result.images[0]
+        else:
+            img = source_image.copy()
+
+        original = img.copy()
+
+        # Scale artifact parameters by intensity - go big or go home
+        artifact_params = {k: v for k, v in params.items()
+                          if k in ["smoothness", "void_strength", "asymmetry", "color_cast", "edge_artifacts"]}
+        for key in artifact_params:
+            artifact_params[key] = control.scale_param(artifact_params[key], 0, artifact_params[key] * 2.5)
+
+        # Set seed for reproducibility of artifact application
         if control.seed is not None:
             np.random.seed(control.seed)
 
         # Apply artifacts in sequence
-        img = self._apply_smoothness(img, params["smoothness"])
-        img = self._apply_void_background(img, params["void_strength"])
-        img = self._apply_asymmetry(img, params["asymmetry"])
-        img = self._apply_color_cast(img, params["color_cast"])
-        img = self._apply_edge_artifacts(img, params["edge_artifacts"])
+        img = self._apply_smoothness(img, artifact_params["smoothness"])
+        img = self._apply_void_background(img, artifact_params["void_strength"])
+        img = self._apply_asymmetry(img, artifact_params["asymmetry"])
+        img = self._apply_color_cast(img, artifact_params["color_cast"])
+        img = self._apply_edge_artifacts(img, artifact_params["edge_artifacts"])
 
         # Apply placement mask
         img = control.apply_mask(img, original)
@@ -167,10 +215,14 @@ class EarlyGANPipeline(EraPipeline):
         return img_out
 
     def _apply_void_background(self, img: Image.Image, strength: float) -> Image.Image:
-        """Apply the background void/bleeding effect.
+        """Apply GAN-style background confusion/bleeding.
 
-        StyleGAN faces often have backgrounds that bleed or fade into
-        a neutral void - similar to the gold backgrounds of Egyptian/Byzantine art.
+        Real GAN backgrounds don't blur - they stay sharp but become incoherent.
+        The latent space "runs out" of training data, producing:
+        - Color bleeding between regions
+        - Texture that doesn't resolve into anything
+        - Sharp but meaningless patterns
+        - Asymmetrical failures (not radial vignettes)
         """
         if strength < 0.01:
             return img
@@ -178,30 +230,47 @@ class EarlyGANPipeline(EraPipeline):
         arr = np.array(img, dtype=np.float32)
         h, w = arr.shape[:2]
 
-        # Create a center-weighted mask (faces are usually centered)
-        y, x = np.ogrid[:h, :w]
-        center_y, center_x = h / 2, w / 2
-        dist = np.sqrt((x - center_x) ** 2 + (y - center_y) ** 2)
-        max_dist = np.sqrt(center_x ** 2 + center_y ** 2)
-        mask = np.clip(dist / max_dist, 0, 1)
+        # Detect "background" via low-frequency areas (less detail = more likely background)
+        gray = np.mean(arr, axis=2)
+        # High-pass filter to find detailed areas
+        low_freq = ndimage.gaussian_filter(gray, sigma=8)
+        high_freq = np.abs(gray - low_freq)
+        high_freq = ndimage.gaussian_filter(high_freq, sigma=3)
 
-        # Apply mask more strongly based on strength
-        mask = mask ** (1 / (strength + 0.5))
-        mask = mask[:, :, np.newaxis]
+        # Areas with low detail are more likely background
+        detail_mask = high_freq / (high_freq.max() + 1e-8)
+        bg_mask = 1 - np.clip(detail_mask * 2, 0, 1)
+        bg_mask = bg_mask[:, :, np.newaxis]
 
-        # Create void color (neutral gray with slight warmth, like old photos)
-        void_color = np.array([[[180, 175, 170]]], dtype=np.float32)
+        # GAN artifact 1: Color channel bleeding (channels shift independently)
+        shifted_r = ndimage.shift(arr[:, :, 0], [strength * 3, strength * 2], mode='reflect')
+        shifted_b = ndimage.shift(arr[:, :, 2], [-strength * 2, strength * 3], mode='reflect')
 
-        # Desaturate edges
-        gray = np.mean(arr, axis=2, keepdims=True)
-        desaturated = arr * (1 - mask * strength * 0.5) + gray * (mask * strength * 0.5)
+        bled = arr.copy()
+        bled[:, :, 0] = arr[:, :, 0] * (1 - bg_mask[:, :, 0] * strength * 0.4) + shifted_r * (bg_mask[:, :, 0] * strength * 0.4)
+        bled[:, :, 2] = arr[:, :, 2] * (1 - bg_mask[:, :, 0] * strength * 0.4) + shifted_b * (bg_mask[:, :, 0] * strength * 0.4)
 
-        # Blend with void
-        result = desaturated * (1 - mask * strength * 0.3) + void_color * (mask * strength * 0.3)
+        # GAN artifact 2: Texture confusion - mix in rotated/flipped patches
+        # This creates that "sharp but wrong" quality
+        flipped = np.flip(arr, axis=1)
+        confused = bled * (1 - bg_mask * strength * 0.2) + flipped * (bg_mask * strength * 0.2)
 
-        # Add slight blur to background
-        blurred = ndimage.gaussian_filter(result, sigma=(strength * 2, strength * 2, 0))
-        result = result * (1 - mask * strength * 0.5) + blurred * (mask * strength * 0.5)
+        # GAN artifact 3: Local color averaging (colors bleed into neighbors)
+        # But keep it SHARP - use small kernel
+        local_avg = ndimage.uniform_filter(arr, size=(int(strength * 8) + 1, int(strength * 8) + 1, 1))
+        result = confused * (1 - bg_mask * strength * 0.3) + local_avg * (bg_mask * strength * 0.3)
+
+        # GAN artifact 4: Asymmetrical void patches (not radial!)
+        # Add some random void-ish regions
+        noise = np.random.rand(h // 16 + 1, w // 16 + 1)
+        noise = ndimage.zoom(noise, (16, 16), order=1)[:h, :w]
+        noise = ndimage.gaussian_filter(noise, sigma=strength * 10)
+        void_patches = (noise > 0.7).astype(np.float32) * bg_mask[:, :, 0]
+        void_patches = ndimage.gaussian_filter(void_patches, sigma=3)[:, :, np.newaxis]
+
+        # Void color - that neutral gray-tan of GAN backgrounds
+        void_color = np.array([[[175, 170, 168]]], dtype=np.float32)
+        result = result * (1 - void_patches * strength * 0.5) + void_color * (void_patches * strength * 0.5)
 
         return Image.fromarray(np.clip(result, 0, 255).astype(np.uint8))
 
@@ -217,16 +286,17 @@ class EarlyGANPipeline(EraPipeline):
         arr = np.array(img, dtype=np.float32)
         h, w = arr.shape[:2]
 
-        # Create subtle displacement field
-        # More displacement on one side than the other
+        # Create displacement field - NOT subtle, real GAN artifacts were visible
         x_coords, y_coords = np.meshgrid(np.arange(w), np.arange(h))
 
-        # Asymmetric displacement - stronger on right side
-        x_displacement = (x_coords / w - 0.5) * strength * 5
-        x_displacement += np.sin(y_coords / h * np.pi * 2) * strength * 2
+        # Asymmetric displacement - stronger on right side, more aggressive
+        x_displacement = (x_coords / w - 0.5) * strength * 15
+        x_displacement += np.sin(y_coords / h * np.pi * 3) * strength * 8
+        x_displacement += np.cos(y_coords / h * np.pi * 5) * strength * 4
 
-        # Subtle y displacement
-        y_displacement = np.sin(x_coords / w * np.pi * 3) * strength * 2
+        # More aggressive y displacement with multiple frequencies
+        y_displacement = np.sin(x_coords / w * np.pi * 4) * strength * 8
+        y_displacement += np.cos(x_coords / w * np.pi * 7) * strength * 3
 
         # Apply displacement
         new_x = np.clip(x_coords + x_displacement, 0, w - 1).astype(np.float32)
@@ -244,26 +314,27 @@ class EarlyGANPipeline(EraPipeline):
     def _apply_color_cast(self, img: Image.Image, strength: float) -> Image.Image:
         """Apply the clinical/synthetic color cast.
 
-        GAN images often have a slightly unnatural color quality -
-        too clean, too uniform, slightly cool/clinical.
+        Early GAN images had a specific quality - slightly desaturated,
+        uniform, with colors that don't quite match reality. More "faded
+        photograph" than "HDR explosion."
         """
         if strength < 0.01:
             return img
 
         arr = np.array(img, dtype=np.float32)
 
-        # Slight cool cast (reduce warmth)
-        arr[:, :, 0] *= (1 - strength * 0.05)  # Reduce red slightly
-        arr[:, :, 2] *= (1 + strength * 0.03)  # Boost blue slightly
+        # Warm the image slightly (GAN faces often had warm cast)
+        arr[:, :, 0] *= (1 + strength * 0.03)  # Boost red slightly
+        arr[:, :, 2] *= (1 - strength * 0.05)  # Reduce blue slightly
 
-        # Compress color range slightly (less natural variation)
+        # Compress color range (less natural variation - the "uncanny" quality)
         mean_color = np.mean(arr, axis=(0, 1), keepdims=True)
-        arr = arr * (1 - strength * 0.15) + mean_color * (strength * 0.15)
+        arr = arr * (1 - strength * 0.2) + mean_color * (strength * 0.2)
 
-        # Boost saturation slightly (that oversaturated GAN look)
+        # REDUCE saturation for that faded/aged quality
         img_out = Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8))
         enhancer = ImageEnhance.Color(img_out)
-        img_out = enhancer.enhance(1 + strength * 0.2)
+        img_out = enhancer.enhance(1 - strength * 0.15)  # Desaturate
 
         return img_out
 

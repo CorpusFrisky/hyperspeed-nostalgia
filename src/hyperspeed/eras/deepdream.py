@@ -3,16 +3,18 @@
 Pattern recognition as primal instinct. Forms emerging from noise.
 Pareidolia: the mind (human or artificial) finding signal in chaos.
 
-Technical approach: Gradient ascent on CNN activations. We maximize
-what the network "sees" in an image, amplifying detected patterns
-until they become visible hallucinations.
+Technical approach:
+1. Generate an image from prompt using Stable Diffusion (optional)
+2. Apply gradient ascent on CNN activations - we maximize what the network
+   "sees" in an image, amplifying detected patterns until they become
+   visible hallucinations.
 
 Art historical parallel: Cave painters at Chauvet used wall irregularities
 to animate figures (limestone bumps becoming animal haunches). DeepDream
 does the same with pixel noise becoming dog faces.
 """
 
-from dataclasses import dataclass
+import os
 from pathlib import Path
 from typing import Any, ClassVar
 
@@ -110,6 +112,7 @@ class DeepDreamPipeline(EraPipeline):
         super().__init__(model_path, device)
         self._model: InceptionFeatureExtractor | None = None
         self._current_layer: str | None = None
+        self._sd_pipe = None
 
     def load_model(self, layer: str = DEFAULT_LAYER) -> None:
         """Load InceptionV3 feature extractor."""
@@ -117,6 +120,24 @@ class DeepDreamPipeline(EraPipeline):
             self._model = InceptionFeatureExtractor(layer).to(self.device)
             self._current_layer = layer
             self._model.eval()
+
+    def _load_sd_pipe(self) -> None:
+        """Load Stable Diffusion for optional image generation."""
+        if self._sd_pipe is not None:
+            return
+
+        from diffusers import StableDiffusionPipeline
+
+        os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = "0.0"
+
+        self._sd_pipe = StableDiffusionPipeline.from_pretrained(
+            "runwayml/stable-diffusion-v1-5",
+            torch_dtype=torch.float32,  # float32 more stable on MPS
+            use_safetensors=True,
+        )
+        self._sd_pipe = self._sd_pipe.to(self.device)
+        self._sd_pipe.enable_attention_slicing()
+        self._sd_pipe.safety_checker = None
 
     def get_default_params(self) -> dict[str, Any]:
         return {
@@ -138,10 +159,11 @@ class DeepDreamPipeline(EraPipeline):
         """Generate a DeepDream image.
 
         Args:
-            prompt: Ignored (DeepDream doesn't use text)
-            source_image: Image to dream on. If None, starts with noise.
+            prompt: Text prompt to generate base image (optional)
+            source_image: Image to dream on. If None and no prompt, starts with noise.
             control: Artifact control params
-            **era_params: layer, octaves, octave_scale, iterations, lr, jitter
+            **era_params: layer, octaves, octave_scale, iterations, lr, jitter,
+                         num_inference_steps, guidance_scale
 
         Returns:
             Dreamed image
@@ -159,10 +181,34 @@ class DeepDreamPipeline(EraPipeline):
         self.load_model(params["layer"])
 
         # Prepare input image
-        if source_image is None:
-            source_image = create_noise_image((512, 512), seed=control.seed)
-        else:
+        if source_image is not None:
+            # Use provided source image
             source_image = resize_to_multiple(source_image, 8)
+        elif prompt is not None:
+            # Generate from prompt using Stable Diffusion
+            self._load_sd_pipe()
+
+            num_steps = era_params.get("num_inference_steps", 30)
+            guidance = era_params.get("guidance_scale", 7.5)
+            width = era_params.get("width", 512)
+            height = era_params.get("height", 512)
+
+            generator = None
+            if control.seed is not None:
+                generator = torch.Generator(device=self.device).manual_seed(control.seed)
+
+            result = self._sd_pipe(
+                prompt=prompt,
+                num_inference_steps=num_steps,
+                guidance_scale=guidance,
+                width=width,
+                height=height,
+                generator=generator,
+            )
+            source_image = result.images[0]
+        else:
+            # No prompt, no source - start with noise
+            source_image = create_noise_image((512, 512), seed=control.seed)
 
         original = source_image.copy()
 
@@ -183,6 +229,12 @@ class DeepDreamPipeline(EraPipeline):
 
         # Apply placement mask
         result = control.apply_mask(result, original)
+
+        # Upscale if requested (do this AFTER dreaming for better quality)
+        upscale = era_params.get("upscale", 1)
+        if upscale > 1:
+            new_size = (result.width * upscale, result.height * upscale)
+            result = result.resize(new_size, Image.Resampling.LANCZOS)
 
         return result
 
