@@ -14,6 +14,7 @@ from hyperspeed.eras.base import EraRegistry
 # Import eras to register them
 from hyperspeed.eras import deepdream  # noqa: F401
 from hyperspeed.eras import early_gan  # noqa: F401
+from hyperspeed.eras import early_diffusion  # noqa: F401
 
 app = typer.Typer(
     name="hyperspeed",
@@ -64,6 +65,52 @@ def generate(
     iterations: Annotated[
         Optional[int],
         typer.Option("--iterations", help="[DeepDream] Iterations per octave"),
+    ] = None,
+    # Early Diffusion params
+    tile_size: Annotated[
+        Optional[int],
+        typer.Option("--tile-size", help="[Early Diffusion] Mosaic tile size in pixels"),
+    ] = None,
+    tile_style: Annotated[
+        Optional[str],
+        typer.Option("--tile-style", help="[Early Diffusion] 'obvious' or 'subtle'"),
+    ] = None,
+    gold_style: Annotated[
+        Optional[str],
+        typer.Option("--gold-style", help="[Early Diffusion] 'metallic' or 'symbolic'"),
+    ] = None,
+    inference_steps: Annotated[
+        Optional[int],
+        typer.Option("--inference-steps", help="[Early Diffusion] Diffusion steps (lower=more undercooked)"),
+    ] = None,
+    guidance_scale: Annotated[
+        Optional[float],
+        typer.Option("--guidance-scale", help="[Early Diffusion] CFG scale (higher=more saturated)"),
+    ] = None,
+    # Individual effect intensities (Early Diffusion)
+    hallucination: Annotated[
+        Optional[float],
+        typer.Option("--hallucination", help="[Early Diffusion] Background hallucination intensity"),
+    ] = None,
+    halo_bleed: Annotated[
+        Optional[float],
+        typer.Option("--halo-bleed", help="[Early Diffusion] Halo bleed intensity"),
+    ] = None,
+    edge_fizz: Annotated[
+        Optional[float],
+        typer.Option("--edge-fizz", help="[Early Diffusion] Edge fizz intensity"),
+    ] = None,
+    eye_drift: Annotated[
+        Optional[float],
+        typer.Option("--eye-drift", help="[Early Diffusion] Eye drift intensity"),
+    ] = None,
+    almost_text: Annotated[
+        Optional[float],
+        typer.Option("--almost-text", help="[Early Diffusion] Almost-text intensity"),
+    ] = None,
+    finger_ambiguity: Annotated[
+        Optional[float],
+        typer.Option("--finger-ambiguity", help="[Early Diffusion] Finger ambiguity intensity"),
     ] = None,
     device: Annotated[
         str,
@@ -116,12 +163,38 @@ def generate(
 
     # Build era params
     era_params = {}
+    # DeepDream params
     if layer is not None:
         era_params["layer"] = layer
     if octaves is not None:
         era_params["octaves"] = octaves
     if iterations is not None:
         era_params["iterations"] = iterations
+    # Early Diffusion params
+    if tile_size is not None:
+        era_params["tile_size"] = tile_size
+    if tile_style is not None:
+        era_params["tile_style"] = tile_style
+    if gold_style is not None:
+        era_params["gold_style"] = gold_style
+    if inference_steps is not None:
+        era_params["inference_steps"] = inference_steps
+    if guidance_scale is not None:
+        era_params["guidance_scale"] = guidance_scale
+    # Individual effect intensities
+    if hallucination is not None:
+        era_params["background_hallucination"] = hallucination
+    if halo_bleed is not None:
+        era_params["halo_bleed"] = halo_bleed
+    if edge_fizz is not None:
+        era_params["edge_fizz"] = edge_fizz
+    if eye_drift is not None:
+        era_params["eye_drift"] = eye_drift
+    if almost_text is not None:
+        era_params["almost_text"] = almost_text
+    if finger_ambiguity is not None:
+        era_params["finger_ambiguity"] = finger_ambiguity
+    # Common params
     if width is not None:
         era_params["width"] = width
     if height is not None:
