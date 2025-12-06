@@ -13,6 +13,7 @@ from hyperspeed.eras.base import EraRegistry
 
 # Import eras to register them
 from hyperspeed.eras import deepdream  # noqa: F401
+from hyperspeed.eras import early_gan  # noqa: F401
 
 app = typer.Typer(
     name="hyperspeed",
