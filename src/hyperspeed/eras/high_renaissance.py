@@ -91,33 +91,33 @@ class HighRenaissancePipeline(EraPipeline):
         self._img2img_pipe = None
 
     def load_model(self) -> None:
-        """Load Stable Diffusion for generation."""
+        """Load SDXL for generation - better faces, higher quality."""
         if self._pipe is not None:
             return
 
-        from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline
+        from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline
 
         os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = "0.0"
 
-        self._pipe = StableDiffusionPipeline.from_pretrained(
-            "runwayml/stable-diffusion-v1-5",
+        # Use SDXL for much better face generation
+        self._pipe = StableDiffusionXLPipeline.from_pretrained(
+            "stabilityai/stable-diffusion-xl-base-1.0",
             torch_dtype=torch.float32,
             use_safetensors=True,
+            variant="fp16",
         )
         self._pipe = self._pipe.to(self.device)
         self._pipe.enable_attention_slicing()
-        self._pipe.safety_checker = None
 
         # Create img2img pipeline sharing the same components
-        self._img2img_pipe = StableDiffusionImg2ImgPipeline(
+        self._img2img_pipe = StableDiffusionXLImg2ImgPipeline(
             vae=self._pipe.vae,
             text_encoder=self._pipe.text_encoder,
+            text_encoder_2=self._pipe.text_encoder_2,
             tokenizer=self._pipe.tokenizer,
+            tokenizer_2=self._pipe.tokenizer_2,
             unet=self._pipe.unet,
             scheduler=self._pipe.scheduler,
-            safety_checker=None,
-            feature_extractor=self._pipe.feature_extractor,
-            requires_safety_checker=False,
         )
         self._img2img_pipe = self._img2img_pipe.to(self.device)
         self._img2img_pipe.enable_attention_slicing()
@@ -176,8 +176,8 @@ class HighRenaissancePipeline(EraPipeline):
                 generator = torch.Generator(device=self.device).manual_seed(control.seed)
                 np.random.seed(control.seed)
 
-            width = era_params.get("width", 512)
-            height = era_params.get("height", 512)
+            width = era_params.get("width", 1024)
+            height = era_params.get("height", 1024)
 
             # Ensure dimensions are multiples of 8
             width = (width // 8) * 8
@@ -262,15 +262,13 @@ class HighRenaissancePipeline(EraPipeline):
         return img
 
     def _apply_blue_orange_cast(self, img: Image.Image, strength: float) -> Image.Image:
-        """Apply THE signature Midjourney v4 color grading - CRANKED TO ABSURD.
+        """Apply CINEMA TRAILER color grading. Teal shadows, orange highlights.
 
-        The most recognizable MJ v4 tell: teal/blue shadows paired with
-        orange/amber highlights. This is the Hollywood blockbuster color grade
-        pushed to parody levels. Every shadow screams teal. Every highlight
-        screams orange. Subtlety is dead.
+        This is the Michael Bay / Marvel / every blockbuster color grade.
+        Shadows are TEAL. Highlights are ORANGE. There is no other color.
+        This should look like it was graded for a trailer, not a film.
 
-        This should make images look like they were color graded by someone
-        who just discovered the teal-orange split toning slider and maxed it.
+        The goal is parody - color grading so aggressive it's almost unwatchable.
         """
         if strength < 0.01:
             return img
@@ -285,59 +283,65 @@ class HighRenaissancePipeline(EraPipeline):
         luminance = 0.299 * r + 0.587 * g + 0.114 * b
         lum_norm = luminance / 255.0
 
-        # Create shadow mask (dark areas) - MORE AGGRESSIVE
-        shadow_mask = np.clip(1 - lum_norm * 2.0, 0, 1)
-        shadow_mask = shadow_mask ** 0.7  # Expand shadow range
-        shadow_mask = ndimage.gaussian_filter(shadow_mask, sigma=3)
+        # === SHADOW MASK - very aggressive, captures more of the image ===
+        shadow_mask = np.clip(1 - lum_norm * 1.5, 0, 1)  # More shadow range
+        shadow_mask = shadow_mask ** 0.5  # Even more expansion
+        shadow_mask = ndimage.gaussian_filter(shadow_mask, sigma=2)
 
-        # Create highlight mask (bright areas) - MORE AGGRESSIVE
-        highlight_mask = np.clip(lum_norm * 2.5 - 1.0, 0, 1)
-        highlight_mask = highlight_mask ** 0.7  # Expand highlight range
-        highlight_mask = ndimage.gaussian_filter(highlight_mask, sigma=3)
+        # === HIGHLIGHT MASK - also aggressive ===
+        highlight_mask = np.clip(lum_norm * 2.0 - 0.6, 0, 1)  # More highlight range
+        highlight_mask = highlight_mask ** 0.5
+        highlight_mask = ndimage.gaussian_filter(highlight_mask, sigma=2)
 
-        # === EFFECT 1: SLAM shadows toward teal/cyan ===
-        # This should be OBVIOUS, not subtle
+        # === TEAL SHADOWS - the cinema look ===
         shadow_blend = shadow_mask * strength
 
-        # Aggressively shift shadows to teal
-        result[:, :, 0] = result[:, :, 0] * (1 - shadow_blend * 0.6)  # Kill red in shadows
-        result[:, :, 1] = result[:, :, 1] + shadow_blend * 30  # Add cyan-green
-        result[:, :, 2] = result[:, :, 2] + shadow_blend * 70  # Heavy blue push
+        # HEAVY teal push - this should be unmistakable
+        result[:, :, 0] = result[:, :, 0] * (1 - shadow_blend * 0.7)  # Kill red hard
+        result[:, :, 1] = result[:, :, 1] * (1 - shadow_blend * 0.2) + shadow_blend * 50  # Cyan-green
+        result[:, :, 2] = result[:, :, 2] + shadow_blend * 100  # HEAVY blue/teal
 
-        # === EFFECT 2: SLAM highlights toward orange/amber ===
+        # === ORANGE HIGHLIGHTS - the other half of the look ===
         highlight_blend = highlight_mask * strength
 
-        # Aggressively shift highlights to orange
-        result[:, :, 0] = result[:, :, 0] + highlight_blend * 60  # Heavy red
-        result[:, :, 1] = result[:, :, 1] + highlight_blend * 30  # Orange gold
-        result[:, :, 2] = result[:, :, 2] * (1 - highlight_blend * 0.5)  # Kill blue in highlights
+        # HEAVY orange push
+        result[:, :, 0] = result[:, :, 0] + highlight_blend * 80  # Heavy red/orange
+        result[:, :, 1] = result[:, :, 1] + highlight_blend * 40  # Gold
+        result[:, :, 2] = result[:, :, 2] * (1 - highlight_blend * 0.6)  # Kill blue in highlights
 
-        # === EFFECT 3: Crush midtones toward the split ===
-        # Even midtones get pulled toward the teal-orange axis
-        midtone_mask = np.clip(1 - np.abs(lum_norm - 0.5) * 4, 0, 1)
-        midtone_blend = midtone_mask * strength * 0.4
+        # === MIDTONES - desaturate and push toward the split ===
+        midtone_mask = np.clip(1 - np.abs(lum_norm - 0.5) * 3, 0, 1)
+        midtone_blend = midtone_mask * strength * 0.5
 
-        # Push midtones toward a desaturated teal-orange neutral
-        result[:, :, 0] = result[:, :, 0] + midtone_blend * 15  # Slight warm
-        result[:, :, 2] = result[:, :, 2] + midtone_blend * 10  # Slight cool
+        # Desaturate midtones (the "filmic" look)
+        gray_mid = luminance[:, :, np.newaxis].repeat(3, axis=2)
+        result = result * (1 - midtone_blend[:, :, np.newaxis] * 0.3) + gray_mid * midtone_blend[:, :, np.newaxis] * 0.3
 
-        # === EFFECT 4: Global contrast boost for that "graded" look ===
-        # S-curve to make it pop
+        # === CONTRAST BOOST - that graded pop ===
         result_norm = result / 255.0
-        s_curve = result_norm ** (1 - strength * 0.2) * (1 + strength * 0.3)
-        result = s_curve * 255.0
+        # S-curve contrast
+        result_norm = 0.5 + (result_norm - 0.5) * (1 + strength * 0.5)
+        # Lift blacks slightly (cinema never has true black)
+        result_norm = result_norm * (1 - strength * 0.1) + strength * 0.05
+        result = result_norm * 255.0
+
+        # === FINAL TEAL WASH - even more teal ===
+        # Add a global teal tint because MJ v4 couldn't help itself
+        teal_wash = strength * 15
+        result[:, :, 1] = result[:, :, 1] + teal_wash * 0.3
+        result[:, :, 2] = result[:, :, 2] + teal_wash
 
         return Image.fromarray(np.clip(result, 0, 255).astype(np.uint8))
 
     def _apply_overdramatized_lighting(self, img: Image.Image, strength: float) -> Image.Image:
-        """Apply ABSURD movie-poster lighting. Godrays EVERYWHERE.
+        """Apply ABSURD Caravaggio-meets-cinematographer lighting.
 
-        MJ v4 lit everything like a Marvel movie. Rim light on every edge.
-        Volumetric rays streaming from above. Backlight bloom so strong
-        subjects glow. This is theatrical lighting applied to a still life
-        of fruit. NOTHING is subtle.
+        GODRAYS. ALWAYS GODRAYS. Plus dramatic side lighting that makes
+        everything cast heroic shadows. A loaf of bread should look like
+        it's being lit for a perfume commercial.
 
-        The goal is parody - lighting so dramatic it borders on ridiculous.
+        Strong directional light from the side (Caravaggio chiaroscuro)
+        combined with volumetric rays from above (cinema trailer).
         """
         if strength < 0.01:
             return img
@@ -350,8 +354,28 @@ class HighRenaissancePipeline(EraPipeline):
         gray = 0.299 * r + 0.587 * g + 0.114 * b
         lum_norm = gray / 255.0
 
-        # === EFFECT 1: AGGRESSIVE rim lighting ===
-        # Every edge gets a glowing halo
+        y_coords, x_coords = np.meshgrid(np.arange(h), np.arange(w), indexing='ij')
+        y_norm = y_coords / h
+        x_norm = x_coords / w
+
+        # === EFFECT 1: DRAMATIC SIDE LIGHTING (Caravaggio style) ===
+        # Strong light from left side, casting shadows to right
+        side_light = np.clip(1 - x_norm * 1.5, 0, 1) ** 0.7
+        side_light = ndimage.gaussian_filter(side_light, sigma=20)
+
+        # Add warm side light
+        side_strength = side_light * strength * 60
+        result[:, :, 0] = result[:, :, 0] + side_strength * 1.3  # Orange light
+        result[:, :, 1] = result[:, :, 1] + side_strength * 0.9
+        result[:, :, 2] = result[:, :, 2] + side_strength * 0.4
+
+        # Darken the opposite side (shadow)
+        shadow_side = np.clip(x_norm * 2 - 0.5, 0, 1) ** 1.5
+        shadow_side = ndimage.gaussian_filter(shadow_side, sigma=15)
+        shadow_strength = shadow_side * strength * 0.4
+        result = result * (1 - shadow_strength[:, :, np.newaxis])
+
+        # === EFFECT 2: AGGRESSIVE rim lighting ===
         edges_x = np.abs(ndimage.sobel(gray, axis=1))
         edges_y = np.abs(ndimage.sobel(gray, axis=0))
         edges = np.sqrt(edges_x**2 + edges_y**2)
@@ -359,66 +383,54 @@ class HighRenaissancePipeline(EraPipeline):
         if edges.max() > 0:
             edges = edges / edges.max()
 
-        # THICK rim light - dilate edges heavily
-        rim_mask = ndimage.maximum_filter(edges, size=8)
-        rim_mask = ndimage.gaussian_filter(rim_mask, sigma=4)
-        rim_mask = rim_mask ** 0.7  # Expand the rim
+        # VERY thick rim
+        rim_mask = ndimage.maximum_filter(edges, size=10)
+        rim_mask = ndimage.gaussian_filter(rim_mask, sigma=5)
+        rim_mask = rim_mask ** 0.6
 
-        # BRIGHT warm rim light - this should be OBVIOUS
-        rim_strength = rim_mask * strength * 120
-        result[:, :, 0] = result[:, :, 0] + rim_strength * 1.3  # Heavy orange rim
-        result[:, :, 1] = result[:, :, 1] + rim_strength * 0.9
-        result[:, :, 2] = result[:, :, 2] + rim_strength * 0.4
+        # VERY bright rim light
+        rim_strength = rim_mask * strength * 150
+        result[:, :, 0] = result[:, :, 0] + rim_strength * 1.4
+        result[:, :, 1] = result[:, :, 1] + rim_strength * 1.0
+        result[:, :, 2] = result[:, :, 2] + rim_strength * 0.5
 
-        # === EFFECT 2: GODRAYS from multiple sources ===
-        y_coords, x_coords = np.meshgrid(np.arange(h), np.arange(w), indexing='ij')
-        y_norm = y_coords / h
-        x_norm = x_coords / w
+        # === EFFECT 3: HEAVY GODRAYS - always godrays ===
+        # Primary rays from top-center
+        angle_top = np.arctan2(x_norm - 0.5, y_norm + 0.05)
+        godray_main = np.cos(angle_top * 15) ** 2
+        godray_main = godray_main * (1 - y_norm) ** 0.4
+        godray_main = ndimage.gaussian_filter(godray_main, sigma=8)
 
-        # Primary godrays from top-center (the classic)
-        angle_from_top = np.arctan2(x_norm - 0.5, y_norm + 0.1)
-        godray_primary = np.cos(angle_from_top * 12) ** 2
-        godray_primary = godray_primary * (1 - y_norm) ** 0.5  # Fade down
-        godray_primary = ndimage.gaussian_filter(godray_primary, sigma=10)
+        # Secondary diagonal rays
+        angle_diag = np.arctan2(y_norm - 0.1, x_norm - 0.2)
+        godray_diag = np.cos(angle_diag * 12) ** 2 * (1 - y_norm) * (1 - x_norm)
+        godray_diag = ndimage.gaussian_filter(godray_diag, sigma=10)
 
-        # Secondary godrays from top-left
-        angle_tl = np.arctan2(y_norm, x_norm)
-        godray_tl = np.cos(angle_tl * 10) ** 2 * (1 - y_norm) * (1 - x_norm)
-        godray_tl = ndimage.gaussian_filter(godray_tl, sigma=12)
-
-        # Tertiary from top-right
-        angle_tr = np.arctan2(y_norm, 1 - x_norm)
-        godray_tr = np.cos(angle_tr * 10) ** 2 * (1 - y_norm) * x_norm
-        godray_tr = ndimage.gaussian_filter(godray_tr, sigma=12)
-
-        # Combine all godrays
-        godray_mask = (godray_primary * 0.5 + godray_tl * 0.3 + godray_tr * 0.3)
-        godray_strength = godray_mask * strength * 80
+        # Combine and make OBVIOUS
+        godray_mask = godray_main * 0.6 + godray_diag * 0.4
+        godray_strength = godray_mask * strength * 120  # HEAVY
 
         # Golden godrays
-        result[:, :, 0] = result[:, :, 0] + godray_strength * 1.2
-        result[:, :, 1] = result[:, :, 1] + godray_strength * 0.95
+        result[:, :, 0] = result[:, :, 0] + godray_strength * 1.3
+        result[:, :, 1] = result[:, :, 1] + godray_strength * 1.0
         result[:, :, 2] = result[:, :, 2] + godray_strength * 0.5
 
-        # === EFFECT 3: Backlight bloom ===
-        # Bright areas should GLOW and bleed
-        bright_mask = np.clip(lum_norm * 3 - 1.5, 0, 1)
-        bright_mask = ndimage.gaussian_filter(bright_mask, sigma=15)
-        bloom = ndimage.gaussian_filter(arr, sigma=[20, 20, 0])
+        # === EFFECT 4: Backlight bloom ===
+        bright_mask = np.clip(lum_norm * 2.5 - 1.0, 0, 1)
+        bright_mask = ndimage.gaussian_filter(bright_mask, sigma=18)
+        bloom = ndimage.gaussian_filter(arr, sigma=[25, 25, 0])
 
-        bloom_strength = bright_mask[:, :, np.newaxis] * strength * 0.6
+        bloom_strength = bright_mask[:, :, np.newaxis] * strength * 0.7
         result = result + bloom * bloom_strength
 
-        # === EFFECT 4: Crushed blacks with lifted shadows ===
-        # The "cinematic" look - blacks aren't black, they're dark blue
-        dark_mask = np.clip(1 - lum_norm * 3, 0, 1)
-        dark_lift = dark_mask * strength * 25
-        result[:, :, 2] = result[:, :, 2] + dark_lift  # Lift shadows to blue
+        # === EFFECT 5: Lifted shadows to teal ===
+        dark_mask = np.clip(1 - lum_norm * 2.5, 0, 1)
+        dark_lift = dark_mask * strength * 35
+        result[:, :, 2] = result[:, :, 2] + dark_lift  # Teal shadows
 
-        # === EFFECT 5: Dramatic contrast boost ===
-        # Make everything POP
+        # === EFFECT 6: HEAVY contrast ===
         mean_lum = np.mean(gray)
-        contrast_factor = 1 + strength * 0.4
+        contrast_factor = 1 + strength * 0.5
         result = mean_lum + (result - mean_lum) * contrast_factor
 
         return Image.fromarray(np.clip(result, 0, 255).astype(np.uint8))
@@ -510,13 +522,13 @@ class HighRenaissancePipeline(EraPipeline):
         return Image.fromarray(np.clip(result, 0, 255).astype(np.uint8))
 
     def _apply_epic_blur(self, img: Image.Image, strength: float) -> Image.Image:
-        """Apply AGGRESSIVE portrait-mode blur with atmospheric haze.
+        """Apply HEAVY atmospheric haze and dramatic depth.
 
-        MJ v4 blurred backgrounds into painterly oblivion while keeping
-        subjects razor sharp. Plus that atmospheric haze/fog used for
-        cheap drama. Even a photo of a sandwich gets the cinematic treatment.
+        MJ v4 backgrounds dissolve into painterly atmospheric drama.
+        Heavy haze, dramatic fog, everything looks like it's set in
+        a misty cathedral or a battlefield at dawn.
 
-        This should be OBVIOUS - backgrounds should dissolve into nothing.
+        The atmosphere should be THICK. Cheap drama via fog machine.
         """
         if strength < 0.01:
             return img
@@ -524,134 +536,199 @@ class HighRenaissancePipeline(EraPipeline):
         arr = np.array(img, dtype=np.float32)
         h, w = arr.shape[:2]
 
-        # Create radial gradient - AGGRESSIVE center focus
         y_coords, x_coords = np.meshgrid(np.arange(h), np.arange(w), indexing='ij')
+        y_norm = y_coords / h
+        x_norm = x_coords / w
         center_y, center_x = h // 2, w // 2
 
         dist = np.sqrt((y_coords - center_y)**2 + (x_coords - center_x)**2)
         max_dist = np.sqrt(center_y**2 + center_x**2)
         dist_norm = dist / max_dist
 
-        # AGGRESSIVE blur falloff - sharp center, VERY blurry edges
-        blur_mask = np.clip(dist_norm * 2.5 - 0.3, 0, 1)
-        blur_mask = blur_mask ** 1.2  # Even more aggressive
-        blur_mask = ndimage.gaussian_filter(blur_mask, sigma=15)
+        # === AGGRESSIVE depth blur ===
+        blur_mask = np.clip(dist_norm * 3 - 0.2, 0, 1)
+        blur_mask = blur_mask ** 1.0
+        blur_mask = ndimage.gaussian_filter(blur_mask, sigma=12)
 
-        # Create HEAVY blur levels
-        blur_small = ndimage.gaussian_filter(arr, sigma=[3, 3, 0])
-        blur_medium = ndimage.gaussian_filter(arr, sigma=[8, 8, 0])
-        blur_large = ndimage.gaussian_filter(arr, sigma=[18, 18, 0])
-        blur_massive = ndimage.gaussian_filter(arr, sigma=[30, 30, 0])
+        # Multiple blur passes
+        blur_light = ndimage.gaussian_filter(arr, sigma=[4, 4, 0])
+        blur_medium = ndimage.gaussian_filter(arr, sigma=[12, 12, 0])
+        blur_heavy = ndimage.gaussian_filter(arr, sigma=[25, 25, 0])
+        blur_massive = ndimage.gaussian_filter(arr, sigma=[40, 40, 0])
 
         blur_mask_3d = blur_mask[:, :, np.newaxis]
 
-        # Progressive blur - edges get MASSIVE blur
         result = (
             arr * (1 - blur_mask_3d * strength) +
-            blur_small * (blur_mask_3d * strength * 0.15) +
-            blur_medium * (blur_mask_3d * strength * 0.25) +
-            blur_large * (blur_mask_3d * strength * 0.3) +
-            blur_massive * (blur_mask_3d * strength * 0.3)
+            blur_light * (blur_mask_3d * strength * 0.1) +
+            blur_medium * (blur_mask_3d * strength * 0.2) +
+            blur_heavy * (blur_mask_3d * strength * 0.35) +
+            blur_massive * (blur_mask_3d * strength * 0.35)
         )
 
-        # === ATMOSPHERIC HAZE ===
-        # Add that cheap dramatic fog effect
-        # More haze at edges/background
-        haze_color = np.array([200, 210, 230])  # Bluish haze
-        haze_mask = blur_mask * strength * 0.25
+        # === HEAVY ATMOSPHERIC HAZE ===
+        # Warm-teal atmospheric haze (matches the color grade)
+        haze_color = np.array([180, 195, 220])  # Teal-ish haze
         haze = haze_color.reshape(1, 1, 3) * np.ones_like(arr)
-        result = result * (1 - haze_mask[:, :, np.newaxis]) + haze * haze_mask[:, :, np.newaxis]
 
-        # === Top-down depth gradient ===
-        # Things at top are "further" - more blurred and hazy
-        y_norm = y_coords / h
-        top_haze = np.clip(1 - y_norm * 1.5, 0, 0.5) * strength
-        top_haze_3d = top_haze[:, :, np.newaxis]
-        result = result * (1 - top_haze_3d * 0.3) + haze * top_haze_3d * 0.3
+        # Haze increases with distance from center and toward top
+        haze_mask = blur_mask * 0.4 + (1 - y_norm) * 0.3
+        haze_mask = np.clip(haze_mask, 0, 1)
+        haze_mask = ndimage.gaussian_filter(haze_mask, sigma=20)
+        haze_strength = haze_mask * strength * 0.5
+
+        result = result * (1 - haze_strength[:, :, np.newaxis]) + haze * haze_strength[:, :, np.newaxis]
+
+        # === DRAMATIC TOP HAZE (sky/background) ===
+        # Top of image gets heavy atmospheric treatment
+        top_fade = np.clip(1 - y_norm * 2, 0, 1) ** 0.8
+        top_fade = ndimage.gaussian_filter(top_fade, sigma=30)
+
+        # Warm atmospheric color for top
+        top_haze_color = np.array([200, 190, 210])  # Slight purple/warm
+        top_haze = top_haze_color.reshape(1, 1, 3) * np.ones_like(arr)
+
+        top_strength = top_fade * strength * 0.4
+        result = result * (1 - top_strength[:, :, np.newaxis]) + top_haze * top_strength[:, :, np.newaxis]
+
+        # === EDGE VIGNETTE (more atmospheric at edges) ===
+        vignette = dist_norm ** 1.5
+        vignette = ndimage.gaussian_filter(vignette, sigma=30)
+        vignette_strength = vignette * strength * 0.25
+
+        # Darken and haze the edges
+        result = result * (1 - vignette_strength[:, :, np.newaxis] * 0.5)
+        result = result * (1 - vignette_strength[:, :, np.newaxis] * 0.3) + haze * vignette_strength[:, :, np.newaxis] * 0.3
 
         return Image.fromarray(np.clip(result, 0, 255).astype(np.uint8))
 
     def _apply_textural_sharpening(self, img: Image.Image, strength: float) -> Image.Image:
-        """Apply AGGRESSIVE sharpening + waxy/plastic skin effect.
+        """Apply OVER-RETOUCHED PERFECTION to faces, sharp textures elsewhere.
 
-        MJ v4 made everything hyper-detailed AND slightly plastic. Textures
-        razor sharp. Skin that's too smooth, too luminous, slightly CG.
-        Every pore visible but also somehow unnaturally perfect.
+        MJ v4 faces are TOO PERFECT - the uncanny valley of idealization.
+        Skin like porcelain. Features too symmetrical. Too smooth, too luminous.
+        Think 'Leonardo with Photoshop who couldn't stop retouching.'
 
-        The combination of over-sharpening with over-smoothed skin creates
-        that distinctive AI-generated look.
+        The faces should make you uncomfortable because they're TOO flawless.
+        Meanwhile, fabrics and textures are razor-sharp.
         """
         if strength < 0.01:
             return img
 
-        # AGGRESSIVE unsharp mask
-        img_sharp = img.filter(ImageFilter.UnsharpMask(
-            radius=2,
-            percent=int(250 * strength),  # Much more aggressive
-            threshold=2
-        ))
-
-        # Second pass of sharpening for extra crispness
-        img_sharp = img_sharp.filter(ImageFilter.UnsharpMask(
-            radius=1,
-            percent=int(100 * strength),
-            threshold=1
-        ))
-
         arr = np.array(img, dtype=np.float32)
-        arr_sharp = np.array(img_sharp, dtype=np.float32)
         h, w = arr.shape[:2]
 
         r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
         gray = 0.299 * r + 0.587 * g + 0.114 * b
 
-        # Detect textured regions
+        # === DETECT SKIN/FACE REGIONS ===
+        # Broader skin detection to catch faces
+        skin_mask = (
+            (r > 60) & (g > 40) & (b > 20) &
+            (r > g * 0.8) & (g > b * 0.7) &
+            (r - b > 5) & (r - b < 150) &
+            (np.abs(r - g) < 80)
+        ).astype(np.float32)
+
+        # Heavy smoothing of mask for soft transitions
+        skin_mask = ndimage.gaussian_filter(skin_mask, sigma=12)
+        skin_mask = np.clip(skin_mask * 1.5, 0, 1)  # Expand the mask
+
+        # === PORCELAIN SKIN EFFECT - AGGRESSIVE SMOOTHING ===
+        # Multiple passes of smoothing for that airbrushed look
+        smooth_light = ndimage.gaussian_filter(arr, sigma=[3, 3, 0])
+        smooth_medium = ndimage.gaussian_filter(arr, sigma=[6, 6, 0])
+        smooth_heavy = ndimage.gaussian_filter(arr, sigma=[10, 10, 0])
+
+        # Blend smoothed versions for porcelain effect
+        skin_smooth = (
+            smooth_light * 0.3 +
+            smooth_medium * 0.4 +
+            smooth_heavy * 0.3
+        )
+
+        # Apply smoothing to skin regions
+        skin_blend = skin_mask[:, :, np.newaxis] * strength * 0.8
+        result = arr * (1 - skin_blend) + skin_smooth * skin_blend
+
+        # === LUMINOUS GLOW - skin that glows too much ===
+        # Inner glow on skin areas
+        skin_glow = ndimage.gaussian_filter(skin_mask, sigma=15)
+        glow_strength = skin_glow * strength * 45
+
+        # Golden/peachy luminous skin
+        result[:, :, 0] = result[:, :, 0] + glow_strength * 1.0   # Warm
+        result[:, :, 1] = result[:, :, 1] + glow_strength * 0.85  # Peachy
+        result[:, :, 2] = result[:, :, 2] + glow_strength * 0.6   # Less blue
+
+        # === SUBSURFACE SCATTERING FAKE - that CG skin look ===
+        # Bright areas of skin get extra luminosity
+        skin_bright = np.clip(gray / 255.0 * skin_mask, 0, 1)
+        skin_bright = ndimage.gaussian_filter(skin_bright, sigma=8)
+        sss_strength = skin_bright * strength * 30
+
+        result[:, :, 0] = result[:, :, 0] + sss_strength * 0.9
+        result[:, :, 1] = result[:, :, 1] + sss_strength * 0.7
+        result[:, :, 2] = result[:, :, 2] + sss_strength * 0.5
+
+        # === EVEN OUT SKIN TONES - remove variation ===
+        # Push skin toward a uniform tone (the over-retouched look)
+        skin_mean = np.zeros(3)
+        skin_pixels = skin_mask > 0.3
+        if np.any(skin_pixels):
+            for c in range(3):
+                skin_mean[c] = np.mean(result[:, :, c][skin_pixels])
+
+            # Blend toward mean skin tone
+            evenness = skin_mask[:, :, np.newaxis] * strength * 0.3
+            skin_target = np.ones_like(result) * skin_mean.reshape(1, 1, 3)
+            result = result * (1 - evenness) + skin_target * evenness
+
+        # === SOFT FOCUS ON SKIN EDGES - dreamy perfection ===
+        # Blur the edges between skin and non-skin for that glamour shot look
+        edge_blur = ndimage.gaussian_filter(result, sigma=[2, 2, 0])
+        skin_edge = ndimage.gaussian_filter(skin_mask, sigma=5) - ndimage.gaussian_filter(skin_mask, sigma=15)
+        skin_edge = np.clip(np.abs(skin_edge) * 3, 0, 1)
+        edge_blend = skin_edge[:, :, np.newaxis] * strength * 0.5
+        result = result * (1 - edge_blend) + edge_blur * edge_blend
+
+        # === SHARP TEXTURES ON NON-SKIN ===
+        # Fabrics, hair, details should be razor sharp
+        non_skin_mask = 1 - skin_mask
+
+        # Aggressive unsharp mask
+        img_from_result = Image.fromarray(np.clip(result, 0, 255).astype(np.uint8))
+        img_sharp = img_from_result.filter(ImageFilter.UnsharpMask(
+            radius=2,
+            percent=int(200 * strength),
+            threshold=2
+        ))
+        arr_sharp = np.array(img_sharp, dtype=np.float32)
+
+        # Apply sharpening only to non-skin
+        sharp_blend = non_skin_mask[:, :, np.newaxis] * strength * 0.6
+        result = result * (1 - sharp_blend) + arr_sharp * sharp_blend
+
+        # === MICROCONTRAST on textures ===
+        # Detect textured regions (high local variance)
         local_mean = ndimage.uniform_filter(gray, size=10)
         local_sq_mean = ndimage.uniform_filter(gray**2, size=10)
-        local_var = local_sq_mean - local_mean**2
-        local_var = np.clip(local_var, 0, None)
+        local_var = np.clip(local_sq_mean - local_mean**2, 0, None)
 
         if local_var.max() > 0:
             texture_mask = local_var / local_var.max()
         else:
             texture_mask = np.zeros_like(gray)
 
+        texture_mask = texture_mask * non_skin_mask  # Only on non-skin
         texture_mask = ndimage.gaussian_filter(texture_mask, sigma=3)
 
-        # === Apply HEAVY sharpening to textured areas ===
-        texture_blend = texture_mask[:, :, np.newaxis] * strength * 0.8
-        result = arr * (1 - texture_blend) + arr_sharp * texture_blend
-
-        # === WAXY/PLASTIC SKIN EFFECT ===
-        # Detect skin regions
-        skin_mask = (
-            (r > 80) & (g > 50) & (b > 30) &
-            (r > g) & (g > b) &
-            (r - b > 10) & (r - b < 120)
-        ).astype(np.float32)
-        skin_mask = ndimage.gaussian_filter(skin_mask, sigma=8)
-
-        # Smooth skin while keeping it sharp at edges - the UNCANNY effect
-        skin_smooth = ndimage.gaussian_filter(result, sigma=[4, 4, 0])
-
-        # Blend smooth skin with sharp details
-        skin_blend = skin_mask[:, :, np.newaxis] * strength * 0.5
-        result = result * (1 - skin_blend) + skin_smooth * skin_blend
-
-        # Add luminous quality to skin (too bright, too perfect)
-        skin_luminance = skin_mask * strength * 20
-        result[:, :, 0] = result[:, :, 0] + skin_luminance * 0.8
-        result[:, :, 1] = result[:, :, 1] + skin_luminance * 0.7
-        result[:, :, 2] = result[:, :, 2] + skin_luminance * 0.5
-
-        # === AGGRESSIVE microcontrast ===
         for c in range(3):
             channel = result[:, :, c]
-            local_mean = ndimage.uniform_filter(channel, size=15)
-            deviation = channel - local_mean
-            # HEAVY boost to local deviations
-            enhanced = local_mean + deviation * (1 + strength * 0.6)
-            blend = texture_mask * strength * 0.5
+            local_mean_ch = ndimage.uniform_filter(channel, size=12)
+            deviation = channel - local_mean_ch
+            enhanced = local_mean_ch + deviation * (1 + strength * 0.5)
+            blend = texture_mask * strength * 0.4
             result[:, :, c] = channel * (1 - blend) + enhanced * blend
 
         return Image.fromarray(np.clip(result, 0, 255).astype(np.uint8))

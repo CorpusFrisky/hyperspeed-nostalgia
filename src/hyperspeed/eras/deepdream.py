@@ -190,8 +190,8 @@ class DeepDreamPipeline(EraPipeline):
 
             num_steps = era_params.get("num_inference_steps", 30)
             guidance = era_params.get("guidance_scale", 7.5)
-            width = era_params.get("width", 512)
-            height = era_params.get("height", 512)
+            width = era_params.get("width", 1024)
+            height = era_params.get("height", 1024)
 
             generator = None
             if control.seed is not None:
@@ -208,7 +208,7 @@ class DeepDreamPipeline(EraPipeline):
             source_image = result.images[0]
         else:
             # No prompt, no source - start with noise
-            source_image = create_noise_image((512, 512), seed=control.seed)
+            source_image = create_noise_image((1024, 1024), seed=control.seed)
 
         original = source_image.copy()
 

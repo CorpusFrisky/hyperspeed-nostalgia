@@ -142,11 +142,16 @@ class EarlyGANPipeline(EraPipeline):
             if control.seed is not None:
                 generator = torch.Generator(device=self.device).manual_seed(control.seed)
 
+            width = era_params.get("width", 1024)
+            height = era_params.get("height", 1024)
+
             # Generate the base image
             result = self._pipe(
                 prompt=prompt,
                 num_inference_steps=num_steps,
                 guidance_scale=guidance,
+                width=width,
+                height=height,
                 generator=generator,
             )
             img = result.images[0]

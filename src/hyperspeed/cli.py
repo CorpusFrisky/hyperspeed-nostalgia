@@ -220,11 +220,11 @@ def generate(
     ] = "mps",
     width: Annotated[
         Optional[int],
-        typer.Option("--width", "-W", help="Output width (default 512)"),
+        typer.Option("--width", "-W", help="Output width (default 1024)"),
     ] = None,
     height: Annotated[
         Optional[int],
-        typer.Option("--height", "-H", help="Output height (default 512)"),
+        typer.Option("--height", "-H", help="Output height (default 1024)"),
     ] = None,
     upscale: Annotated[
         int,

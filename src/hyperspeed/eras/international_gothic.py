@@ -186,8 +186,8 @@ class InternationalGothicPipeline(EraPipeline):
             if control.seed is not None:
                 generator = torch.Generator(device=self.device).manual_seed(control.seed)
 
-            width = era_params.get("width", 512)
-            height = era_params.get("height", 768)  # Portrait orientation
+            width = era_params.get("width", 1024)
+            height = era_params.get("height", 1536)  # Portrait orientation
 
             result = self._pipe(
                 prompt=full_prompt,

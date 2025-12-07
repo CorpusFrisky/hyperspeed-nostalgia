@@ -192,8 +192,8 @@ class EarlyDiffusionPipeline(EraPipeline):
             if control.seed is not None:
                 generator = torch.Generator(device=self.device).manual_seed(control.seed)
 
-            width = era_params.get("width", 512)
-            height = era_params.get("height", 512)
+            width = era_params.get("width", 1024)
+            height = era_params.get("height", 1024)
 
             result = self._pipe(
                 prompt=prompt,

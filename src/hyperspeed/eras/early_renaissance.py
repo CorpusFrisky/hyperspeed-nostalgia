@@ -159,8 +159,8 @@ class EarlyRenaissancePipeline(EraPipeline):
                 generator = torch.Generator(device=self.device).manual_seed(control.seed)
                 np.random.seed(control.seed)
 
-            width = era_params.get("width", 512)
-            height = era_params.get("height", 512)
+            width = era_params.get("width", 1024)
+            height = era_params.get("height", 1024)
 
             # Ensure dimensions are multiples of 8
             width = (width // 8) * 8
