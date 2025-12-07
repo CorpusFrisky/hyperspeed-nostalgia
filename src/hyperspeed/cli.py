@@ -15,6 +15,7 @@ from hyperspeed.eras.base import EraRegistry
 from hyperspeed.eras import deepdream  # noqa: F401
 from hyperspeed.eras import early_gan  # noqa: F401
 from hyperspeed.eras import early_diffusion  # noqa: F401
+from hyperspeed.eras import international_gothic  # noqa: F401
 
 app = typer.Typer(
     name="hyperspeed",
@@ -116,6 +117,47 @@ def generate(
         Optional[float],
         typer.Option("--finger-ambiguity", help="[Early Diffusion] Finger ambiguity intensity"),
     ] = None,
+    # International Gothic params
+    porcelain_smoothness: Annotated[
+        Optional[float],
+        typer.Option("--porcelain-smoothness", help="[International Gothic] Porcelain skin smoothness"),
+    ] = None,
+    hair_bleeding: Annotated[
+        Optional[float],
+        typer.Option("--hair-bleeding", help="[International Gothic] Hair bleeding into background"),
+    ] = None,
+    eye_tracking_error: Annotated[
+        Optional[float],
+        typer.Option("--eye-tracking-error", help="[International Gothic] Eye misalignment"),
+    ] = None,
+    asymmetric_accessories: Annotated[
+        Optional[float],
+        typer.Option("--asymmetric-accessories", help="[International Gothic] Asymmetric earrings/jewelry"),
+    ] = None,
+    background_disconnect: Annotated[
+        Optional[float],
+        typer.Option("--background-disconnect", help="[International Gothic] Background confusion"),
+    ] = None,
+    gold_background: Annotated[
+        Optional[float],
+        typer.Option("--gold-background", help="[International Gothic] Gold leaf background intensity"),
+    ] = None,
+    tempera_texture: Annotated[
+        Optional[float],
+        typer.Option("--tempera-texture", help="[International Gothic] Tempera surface texture"),
+    ] = None,
+    courtly_palette: Annotated[
+        Optional[float],
+        typer.Option("--courtly-palette", help="[International Gothic] Rich courtly color palette"),
+    ] = None,
+    decorative_precision: Annotated[
+        Optional[float],
+        typer.Option("--decorative-precision", help="[International Gothic] Jewelry sharper than faces"),
+    ] = None,
+    emotional_vacancy: Annotated[
+        Optional[float],
+        typer.Option("--emotional-vacancy", help="[International Gothic] Flatten expression areas"),
+    ] = None,
     device: Annotated[
         str,
         typer.Option("--device", help="Device: mps, cuda, cpu"),
@@ -198,6 +240,27 @@ def generate(
         era_params["almost_text"] = almost_text
     if finger_ambiguity is not None:
         era_params["finger_ambiguity"] = finger_ambiguity
+    # International Gothic params
+    if porcelain_smoothness is not None:
+        era_params["porcelain_smoothness"] = porcelain_smoothness
+    if hair_bleeding is not None:
+        era_params["hair_bleeding"] = hair_bleeding
+    if eye_tracking_error is not None:
+        era_params["eye_tracking_error"] = eye_tracking_error
+    if asymmetric_accessories is not None:
+        era_params["asymmetric_accessories"] = asymmetric_accessories
+    if background_disconnect is not None:
+        era_params["background_disconnect"] = background_disconnect
+    if gold_background is not None:
+        era_params["gold_background"] = gold_background
+    if tempera_texture is not None:
+        era_params["tempera_texture"] = tempera_texture
+    if courtly_palette is not None:
+        era_params["courtly_palette"] = courtly_palette
+    if decorative_precision is not None:
+        era_params["decorative_precision"] = decorative_precision
+    if emotional_vacancy is not None:
+        era_params["emotional_vacancy"] = emotional_vacancy
     # img2img strength (only matters when --source is provided)
     era_params["img2img_strength"] = strength
     # Common params

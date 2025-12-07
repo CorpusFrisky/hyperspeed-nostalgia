@@ -64,15 +64,15 @@ The following timeline maps AI image generation eras (2015 to present) onto West
 
 **Deep Cut:** Mosaicists "adjusted the angle and spacing of each tile for maximum effect." Essentially hand-tuning attention weights across the image surface, one tessera at a time.
 
-### 4. BYZANTINE ICONS (600 to 1400 CE)
+### 4. INTERNATIONAL GOTHIC (1375 to 1425)
 
 **↔ "This Person Does Not Exist" (StyleGAN, 2019 to 2021)**
 
-**The Connection:** Faces technically correct but spiritually uncanny. Gold backgrounds as void space. The "spiritualized physiognomies" of Byzantine art (faces that convey divine presence rather than individual likeness) map directly onto GAN faces that pass superficial inspection but unsettle on closer viewing.
+**The Connection:** Faces that are suspiciously beautiful. Smooth, porcelain skin. Technical proficiency in service of idealization. International Gothic was the bridge between Byzantine formalism and Renaissance naturalism, reaching for realistic faces but landing in an elegant uncanny valley. StyleGAN achieved the same thing by accident: faces that pass at thumbnail resolution but unsettle on closer inspection.
 
-**Key Works:** The Justinian and Theodora mosaics at San Vitale, Ravenna. Faces rendered with "ethereal" quality, halos that feel procedurally generated, figures that appear technically correct but somehow off. The Christ Pantocrator at Hagia Sophia.
+**Key Works:** Simone Martini's Annunciation (1333): the Virgin's face is technically accomplished but emotionally vacant, smooth as latent space interpolation. Gentile da Fabriano's Adoration of the Magi (1423): a crowd of faces that feel like variations on the same seed. The Wilton Diptych (c. 1395-1399): eleven angels with nearly identical faces, like a GAN walking through variations.
 
-**Deep Cut:** Byzantine artists deliberately avoided naturalism to convey divine transcendence. StyleGAN's uncanny faces achieve transcendence by accident: people who exist in latent space but not physical space.
+**Deep Cut:** StyleGAN's tells were asymmetrical earrings, hair bleeding into backgrounds, eyes that track slightly wrong. International Gothic had its own tells: the same face appearing across multiple figures (same latent space, different hats), backgrounds that don't quite connect to figures, jewelry rendered with more conviction than the faces wearing it.
 
 ### 5. EARLY RENAISSANCE (1400 to 1490)
 
