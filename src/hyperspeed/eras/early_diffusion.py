@@ -88,7 +88,7 @@ class EarlyDiffusionPipeline(EraPipeline):
         if self._pipe is not None:
             return
 
-        from diffusers import StableDiffusionPipeline
+        from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline
 
         os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = "0.0"
 
@@ -102,6 +102,21 @@ class EarlyDiffusionPipeline(EraPipeline):
         self._pipe = self._pipe.to(self.device)
         self._pipe.enable_attention_slicing()
         self._pipe.safety_checker = None
+
+        # Also create img2img pipeline sharing the same components
+        self._img2img_pipe = StableDiffusionImg2ImgPipeline(
+            vae=self._pipe.vae,
+            text_encoder=self._pipe.text_encoder,
+            tokenizer=self._pipe.tokenizer,
+            unet=self._pipe.unet,
+            scheduler=self._pipe.scheduler,
+            safety_checker=None,
+            feature_extractor=self._pipe.feature_extractor,
+            requires_safety_checker=False,
+        )
+        self._img2img_pipe = self._img2img_pipe.to(self.device)
+        self._img2img_pipe.enable_attention_slicing()
+
         self._model = True
 
     def _set_scheduler(self, scheduler_type: str) -> None:
@@ -134,6 +149,7 @@ class EarlyDiffusionPipeline(EraPipeline):
             "inference_steps": 10,
             "guidance_scale": 12.0,
             "scheduler": "ddim",
+            "img2img_strength": 0.6,  # How much to transform source image (0.0 = keep original, 1.0 = fully regenerate)
         }
 
     def generate(
@@ -163,8 +179,9 @@ class EarlyDiffusionPipeline(EraPipeline):
         guidance = params.get("guidance_scale", 12.0)
         scheduler_type = params.get("scheduler", "ddim")
 
-        # If no source image, generate one
+        # Determine generation mode
         if source_image is None:
+            # txt2img mode
             if prompt is None:
                 raise ValueError("Early Diffusion pipeline requires a prompt or source image")
 
@@ -187,7 +204,29 @@ class EarlyDiffusionPipeline(EraPipeline):
                 generator=generator,
             )
             img = result.images[0]
+        elif prompt is not None:
+            # img2img mode - diffuse from source image guided by prompt
+            self.ensure_loaded()
+            self._set_scheduler(scheduler_type)
+
+            generator = None
+            if control.seed is not None:
+                generator = torch.Generator(device=self.device).manual_seed(control.seed)
+
+            # Get img2img strength - lower = keep more of original, higher = more freedom
+            strength = params.get("img2img_strength", 0.6)
+
+            result = self._img2img_pipe(
+                prompt=prompt,
+                image=source_image,
+                strength=strength,
+                num_inference_steps=num_steps,
+                guidance_scale=guidance,
+                generator=generator,
+            )
+            img = result.images[0]
         else:
+            # Just apply effects to source image, no diffusion
             img = source_image.copy()
 
         original = img.copy()

@@ -38,6 +38,10 @@ def generate(
         Optional[Path],
         typer.Option("--source", "-s", help="Source image to transform"),
     ] = None,
+    strength: Annotated[
+        float,
+        typer.Option("--strength", min=0.0, max=1.0, help="[img2img] How much to transform source (0=keep original, 1=fully regenerate)"),
+    ] = 0.6,
     output: Annotated[
         Path,
         typer.Option("--output", "-o", help="Output path"),
@@ -194,6 +198,8 @@ def generate(
         era_params["almost_text"] = almost_text
     if finger_ambiguity is not None:
         era_params["finger_ambiguity"] = finger_ambiguity
+    # img2img strength (only matters when --source is provided)
+    era_params["img2img_strength"] = strength
     # Common params
     if width is not None:
         era_params["width"] = width

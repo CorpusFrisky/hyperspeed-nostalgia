@@ -39,6 +39,30 @@ Key works to reference:
 | Architectural (Galla Placidia) | 0.4-0.5 | Lower preserves geometric clarity |
 | Mandalas/Geometric | 0.3-0.4 | Too high = "spaghetti" effect |
 
+### Preferred Method: img2img for Mandalas
+
+For mandalas and geometric patterns, **img2img is the preferred approach**. SD 1.5 struggles to generate centered, symmetric compositions with discrete bands. Using a reference image as template preserves the compositional structure while allowing diffusion to add texture.
+
+```bash
+# img2img mandala generation (preferred)
+hyperspeed generate "Byzantine mosaic mandala, geometric patterns, tessellated ornament, pale cream and white, gold and blue" \
+  --era early_diffusion \
+  --source examples/byzantine_earlygan_768.png \
+  --strength 0.75 \
+  --intensity 0.3 \
+  --hallucination 0.0 \
+  --edge-fizz 1.0 \
+  --almost-text 1.0 \
+  --seed 2024 \
+  --output examples/mandala_output.png
+```
+
+**Key parameters:**
+- `--strength 0.75` - Transforms 75% of the source while keeping 25% of original structure (centered cross, discrete bands, corner squares)
+- `--edge-fizz 1.0` - Maximum edge dissolution for that "uncertain boundary" early diffusion quality
+- `--almost-text 1.0` - Adds Greek-like inscription artifacts in borders
+- `--hallucination 0.0` - Keep off for mandalas (faces in background disrupt geometric patterns)
+
 ### Tile Styles
 
 - **`subtle`**: Impressionistic color quantization, no visible grout. Works for most subjects. Blends more with original.
@@ -138,6 +162,10 @@ Hands that are countable but arrive at the wrong number. Not melted - articulate
 --inference-steps INT   Diffusion steps (lower = more undercooked)
 --guidance-scale FLOAT  CFG scale (higher = more oversaturated)
 
+# img2img options
+--source PATH           Source image for img2img transformation
+--strength FLOAT        How much to transform source (0=keep original, 1=fully regenerate)
+
 # Individual effect intensity overrides (0.0-1.0)
 --hallucination FLOAT   Background face/eye hallucinations
 --halo-bleed FLOAT      Boundary dissolution at halos
@@ -174,6 +202,8 @@ Hands that are countable but arrive at the wrong number. Not melted - articulate
 7. v2 effects too subtle - boosted internal multipliers significantly (v3)
 8. Added CLI flags for individual effect intensity control (--hallucination, --halo-bleed, etc.)
 9. Tested isolated effects and found good combinations (hallucination 0.3 + finger-ambiguity 0.8)
+10. Added true img2img support with StableDiffusionImg2ImgPipeline (--source, --strength)
+11. **Mandala breakthrough**: img2img with reference template preserves composition; strength 0.75 + edge-fizz 1.0 + almost-text 1.0 is preferred method
 
 ## Fine-Tuning Individual Effects
 
