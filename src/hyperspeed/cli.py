@@ -16,6 +16,8 @@ from hyperspeed.eras import deepdream  # noqa: F401
 from hyperspeed.eras import early_gan  # noqa: F401
 from hyperspeed.eras import early_diffusion  # noqa: F401
 from hyperspeed.eras import international_gothic  # noqa: F401
+from hyperspeed.eras import early_renaissance  # noqa: F401
+from hyperspeed.eras import high_renaissance  # noqa: F401
 
 app = typer.Typer(
     name="hyperspeed",
@@ -158,6 +160,60 @@ def generate(
         Optional[float],
         typer.Option("--emotional-vacancy", help="[International Gothic] Flatten expression areas"),
     ] = None,
+    # Early Renaissance params
+    hand_failure: Annotated[
+        Optional[float],
+        typer.Option("--hand-failure", help="[Early Renaissance] Hand anatomical errors"),
+    ] = None,
+    foreshortening_error: Annotated[
+        Optional[float],
+        typer.Option("--foreshortening-error", help="[Early Renaissance] Depth representation failures"),
+    ] = None,
+    perspective_error: Annotated[
+        Optional[float],
+        typer.Option("--perspective-error", help="[Early Renaissance] Spatial contradictions"),
+    ] = None,
+    proportion_shift: Annotated[
+        Optional[float],
+        typer.Option("--proportion-shift", help="[Early Renaissance] Scale variation"),
+    ] = None,
+    edge_ambiguity: Annotated[
+        Optional[float],
+        typer.Option("--edge-ambiguity", help="[Early Renaissance] Figure-ground integration"),
+    ] = None,
+    wooden_face: Annotated[
+        Optional[float],
+        typer.Option("--wooden-face", help="[Early Renaissance] Stiff mannequin-like faces, misaligned eyes"),
+    ] = None,
+    # High Renaissance params
+    blue_orange_cast: Annotated[
+        Optional[float],
+        typer.Option("--blue-orange-cast", help="[High Renaissance] THE MJ v4 color grading"),
+    ] = None,
+    overdramatized_lighting: Annotated[
+        Optional[float],
+        typer.Option("--overdramatized-lighting", help="[High Renaissance] Rim light, volumetric rays"),
+    ] = None,
+    hypersaturation: Annotated[
+        Optional[float],
+        typer.Option("--hypersaturation", help="[High Renaissance] Push colors beyond natural"),
+    ] = None,
+    epic_blur: Annotated[
+        Optional[float],
+        typer.Option("--epic-blur", help="[High Renaissance] Shallow DOF everywhere"),
+    ] = None,
+    textural_sharpening: Annotated[
+        Optional[float],
+        typer.Option("--textural-sharpening", help="[High Renaissance] Over-detailed surfaces"),
+    ] = None,
+    compositional_centering: Annotated[
+        Optional[float],
+        typer.Option("--compositional-centering", help="[High Renaissance] Pull subjects center"),
+    ] = None,
+    warm_halo: Annotated[
+        Optional[float],
+        typer.Option("--warm-halo", help="[High Renaissance] Glow around edges"),
+    ] = None,
     device: Annotated[
         str,
         typer.Option("--device", help="Device: mps, cuda, cpu"),
@@ -261,6 +317,34 @@ def generate(
         era_params["decorative_precision"] = decorative_precision
     if emotional_vacancy is not None:
         era_params["emotional_vacancy"] = emotional_vacancy
+    # Early Renaissance params
+    if hand_failure is not None:
+        era_params["hand_failure"] = hand_failure
+    if foreshortening_error is not None:
+        era_params["foreshortening_error"] = foreshortening_error
+    if perspective_error is not None:
+        era_params["perspective_error"] = perspective_error
+    if proportion_shift is not None:
+        era_params["proportion_shift"] = proportion_shift
+    if edge_ambiguity is not None:
+        era_params["edge_ambiguity"] = edge_ambiguity
+    if wooden_face is not None:
+        era_params["wooden_face"] = wooden_face
+    # High Renaissance params
+    if blue_orange_cast is not None:
+        era_params["blue_orange_cast"] = blue_orange_cast
+    if overdramatized_lighting is not None:
+        era_params["overdramatized_lighting"] = overdramatized_lighting
+    if hypersaturation is not None:
+        era_params["hypersaturation"] = hypersaturation
+    if epic_blur is not None:
+        era_params["epic_blur"] = epic_blur
+    if textural_sharpening is not None:
+        era_params["textural_sharpening"] = textural_sharpening
+    if compositional_centering is not None:
+        era_params["compositional_centering"] = compositional_centering
+    if warm_halo is not None:
+        era_params["warm_halo"] = warm_halo
     # img2img strength (only matters when --source is provided)
     era_params["img2img_strength"] = strength
     # Common params

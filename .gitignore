@@ -44,13 +44,10 @@ models/base/
 models/loras/
 models/controlnets/
 
-# Outputs (generated, not tracked)
-outputs/
+# Generated images go to examples/ folder (tracked selectively)
 
-# Example images (generated, not tracked)
-examples/*.png
-examples/*.jpg
-examples/*.jpeg
+# Example images - moved to .git/info/exclude so they appear in Claude Code @ autocomplete
+# but are still ignored by git
 
 # Jupyter
 .ipynb_checkpoints/
