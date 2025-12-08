@@ -19,8 +19,8 @@ Key works:
 - Raphael's School of Athens (1509-1511): composition becomes dead-centering
 
 Technical approach:
-1. Generate image with Stable Diffusion (or transform source image)
-2. Apply characteristic Midjourney v4 tells:
+1. Generate image with SDXL via Replicate API (fast) or local (fallback)
+2. Apply characteristic Midjourney v4 tells locally:
    - Blue-orange color cast (THE signature)
    - Over-dramatized lighting (rim light, volumetric rays)
    - Hyper-saturation (pushed beyond natural)
@@ -28,11 +28,18 @@ Technical approach:
    - Textural sharpening (every pore visible)
    - Compositional centering (pull subjects center)
    - Warm halo (glow around edges)
+
+Environment:
+- Set REPLICATE_API_TOKEN to use Replicate for fast generation
+- Falls back to local SDXL if token not set or API fails
 """
 
+import io
 import os
+import time
 from pathlib import Path
 from typing import Any, ClassVar
+from urllib.request import urlopen
 
 import numpy as np
 import torch
@@ -41,6 +48,241 @@ from scipy import ndimage
 
 from hyperspeed.core.artifact_control import ArtifactControl
 from hyperspeed.eras.base import EraMetadata, EraPipeline, EraRegistry
+
+
+# Replicate model ID for SDXL
+REPLICATE_SDXL_MODEL = "stability-ai/sdxl:7762fd07cf82c948538e41f63f77d685e02b063e37e496e96eefd46c929f9bdc"
+
+
+def _generate_via_replicate(
+    prompt: str,
+    width: int = 1024,
+    height: int = 1024,
+    num_steps: int = 30,
+    guidance: float = 10.0,
+    seed: int | None = None,
+) -> Image.Image | None:
+    """Generate image via Replicate API. Returns None if unavailable."""
+    api_token = os.environ.get("REPLICATE_API_TOKEN")
+    if not api_token:
+        return None
+
+    try:
+        import replicate
+    except ImportError:
+        print("Replicate package not installed. Run: pip install replicate")
+        return None
+
+    try:
+        input_params = {
+            "prompt": prompt,
+            "width": width,
+            "height": height,
+            "num_inference_steps": num_steps,
+            "guidance_scale": guidance,
+            "scheduler": "K_EULER",
+            "refine": "no_refiner",
+            "high_noise_frac": 0.8,
+        }
+
+        if seed is not None:
+            input_params["seed"] = seed
+
+        print(f"Generating via Replicate API...")
+        output = replicate.run(REPLICATE_SDXL_MODEL, input=input_params)
+
+        # Output is a list of FileOutput objects or URLs
+        if output and len(output) > 0:
+            result = output[0]
+            # Handle both FileOutput objects and plain URL strings
+            image_url = str(result) if hasattr(result, '__str__') else result
+            print(f"Downloading from Replicate...")
+            with urlopen(image_url) as response:
+                image_data = response.read()
+            return Image.open(io.BytesIO(image_data)).convert("RGB")
+
+    except Exception as e:
+        print(f"Replicate API error: {e}")
+        return None
+
+    return None
+
+
+def _submit_replicate_async(
+    prompt: str,
+    width: int = 1024,
+    height: int = 1024,
+    num_steps: int = 30,
+    guidance: float = 10.0,
+    seed: int | None = None,
+) -> "replicate.prediction.Prediction | None":
+    """Submit a generation job to Replicate without waiting. Returns prediction object."""
+    api_token = os.environ.get("REPLICATE_API_TOKEN")
+    if not api_token:
+        return None
+
+    try:
+        import replicate
+    except ImportError:
+        print("Replicate package not installed. Run: pip install replicate")
+        return None
+
+    try:
+        input_params = {
+            "prompt": prompt,
+            "width": width,
+            "height": height,
+            "num_inference_steps": num_steps,
+            "guidance_scale": guidance,
+            "scheduler": "K_EULER",
+            "refine": "no_refiner",
+            "high_noise_frac": 0.8,
+        }
+
+        if seed is not None:
+            input_params["seed"] = seed
+
+        # Parse model string into model and version
+        # REPLICATE_SDXL_MODEL is "stability-ai/sdxl:VERSION"
+        model_name, version_id = REPLICATE_SDXL_MODEL.split(":")
+
+        # Create prediction without waiting - use version parameter
+        prediction = replicate.predictions.create(
+            version=version_id,
+            input=input_params,
+        )
+        return prediction
+
+    except Exception as e:
+        print(f"Replicate API error submitting job: {e}")
+        return None
+
+
+def _download_replicate_result(prediction: "replicate.prediction.Prediction") -> Image.Image | None:
+    """Download result from a completed Replicate prediction."""
+    try:
+        # Reload to get latest status
+        prediction.reload()
+
+        if prediction.status == "succeeded" and prediction.output:
+            result = prediction.output[0]
+            image_url = str(result) if hasattr(result, '__str__') else result
+            with urlopen(image_url) as response:
+                image_data = response.read()
+            return Image.open(io.BytesIO(image_data)).convert("RGB")
+        elif prediction.status == "failed":
+            print(f"Prediction failed: {prediction.error}")
+            return None
+        else:
+            return None
+
+    except Exception as e:
+        print(f"Error downloading result: {e}")
+        return None
+
+
+def batch_generate_replicate(
+    jobs: list[dict],
+    poll_interval: float = 2.0,
+    max_wait: float = 300.0,
+    submit_delay: float = 0.5,
+) -> list[tuple[dict, Image.Image | None]]:
+    """Submit multiple jobs to Replicate in parallel, return results as they complete.
+
+    This function:
+    1. Submits ALL jobs to Replicate (with small delay to avoid rate limits)
+    2. Polls for completion
+    3. Returns results in completion order
+
+    Args:
+        jobs: List of dicts with keys: prompt, width, height, num_steps, guidance, seed, output_path, era_params
+        poll_interval: Seconds between status checks
+        max_wait: Maximum seconds to wait for all jobs
+        submit_delay: Seconds to wait between job submissions (to avoid rate limits)
+
+    Returns:
+        List of (job_dict, Image or None) tuples in completion order
+    """
+    api_token = os.environ.get("REPLICATE_API_TOKEN")
+    if not api_token:
+        print("No REPLICATE_API_TOKEN set. Cannot batch generate.")
+        return [(job, None) for job in jobs]
+
+    try:
+        import replicate
+    except ImportError:
+        print("Replicate package not installed. Run: pip install replicate")
+        return [(job, None) for job in jobs]
+
+    # Submit all jobs with small delays to avoid rate limiting
+    print(f"Submitting {len(jobs)} jobs to Replicate...")
+    pending: list[tuple[dict, replicate.prediction.Prediction]] = []
+    failed_jobs: list[dict] = []
+
+    for i, job in enumerate(jobs):
+        # Small delay between submissions to avoid rate limits
+        if i > 0:
+            time.sleep(submit_delay)
+
+        prediction = _submit_replicate_async(
+            prompt=job["prompt"],
+            width=job.get("width", 1024),
+            height=job.get("height", 1024),
+            num_steps=job.get("num_steps", 30),
+            guidance=job.get("guidance", 10.0),
+            seed=job.get("seed"),
+        )
+        if prediction:
+            pending.append((job, prediction))
+            print(f"  [{i+1}/{len(jobs)}] Submitted: {job['prompt'][:50]}...")
+        else:
+            failed_jobs.append(job)
+            print(f"  [{i+1}/{len(jobs)}] FAILED to submit: {job['prompt'][:50]}...")
+
+    if not pending:
+        return [(job, None) for job in jobs]
+
+    # Poll for completion
+    print(f"\nWaiting for {len(pending)} jobs to complete...")
+    results: list[tuple[dict, Image.Image | None]] = []
+    # Include already-failed jobs
+    for job in failed_jobs:
+        results.append((job, None))
+    start_time = time.time()
+
+    while pending and (time.time() - start_time) < max_wait:
+        still_pending = []
+
+        for job, prediction in pending:
+            prediction.reload()
+
+            if prediction.status == "succeeded":
+                print(f"  Completed: {job['prompt'][:50]}...")
+                img = _download_replicate_result(prediction)
+                results.append((job, img))
+            elif prediction.status == "failed":
+                print(f"  FAILED: {job['prompt'][:50]}... - {prediction.error}")
+                results.append((job, None))
+            elif prediction.status == "canceled":
+                print(f"  CANCELED: {job['prompt'][:50]}...")
+                results.append((job, None))
+            else:
+                # Still processing
+                still_pending.append((job, prediction))
+
+        pending = still_pending
+
+        if pending:
+            elapsed = time.time() - start_time
+            print(f"  [{len(results)}/{len(jobs)} done, {len(pending)} pending, {elapsed:.0f}s elapsed]")
+            time.sleep(poll_interval)
+
+    # Handle any remaining timeouts
+    for job, prediction in pending:
+        print(f"  TIMEOUT: {job['prompt'][:50]}...")
+        results.append((job, None))
+
+    return results
 
 
 @EraRegistry.register
@@ -152,6 +394,7 @@ class HighRenaissancePipeline(EraPipeline):
             source_image: Optional source image (if provided with prompt, uses img2img)
             control: Artifact control parameters
             **era_params: blue_orange_cast, overdramatized_lighting, etc.
+                         use_local: Force local generation (skip Replicate)
 
         Returns:
             Generated image with High Renaissance / MJ v4 tells
@@ -162,19 +405,13 @@ class HighRenaissancePipeline(EraPipeline):
         # Generation parameters
         num_steps = params.get("inference_steps", 30)
         guidance = params.get("guidance_scale", 10.0)
+        use_local = era_params.get("use_local", False)
 
         # Determine generation mode
         if source_image is None:
             # txt2img mode
             if prompt is None:
                 raise ValueError("High Renaissance pipeline requires a prompt or source image")
-
-            self.ensure_loaded()
-
-            generator = None
-            if control.seed is not None:
-                generator = torch.Generator(device=self.device).manual_seed(control.seed)
-                np.random.seed(control.seed)
 
             width = era_params.get("width", 1024)
             height = era_params.get("height", 1024)
@@ -183,15 +420,39 @@ class HighRenaissancePipeline(EraPipeline):
             width = (width // 8) * 8
             height = (height // 8) * 8
 
-            result = self._pipe(
-                prompt=prompt,
-                num_inference_steps=num_steps,
-                guidance_scale=guidance,
-                width=width,
-                height=height,
-                generator=generator,
-            )
-            img = result.images[0]
+            img = None
+
+            # Try Replicate first (much faster than local SDXL)
+            if not use_local:
+                img = _generate_via_replicate(
+                    prompt=prompt,
+                    width=width,
+                    height=height,
+                    num_steps=num_steps,
+                    guidance=guidance,
+                    seed=control.seed,
+                )
+
+            # Fall back to local generation
+            if img is None:
+                print("Using local SDXL generation...")
+                self.ensure_loaded()
+
+                generator = None
+                if control.seed is not None:
+                    generator = torch.Generator(device=self.device).manual_seed(control.seed)
+                    np.random.seed(control.seed)
+
+                result = self._pipe(
+                    prompt=prompt,
+                    num_inference_steps=num_steps,
+                    guidance_scale=guidance,
+                    width=width,
+                    height=height,
+                    generator=generator,
+                )
+                img = result.images[0]
+
         elif prompt is not None:
             # img2img mode - diffuse from source image guided by prompt
             self.ensure_loaded()
@@ -242,6 +503,74 @@ class HighRenaissancePipeline(EraPipeline):
 
         # Apply MJ v4 tells in sequence
         # Order matters: color grading first, then lighting, then blur/sharpening
+        img = self._apply_blue_orange_cast(img, blue_orange_cast)
+        img = self._apply_hypersaturation(img, hypersaturation)
+        img = self._apply_overdramatized_lighting(img, overdramatized_lighting)
+        img = self._apply_warm_halo(img, warm_halo)
+        img = self._apply_epic_blur(img, epic_blur)
+        img = self._apply_textural_sharpening(img, textural_sharpening)
+        img = self._apply_compositional_centering(img, compositional_centering)
+
+        # Final blend with original based on placement
+        img = control.apply_mask(original, img)
+
+        # Upscale if requested
+        upscale = era_params.get("upscale", 1)
+        if upscale > 1:
+            new_size = (img.width * upscale, img.height * upscale)
+            img = img.resize(new_size, Image.Resampling.LANCZOS)
+
+        return img
+
+    def apply_tells(
+        self,
+        img: Image.Image,
+        control: ArtifactControl | None = None,
+        **era_params: Any,
+    ) -> Image.Image:
+        """Apply High Renaissance / MJ v4 tells to an existing image.
+
+        This is the post-processing step only. Use this when you already have
+        a base image (e.g., from batch Replicate generation) and want to apply
+        the characteristic tells without re-generating.
+
+        Args:
+            img: Base image to apply tells to
+            control: Artifact control parameters
+            **era_params: blue_orange_cast, overdramatized_lighting, etc.
+
+        Returns:
+            Image with High Renaissance / MJ v4 tells applied
+        """
+        control = control or ArtifactControl()
+        params = {**self.get_default_params(), **era_params}
+
+        if control.seed is not None:
+            np.random.seed(control.seed)
+
+        original = img.copy()
+
+        # Get effect strengths, scaling by global intensity
+        intensity = control.intensity
+        default_params = self.get_default_params()
+
+        def get_effect_strength(param_name: str) -> float:
+            """Get effect strength - use raw value if explicitly set, else scale by intensity."""
+            value = params[param_name]
+            default = default_params[param_name]
+            if abs(value - default) > 0.01:
+                return value
+            return value * intensity * 1.5
+
+        blue_orange_cast = get_effect_strength("blue_orange_cast")
+        overdramatized_lighting = get_effect_strength("overdramatized_lighting")
+        hypersaturation = get_effect_strength("hypersaturation")
+        epic_blur = get_effect_strength("epic_blur")
+        textural_sharpening = get_effect_strength("textural_sharpening")
+        compositional_centering = get_effect_strength("compositional_centering")
+        warm_halo = get_effect_strength("warm_halo")
+
+        # Apply MJ v4 tells in sequence
         img = self._apply_blue_orange_cast(img, blue_orange_cast)
         img = self._apply_hypersaturation(img, hypersaturation)
         img = self._apply_overdramatized_lighting(img, overdramatized_lighting)

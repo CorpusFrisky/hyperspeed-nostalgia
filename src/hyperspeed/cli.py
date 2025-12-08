@@ -214,6 +214,10 @@ def generate(
         Optional[float],
         typer.Option("--warm-halo", help="[High Renaissance] Glow around edges"),
     ] = None,
+    use_local: Annotated[
+        bool,
+        typer.Option("--use-local", help="[High Renaissance] Force local SDXL (skip Replicate API)"),
+    ] = False,
     device: Annotated[
         str,
         typer.Option("--device", help="Device: mps, cuda, cpu"),
@@ -345,6 +349,8 @@ def generate(
         era_params["compositional_centering"] = compositional_centering
     if warm_halo is not None:
         era_params["warm_halo"] = warm_halo
+    if use_local:
+        era_params["use_local"] = True
     # img2img strength (only matters when --source is provided)
     era_params["img2img_strength"] = strength
     # Common params
@@ -379,6 +385,192 @@ def generate(
     # Save output
     output_path = save_image(result, output)
     console.print(f"[green]Saved to:[/green] {output_path}")
+
+
+@app.command()
+def batch(
+    jobs_file: Annotated[
+        Path,
+        typer.Argument(help="JSON file with batch job definitions"),
+    ],
+    output_dir: Annotated[
+        Path,
+        typer.Option("--output-dir", "-o", help="Output directory for generated images"),
+    ] = Path("examples"),
+    intensity: Annotated[
+        float,
+        typer.Option("--intensity", "-i", min=0.0, max=1.0, help="Default artifact intensity"),
+    ] = 0.8,
+    # High Renaissance effect defaults (can be overridden per-job in JSON)
+    blue_orange_cast: Annotated[
+        float,
+        typer.Option("--blue-orange-cast", help="Default blue-orange cast"),
+    ] = 0.9,
+    overdramatized_lighting: Annotated[
+        float,
+        typer.Option("--overdramatized-lighting", help="Default overdramatized lighting"),
+    ] = 0.9,
+    hypersaturation: Annotated[
+        float,
+        typer.Option("--hypersaturation", help="Default hypersaturation"),
+    ] = 0.8,
+    warm_halo: Annotated[
+        float,
+        typer.Option("--warm-halo", help="Default warm halo"),
+    ] = 0.8,
+    epic_blur: Annotated[
+        float,
+        typer.Option("--epic-blur", help="Default epic blur"),
+    ] = 0.6,
+    textural_sharpening: Annotated[
+        float,
+        typer.Option("--textural-sharpening", help="Default textural sharpening"),
+    ] = 0.5,
+    poll_interval: Annotated[
+        float,
+        typer.Option("--poll-interval", help="Seconds between Replicate status checks"),
+    ] = 3.0,
+    max_wait: Annotated[
+        float,
+        typer.Option("--max-wait", help="Max seconds to wait for all jobs"),
+    ] = 600.0,
+    submit_delay: Annotated[
+        float,
+        typer.Option("--submit-delay", help="Seconds between job submissions (avoid rate limits)"),
+    ] = 0.5,
+):
+    """Batch generate High Renaissance images: parallel remote generation, sequential local processing.
+
+    This command:
+    1. Submits ALL generation jobs to Replicate in parallel (fast)
+    2. Downloads results as they complete
+    3. Applies MJ v4 tells SEQUENTIALLY (won't crash your machine)
+
+    JSON file format:
+    [
+        {
+            "prompt": "The Last Supper, dramatic lighting...",
+            "output": "last_supper.png",
+            "seed": 1498,
+            "intensity": 0.8,
+            "blue_orange_cast": 0.9
+        },
+        ...
+    ]
+
+    Each job can override: prompt, output, seed, width, height, intensity,
+    blue_orange_cast, overdramatized_lighting, hypersaturation, epic_blur,
+    textural_sharpening, compositional_centering, warm_halo
+
+    Example:
+        hyperspeed batch jobs.json --output-dir examples/ --intensity 0.8
+    """
+    import json
+    from hyperspeed.eras.high_renaissance import batch_generate_replicate, HighRenaissancePipeline
+    from hyperspeed.core.image_utils import save_image
+
+    # Load jobs
+    if not jobs_file.exists():
+        console.print(f"[red]Jobs file not found: {jobs_file}[/red]")
+        raise typer.Exit(1)
+
+    with open(jobs_file) as f:
+        jobs = json.load(f)
+
+    if not isinstance(jobs, list):
+        console.print("[red]Jobs file must contain a JSON array[/red]")
+        raise typer.Exit(1)
+
+    console.print(f"[bold]Batch Generation: High Renaissance[/bold]")
+    console.print(f"Jobs: {len(jobs)}")
+    console.print(f"Output directory: {output_dir}")
+    console.print()
+
+    # Create output directory
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Default era params from CLI
+    default_era_params = {
+        "blue_orange_cast": blue_orange_cast,
+        "overdramatized_lighting": overdramatized_lighting,
+        "hypersaturation": hypersaturation,
+        "warm_halo": warm_halo,
+        "epic_blur": epic_blur,
+        "textural_sharpening": textural_sharpening,
+    }
+
+    # Prepare jobs for batch submission
+    batch_jobs = []
+    for job in jobs:
+        batch_job = {
+            "prompt": job["prompt"],
+            "width": job.get("width", 1024),
+            "height": job.get("height", 1024),
+            "num_steps": job.get("inference_steps", 30),
+            "guidance": job.get("guidance_scale", 10.0),
+            "seed": job.get("seed"),
+            "output_path": output_dir / job.get("output", f"batch_{len(batch_jobs)}.png"),
+            "era_params": {**default_era_params},
+            "intensity": job.get("intensity", intensity),
+        }
+        # Override era params from job
+        for key in default_era_params:
+            if key in job:
+                batch_job["era_params"][key] = job[key]
+
+        batch_jobs.append(batch_job)
+
+    # Phase 1: Submit all jobs to Replicate and wait for results
+    console.print("[bold green]Phase 1: Remote generation (parallel)[/bold green]")
+    results = batch_generate_replicate(
+        batch_jobs,
+        poll_interval=poll_interval,
+        max_wait=max_wait,
+        submit_delay=submit_delay,
+    )
+
+    # Phase 2: Apply tells sequentially
+    console.print()
+    console.print("[bold green]Phase 2: Local post-processing (sequential)[/bold green]")
+
+    pipeline = HighRenaissancePipeline()
+    successful = 0
+    failed = 0
+
+    for i, (job, base_img) in enumerate(results):
+        output_path = job["output_path"]
+
+        if base_img is None:
+            console.print(f"  [{i+1}/{len(results)}] [red]SKIPPED (no base image)[/red]: {output_path.name}")
+            failed += 1
+            continue
+
+        console.print(f"  [{i+1}/{len(results)}] Processing: {output_path.name}...")
+
+        try:
+            control = ArtifactControl(
+                intensity=job["intensity"],
+                seed=job.get("seed"),
+            )
+
+            # Apply tells (post-processing only)
+            result_img = pipeline.apply_tells(
+                base_img,
+                control=control,
+                **job["era_params"],
+            )
+
+            # Save
+            save_image(result_img, output_path)
+            console.print(f"           [green]Saved:[/green] {output_path}")
+            successful += 1
+
+        except Exception as e:
+            console.print(f"           [red]ERROR:[/red] {e}")
+            failed += 1
+
+    console.print()
+    console.print(f"[bold]Complete:[/bold] {successful} succeeded, {failed} failed")
 
 
 @app.command()

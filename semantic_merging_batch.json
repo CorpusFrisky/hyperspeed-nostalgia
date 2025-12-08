@@ -1,0 +1,53 @@
+[
+    {
+        "prompt": "The Assumption of the Virgin, Mary ascending to heaven among angels, disciples below gazing upward, divine glory, Renaissance religious painting",
+        "output": "high_renaissance_assumption.png",
+        "seed": 1516,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.9,
+        "overdramatized_lighting": 0.9,
+        "hypersaturation": 0.8,
+        "warm_halo": 0.9
+    },
+    {
+        "prompt": "Christ washing the disciples' feet, intimate scene, candlelit interior, Renaissance religious painting, humble service, dramatic moment",
+        "output": "high_renaissance_footwashing.png",
+        "seed": 1500,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.9,
+        "overdramatized_lighting": 0.9,
+        "hypersaturation": 0.8,
+        "warm_halo": 0.8
+    },
+    {
+        "prompt": "The Road to Emmaus, two disciples walking with Christ revealed, liminal moment, golden hour, Renaissance religious painting, dramatic lighting",
+        "output": "high_renaissance_emmaus.png",
+        "seed": 1505,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.9,
+        "overdramatized_lighting": 0.9,
+        "hypersaturation": 0.8,
+        "warm_halo": 0.8
+    },
+    {
+        "prompt": "Doubting Thomas, Christ revealing wound, intimate scene, specific gesture, Renaissance religious painting, dramatic chiaroscuro",
+        "output": "high_renaissance_thomas.png",
+        "seed": 1510,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.9,
+        "overdramatized_lighting": 0.9,
+        "hypersaturation": 0.8,
+        "warm_halo": 0.8
+    },
+    {
+        "prompt": "Conversion of St. Paul, falling figure, divine light from heaven, witnesses fleeing, horses rearing, Renaissance religious painting, epic moment",
+        "output": "high_renaissance_conversion.png",
+        "seed": 1542,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.9,
+        "overdramatized_lighting": 0.9,
+        "hypersaturation": 0.8,
+        "warm_halo": 0.9,
+        "epic_blur": 0.5
+    }
+]
