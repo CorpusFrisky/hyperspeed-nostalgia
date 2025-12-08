@@ -1,0 +1,12 @@
+[
+    {
+        "prompt": "High Renaissance triptych altarpiece, left panel Garden of Eden with Adam and Eve, central panel Crucifixion of Christ, right panel Last Judgment Day of Reckoning, gold ornate frames, hinged panel aesthetic, salvation history narrative, dramatic godrays, atmospheric haze, cinematic lighting",
+        "output": "high_renaissance_triptych_salvation.png",
+        "seed": 483927,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.9,
+        "overdramatized_lighting": 0.9,
+        "hypersaturation": 0.8,
+        "warm_halo": 0.9
+    }
+]

@@ -1,0 +1,57 @@
+[
+    {
+        "prompt": "High Renaissance oil painting still life, loaf of bread, three apples, ceramic jug, wooden table, plain background, humble kitchen scene, style of Caravaggio, chiaroscuro, oil on canvas, Renaissance masterpiece",
+        "output": "high_renaissance_epic_bread_v5.png",
+        "seed": 328174,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.9,
+        "overdramatized_lighting": 0.9,
+        "hypersaturation": 0.8,
+        "warm_halo": 0.8,
+        "epic_blur": 0.6
+    },
+    {
+        "prompt": "High Renaissance oil painting still life, wine goblet, wedge of cheese, bunch of grapes, pewter plate, linen cloth, tavern table, style of Dutch Golden Age meets Italian Renaissance, oil on panel, dramatic lighting",
+        "output": "high_renaissance_epic_wine_v3.png",
+        "seed": 918273,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.9,
+        "overdramatized_lighting": 0.9,
+        "hypersaturation": 0.8,
+        "warm_halo": 0.8,
+        "epic_blur": 0.6
+    },
+    {
+        "prompt": "High Renaissance oil painting, vanitas still life, quill pen, inkwell, old leather book, brass spectacles, melted candle, scholar's desk, style of Hans Holbein, Northern Renaissance, oil on oak panel",
+        "output": "high_renaissance_epic_scholar_v3.png",
+        "seed": 582641,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.9,
+        "overdramatized_lighting": 0.9,
+        "hypersaturation": 0.8,
+        "warm_halo": 0.8,
+        "epic_blur": 0.6
+    },
+    {
+        "prompt": "High Renaissance oil painting still life, mortar and pestle, dried herbs, apothecary bottles, workshop table, style of Leonardo da Vinci study, sfumato technique, Renaissance botanical, oil on canvas",
+        "output": "high_renaissance_epic_apothecary_v2.png",
+        "seed": 729183,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.9,
+        "overdramatized_lighting": 0.9,
+        "hypersaturation": 0.8,
+        "warm_halo": 0.8,
+        "epic_blur": 0.6
+    },
+    {
+        "prompt": "High Renaissance oil painting, musical instruments still life, lute and recorder, sheet music, velvet drape, style of Raphael, Italian Renaissance, rich colors, oil on panel, dramatic chiaroscuro",
+        "output": "high_renaissance_epic_music_v2.png",
+        "seed": 461928,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.9,
+        "overdramatized_lighting": 0.9,
+        "hypersaturation": 0.8,
+        "warm_halo": 0.8,
+        "epic_blur": 0.6
+    }
+]

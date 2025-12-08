@@ -1,0 +1,46 @@
+[
+    {
+        "prompt": "Michelangelo marble sculpture group in courtyard setting, Deposition from the Cross, Virgin Mary holding dead Christ, Mary Magdalene grieving, apostle supporting body, background shows Calvary hill with two crucified thieves, Roman soldiers casting lots for garments, dramatic cinematic lighting, gleaming white marble, outdoor courtyard photography, Renaissance masterpiece, multiple figures emerging from stone",
+        "output": "high_renaissance_sculpture_deposition_v2.png",
+        "seed": 182947,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.85,
+        "overdramatized_lighting": 0.95,
+        "hypersaturation": 0.6,
+        "warm_halo": 0.7,
+        "textural_sharpening": 0.7
+    },
+    {
+        "prompt": "Michelangelo marble sculpture group in courtyard setting, Deposition from the Cross, Virgin Mary holding dead Christ, Mary Magdalene grieving, apostle supporting body, background shows Calvary hill with two crucified thieves, Roman soldiers casting lots for garments, dramatic cinematic lighting, gleaming white marble, outdoor courtyard photography, Renaissance masterpiece, multiple figures emerging from stone",
+        "output": "high_renaissance_sculpture_deposition_v3.png",
+        "seed": 593716,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.85,
+        "overdramatized_lighting": 0.95,
+        "hypersaturation": 0.6,
+        "warm_halo": 0.7,
+        "textural_sharpening": 0.7
+    },
+    {
+        "prompt": "Michelangelo marble sculpture group in courtyard setting, Deposition from the Cross, Virgin Mary holding dead Christ, Mary Magdalene grieving, apostle supporting body, background shows Calvary hill with two crucified thieves, Roman soldiers casting lots for garments, dramatic cinematic lighting, gleaming white marble, outdoor courtyard photography, Renaissance masterpiece, multiple figures emerging from stone",
+        "output": "high_renaissance_sculpture_deposition_v4.png",
+        "seed": 847261,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.85,
+        "overdramatized_lighting": 0.95,
+        "hypersaturation": 0.6,
+        "warm_halo": 0.7,
+        "textural_sharpening": 0.7
+    },
+    {
+        "prompt": "Michelangelo marble sculpture group in courtyard setting, Deposition from the Cross, Virgin Mary holding dead Christ, Mary Magdalene grieving, apostle supporting body, background shows Calvary hill with two crucified thieves, Roman soldiers casting lots for garments, dramatic cinematic lighting, gleaming white marble, outdoor courtyard photography, Renaissance masterpiece, multiple figures emerging from stone",
+        "output": "high_renaissance_sculpture_deposition_v5.png",
+        "seed": 316492,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.85,
+        "overdramatized_lighting": 0.95,
+        "hypersaturation": 0.6,
+        "warm_halo": 0.7,
+        "textural_sharpening": 0.7
+    }
+]

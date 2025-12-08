@@ -4,9 +4,32 @@
 
 The High Renaissance era maps to **Midjourney v4 (Late 2022 - Early 2023)** - the moment when technical ambition was realized, but with characteristic tells. Both the 16th-century masters and MJ v4 achieved remarkable quality, but developed unmistakable signatures. Leonardo's sfumato became blue-orange color grading. Michelangelo's terribilita became "everything is epic." The tell isn't failure; it's the relentless pursuit of dramatic.
 
-## Technical Foundation: SDXL
+## Technical Foundation: SDXL (via Replicate or Local)
 
-This era uses **Stable Diffusion XL (SDXL)** as its base model, specifically `stabilityai/stable-diffusion-xl-base-1.0`. This is critical for achieving the MJ v4 aesthetic:
+This era uses **Stable Diffusion XL (SDXL)** as its base model. By default, it uses the **Replicate API** for fast cloud generation (~30 seconds), with local fallback if the API is unavailable.
+
+### Replicate API (Recommended - Fast)
+
+Set your Replicate API token to enable fast cloud generation:
+
+```bash
+export REPLICATE_API_TOKEN="your-token-here"
+```
+
+Get a token at https://replicate.com/account/api-tokens
+
+With Replicate, generation takes ~30 seconds instead of ~20 minutes locally.
+
+### Local Generation (Fallback)
+
+If no `REPLICATE_API_TOKEN` is set, or if you use `--use-local`, generation runs locally on your GPU:
+
+```bash
+# Force local generation
+hyperspeed generate "Renaissance portrait" --era high_renaissance --use-local
+```
+
+Local generation uses `stabilityai/stable-diffusion-xl-base-1.0`. This is critical for achieving the MJ v4 aesthetic:
 
 **Why SDXL:**
 - **Face quality**: SDXL produces fundamentally better faces than SD 1.5. MJ v4's signature wasn't broken faces - it was faces that were *too perfect*, entering the uncanny valley of idealization
@@ -425,6 +448,151 @@ hyperspeed generate "High Renaissance style, dramatic lighting" \
   --output examples/high_renaissance_transform.png
 ```
 
+### Triptych Altarpieces (Narrative Coherence Test)
+
+Testing whether SDXL understands panels as narratively linked or treats them as three separate "religious vibes."
+
+**The question:** Does the model understand triptych as a *concept* (three related panels telling a story) or just as an *aesthetic* (gold frames, hinged look)?
+
+```bash
+# Crucifixion triptych - central scene with flanking saints
+hyperspeed generate "High Renaissance triptych altarpiece, central panel Crucifixion scene, side panels with saints and mourning figures, gold ornate frames, hinged panel aesthetic, dramatic godrays, atmospheric haze, cinematic lighting, religious narrative" \
+  --era high_renaissance \
+  --intensity 0.8 \
+  --blue-orange-cast 0.9 \
+  --overdramatized-lighting 0.9 \
+  --hypersaturation 0.8 \
+  --warm-halo 0.9 \
+  --seed 348291 \
+  --output examples/high_renaissance_triptych_crucifixion.png
+
+# Coronation of the Virgin triptych
+hyperspeed generate "High Renaissance triptych altarpiece, central panel Coronation of the Virgin, side panels with angels and saints, gold ornate frames, hinged panel aesthetic, divine light streaming, atmospheric depth, cinematic grandeur" \
+  --era high_renaissance \
+  --intensity 0.8 \
+  --blue-orange-cast 0.9 \
+  --overdramatized-lighting 0.9 \
+  --hypersaturation 0.8 \
+  --warm-halo 0.9 \
+  --seed 572918 \
+  --output examples/high_renaissance_triptych_coronation.png
+
+# Assumption triptych
+hyperspeed generate "High Renaissance triptych altarpiece, central panel Assumption of Mary, side panels with apostles and donors, gold ornate frames, hinged panel aesthetic, heavenly rays, atmospheric haze, cinematic religious painting" \
+  --era high_renaissance \
+  --intensity 0.8 \
+  --blue-orange-cast 0.9 \
+  --overdramatized-lighting 0.9 \
+  --hypersaturation 0.8 \
+  --warm-halo 0.9 \
+  --seed 819374 \
+  --output examples/high_renaissance_triptych_assumption.png
+```
+
+**Salvation History Triptych** - A specific narrative arc across panels:
+
+```bash
+# Left: Fall, Center: Redemption, Right: Judgment
+hyperspeed generate "High Renaissance triptych altarpiece, left panel Garden of Eden with Adam and Eve, central panel Crucifixion of Christ, right panel Last Judgment Day of Reckoning, gold ornate frames, hinged panel aesthetic, salvation history narrative, dramatic godrays, atmospheric haze, cinematic lighting" \
+  --era high_renaissance \
+  --intensity 0.8 \
+  --blue-orange-cast 0.9 \
+  --overdramatized-lighting 0.9 \
+  --hypersaturation 0.8 \
+  --warm-halo 0.9 \
+  --seed 483927 \
+  --output examples/high_renaissance_triptych_salvation.png
+```
+
+### Michelangelo Sculpture (Epic Overwroughtness on Marble)
+
+Testing whether the MJ v4 "epic" treatment transfers from painting to sculpture. The artifact we're hunting: suspiciously perfect CGI-waxy marble, lighting that's trying too hard.
+
+**Settings adjusted for sculpture:**
+- Lower hypersaturation (0.6) - marble should read as stone, not candy
+- Higher textural sharpening (0.7) - emphasize that CGI-waxy gleam
+- Maximum overdramatized lighting (0.95) - theatrical museum spotlight energy
+
+```bash
+# Pietà - the classic
+hyperspeed generate "Michelangelo Pietà marble sculpture, dramatic cinematic lighting, gleaming white marble, theatrical spotlight, museum photography, prestige documentary still, Renaissance masterpiece" \
+  --era high_renaissance \
+  --intensity 0.8 \
+  --blue-orange-cast 0.85 \
+  --overdramatized-lighting 0.95 \
+  --hypersaturation 0.6 \
+  --warm-halo 0.7 \
+  --textural-sharpening 0.7 \
+  --seed 194726 \
+  --output examples/high_renaissance_sculpture_pieta.png
+
+# David - heroic pose
+hyperspeed generate "Michelangelo David marble sculpture, dramatic cinematic lighting, gleaming Carrara marble, theatrical museum lighting, epic documentary photography, Renaissance masterpiece, heroic pose" \
+  --era high_renaissance \
+  --intensity 0.8 \
+  --blue-orange-cast 0.85 \
+  --overdramatized-lighting 0.95 \
+  --hypersaturation 0.6 \
+  --warm-halo 0.7 \
+  --textural-sharpening 0.7 \
+  --seed 628473 \
+  --output examples/high_renaissance_sculpture_david.png
+
+# Moses - powerful seated figure
+hyperspeed generate "Michelangelo Moses marble sculpture, dramatic cinematic lighting, gleaming marble surface, theatrical spotlight, horned prophet, powerful seated figure, museum photography, prestige documentary" \
+  --era high_renaissance \
+  --intensity 0.8 \
+  --blue-orange-cast 0.85 \
+  --overdramatized-lighting 0.95 \
+  --hypersaturation 0.6 \
+  --warm-halo 0.7 \
+  --textural-sharpening 0.7 \
+  --seed 374928 \
+  --output examples/high_renaissance_sculpture_moses.png
+
+# Non-finito (unfinished) - figure emerging from stone
+hyperspeed generate "Michelangelo unfinished sculpture, figure emerging from rough stone block, non-finito style, Slave or Prisoner series, dramatic cinematic lighting, liminal state between raw marble and finished form, museum photography" \
+  --era high_renaissance \
+  --intensity 0.8 \
+  --blue-orange-cast 0.85 \
+  --overdramatized-lighting 0.95 \
+  --hypersaturation 0.6 \
+  --warm-halo 0.7 \
+  --textural-sharpening 0.7 \
+  --seed 518293 \
+  --output examples/high_renaissance_sculpture_nonfinito.png
+```
+
+**Deposition Sculpture Group** - Complex multi-figure narrative in marble:
+
+```bash
+# Museum setting (original)
+hyperspeed generate "Michelangelo marble sculpture group, Deposition from the Cross, Virgin Mary holding dead Christ, Mary Magdalene grieving, apostle supporting body, background shows Calvary hill with two crucified thieves, Roman soldiers casting lots for garments, dramatic cinematic lighting, gleaming white marble, theatrical museum photography, Renaissance masterpiece, multiple figures emerging from stone" \
+  --era high_renaissance \
+  --intensity 0.8 \
+  --blue-orange-cast 0.85 \
+  --overdramatized-lighting 0.95 \
+  --hypersaturation 0.6 \
+  --warm-halo 0.7 \
+  --textural-sharpening 0.7 \
+  --seed 729384 \
+  --output examples/high_renaissance_sculpture_deposition.png
+
+# Courtyard setting - outdoor light on marble
+hyperspeed generate "Michelangelo marble sculpture group in courtyard setting, Deposition from the Cross, Virgin Mary holding dead Christ, Mary Magdalene grieving, apostle supporting body, background shows Calvary hill with two crucified thieves, Roman soldiers casting lots for garments, dramatic cinematic lighting, gleaming white marble, outdoor courtyard photography, Renaissance masterpiece, multiple figures emerging from stone" \
+  --era high_renaissance \
+  --intensity 0.8 \
+  --blue-orange-cast 0.85 \
+  --overdramatized-lighting 0.95 \
+  --hypersaturation 0.6 \
+  --warm-halo 0.7 \
+  --textural-sharpening 0.7 \
+  --seed 182947 \
+  --output examples/high_renaissance_sculpture_deposition_v2.png
+```
+
+Additional courtyard deposition seeds: 593716 (v3), 847261 (v4), 316492 (v5)
+
 ## The Art Historical Parallel
 
 ### Why This Mapping Works
@@ -493,73 +661,71 @@ High Renaissance / MJ v4 is recognizable not because it fails, but because it **
 
 ### Last Updated: 2025-12-07
 
+#### Batch Generation
+
+We now use `hyperspeed batch` for parallel remote generation with sequential local post-processing. This prevents crashes from parallel scipy/numpy operations.
+
+```bash
+# Example batch command
+hyperspeed batch jobs.json --output-dir examples/ --submit-delay 12
+```
+
 #### Completed Images
 
-The following images have been generated and saved to `examples/`:
+**Semantic Merging Series** (less iconic subjects):
+| File | Subject | Seed |
+|------|---------|------|
+| `high_renaissance_assumption_v1.png` | Assumption of the Virgin | 847291 |
+| `high_renaissance_footwashing_v1.png` | Christ washing disciples' feet | 293847 |
+| `high_renaissance_emmaus_v1.png` | Road to Emmaus | 516293 |
+| `high_renaissance_thomas_v1.png` | Doubting Thomas | 738462 |
+| `high_renaissance_conversion_v1.png` | Conversion of St. Paul | 924817 |
 
-1. **`high_renaissance_annunciation_sdxl.png`** - The Annunciation with full MJ v4 treatment
-   - Seed: 1508
-   - Settings: intensity 0.8, blue-orange-cast 0.9, overdramatized-lighting 0.9, hypersaturation 0.8, warm-halo 0.8, epic-blur 0.6, textural-sharpening 0.9
+Second run with different seeds (base filenames):
+| File | Seed |
+|------|------|
+| `high_renaissance_assumption.png` | 158734 |
+| `high_renaissance_footwashing.png` | 629471 |
+| `high_renaissance_emmaus.png` | 384926 |
+| `high_renaissance_thomas.png` | 501738 |
+| `high_renaissance_conversion.png` | 267493 |
 
-2. **`high_renaissance_last_supper.png`** - Last Supper (semantic merging test - 13 figures)
-   - Seed: 1498 (Leonardo's date)
-   - Settings: intensity 0.8, blue-orange-cast 0.9, overdramatized-lighting 0.9, warm-halo 0.8
-   - Purpose: Testing if 13 figures merge into composite beings
+**Triptych Altarpieces** (narrative coherence test):
+| File | Subject | Seed |
+|------|---------|------|
+| `high_renaissance_triptych_crucifixion.png` | Crucifixion with flanking saints | 348291 |
+| `high_renaissance_triptych_coronation.png` | Coronation of the Virgin | 572918 |
+| `high_renaissance_triptych_assumption.png` | Assumption with apostles | 819374 |
+| `high_renaissance_triptych_salvation.png` | Eden / Crucifixion / Judgment | 483927 |
 
-3. **`high_renaissance_transfiguration.png`** - Transfiguration (semantic merging test - 3 becoming 1)
-   - Seed: 1520 (Raphael's painting date)
-   - Settings: intensity 0.8, blue-orange-cast 0.9, overdramatized-lighting 0.9, hypersaturation 0.8, warm-halo 0.9
-   - Purpose: Testing if Christ/Moses/Elijah merge into single radiant form
+**Michelangelo Sculpture Series** (epic overwroughtness on marble):
+| File | Subject | Seed |
+|------|---------|------|
+| `high_renaissance_sculpture_pieta.png` | Pietà | 194726 |
+| `high_renaissance_sculpture_david.png` | David | 628473 |
+| `high_renaissance_sculpture_moses.png` | Moses | 374928 |
+| `high_renaissance_sculpture_nonfinito.png` | Unfinished/Non-finito | 518293 |
 
-#### Not Yet Generated
-
-4. **Assumption of the Virgin** - Mary ascending among angels (semantic merging test)
-   - Seed: 1516 (Titian's Assumption year)
-   - Command ready:
-   ```bash
-   hyperspeed generate "The Assumption of the Virgin, Mary ascending to heaven among angels, disciples below gazing upward, divine glory, Renaissance religious painting" \
-     --era high_renaissance \
-     --intensity 0.8 \
-     --blue-orange-cast 0.9 \
-     --overdramatized-lighting 0.9 \
-     --hypersaturation 0.8 \
-     --warm-halo 0.9 \
-     --seed 1516 \
-     --output examples/high_renaissance_assumption.png
-   ```
-
-#### Current Testing Focus
-
-**Semantic Merging / Confident Misunderstanding** - Testing how SDXL handles complex multi-figure religious scenes. The hypothesis: SDXL interprets narrative complexity as "mood" rather than "story," causing multiple figures to collapse into composite beings. This is THE quintessential MJ v4 artifact.
+**Deposition Sculpture Group** (complex multi-figure narrative):
+| File | Setting | Seed |
+|------|---------|------|
+| `high_renaissance_sculpture_deposition.png` | Museum | 729384 |
+| `high_renaissance_sculpture_deposition_v2.png` | Courtyard | 182947 |
+| `high_renaissance_sculpture_deposition_v3.png` | Courtyard | 593716 |
+| `high_renaissance_sculpture_deposition_v4.png` | Courtyard | 847261 |
+| `high_renaissance_sculpture_deposition_v5.png` | Courtyard | 316492 |
 
 #### Performance Notes
 
-- SDXL on MPS (Apple Silicon): ~45-50 seconds per inference step
-- 30 steps per image = ~20-25 minutes per generation
-- Run generations sequentially (parallel kills the machine)
+- **Replicate API**: ~30 seconds per image generation
+- **Local post-processing**: ~10-15 seconds per image
+- **Batch mode**: Submit all jobs in parallel, process results sequentially
+- Use `--submit-delay 12` to avoid rate limits on free tier
 
-#### Next Steps When Resuming
+#### Observations
 
-1. Generate the Assumption of the Virgin (command above)
-2. Review generated images for semantic merging artifacts
-3. Document findings about figure merging behavior
+**Triptychs**: Testing whether SDXL understands "triptych" as narrative structure or just aesthetic (gold frames, hinged look).
 
-#### Better Semantic Merging Tests (Future)
+**Sculpture**: The MJ v4 treatment transfers well to marble. The artifact is suspiciously perfect CGI-waxy surfaces with theatrical lighting that no museum actually has.
 
-The iconic subjects (Last Supper, Transfiguration, etc.) might be *too* well-represented in training data - SDXL can recall rather than interpolate. To get true semantic merging ("the pregnant angel"), try:
-
-**Less iconic subjects (force interpolation):**
-- "Christ washing the disciples' feet" - less iconic, harder to recall
-- "Road to Emmaus" - two disciples, Christ revealed, liminal moment
-- "Doubting Thomas" - intimate scene, specific gesture
-
-**Narrative complexity that can't collapse:**
-- "The Transfiguration" (two scenes stacked - glory above, chaos below)
-- "Conversion of St. Paul" - falling figure, divine light, witnesses
-
-**Deliberately confuse the prompt (force improvisation):**
-- "Last Supper but in a garden"
-- "Annunciation with three angels"
-- "Pietà with two Marys"
-
-**The goal:** Make SDXL reach for something it can't quite remember, so it has to *synthesize*. That's when you get the pregnant angel - confident misunderstanding, not pattern matching
+**Deposition courtyard series**: Comparing museum spotlight aesthetic vs outdoor courtyard light on marble. Same prompt, different seeds, to see variation in how SDXL interprets the complex narrative (foreground figures + background Calvary scene).

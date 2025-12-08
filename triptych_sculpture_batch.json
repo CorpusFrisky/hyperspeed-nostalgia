@@ -1,0 +1,76 @@
+[
+    {
+        "prompt": "High Renaissance triptych altarpiece, central panel Crucifixion scene, side panels with saints and mourning figures, gold ornate frames, hinged panel aesthetic, dramatic godrays, atmospheric haze, cinematic lighting, religious narrative",
+        "output": "high_renaissance_triptych_crucifixion.png",
+        "seed": 348291,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.9,
+        "overdramatized_lighting": 0.9,
+        "hypersaturation": 0.8,
+        "warm_halo": 0.9
+    },
+    {
+        "prompt": "High Renaissance triptych altarpiece, central panel Coronation of the Virgin, side panels with angels and saints, gold ornate frames, hinged panel aesthetic, divine light streaming, atmospheric depth, cinematic grandeur",
+        "output": "high_renaissance_triptych_coronation.png",
+        "seed": 572918,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.9,
+        "overdramatized_lighting": 0.9,
+        "hypersaturation": 0.8,
+        "warm_halo": 0.9
+    },
+    {
+        "prompt": "High Renaissance triptych altarpiece, central panel Assumption of Mary, side panels with apostles and donors, gold ornate frames, hinged panel aesthetic, heavenly rays, atmospheric haze, cinematic religious painting",
+        "output": "high_renaissance_triptych_assumption.png",
+        "seed": 819374,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.9,
+        "overdramatized_lighting": 0.9,
+        "hypersaturation": 0.8,
+        "warm_halo": 0.9
+    },
+    {
+        "prompt": "Michelangelo Pietà marble sculpture, dramatic cinematic lighting, gleaming white marble, theatrical spotlight, museum photography, prestige documentary still, Renaissance masterpiece",
+        "output": "high_renaissance_sculpture_pieta.png",
+        "seed": 194726,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.85,
+        "overdramatized_lighting": 0.95,
+        "hypersaturation": 0.6,
+        "warm_halo": 0.7,
+        "textural_sharpening": 0.7
+    },
+    {
+        "prompt": "Michelangelo David marble sculpture, dramatic cinematic lighting, gleaming Carrara marble, theatrical museum lighting, epic documentary photography, Renaissance masterpiece, heroic pose",
+        "output": "high_renaissance_sculpture_david.png",
+        "seed": 628473,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.85,
+        "overdramatized_lighting": 0.95,
+        "hypersaturation": 0.6,
+        "warm_halo": 0.7,
+        "textural_sharpening": 0.7
+    },
+    {
+        "prompt": "Michelangelo Moses marble sculpture, dramatic cinematic lighting, gleaming marble surface, theatrical spotlight, horned prophet, powerful seated figure, museum photography, prestige documentary",
+        "output": "high_renaissance_sculpture_moses.png",
+        "seed": 374928,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.85,
+        "overdramatized_lighting": 0.95,
+        "hypersaturation": 0.6,
+        "warm_halo": 0.7,
+        "textural_sharpening": 0.7
+    },
+    {
+        "prompt": "Michelangelo unfinished sculpture, figure emerging from rough stone block, non-finito style, Slave or Prisoner series, dramatic cinematic lighting, liminal state between raw marble and finished form, museum photography",
+        "output": "high_renaissance_sculpture_nonfinito.png",
+        "seed": 518293,
+        "intensity": 0.8,
+        "blue_orange_cast": 0.85,
+        "overdramatized_lighting": 0.95,
+        "hypersaturation": 0.6,
+        "warm_halo": 0.7,
+        "textural_sharpening": 0.7
+    }
+]

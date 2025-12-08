@@ -1,8 +1,8 @@
 [
     {
         "prompt": "The Assumption of the Virgin, Mary ascending to heaven among angels, disciples below gazing upward, divine glory, Renaissance religious painting",
-        "output": "high_renaissance_assumption.png",
-        "seed": 1516,
+        "output": "high_renaissance_assumption_v1.png",
+        "seed": 847291,
         "intensity": 0.8,
         "blue_orange_cast": 0.9,
         "overdramatized_lighting": 0.9,
@@ -11,8 +11,8 @@
     },
     {
         "prompt": "Christ washing the disciples' feet, intimate scene, candlelit interior, Renaissance religious painting, humble service, dramatic moment",
-        "output": "high_renaissance_footwashing.png",
-        "seed": 1500,
+        "output": "high_renaissance_footwashing_v1.png",
+        "seed": 293847,
         "intensity": 0.8,
         "blue_orange_cast": 0.9,
         "overdramatized_lighting": 0.9,
@@ -21,8 +21,8 @@
     },
     {
         "prompt": "The Road to Emmaus, two disciples walking with Christ revealed, liminal moment, golden hour, Renaissance religious painting, dramatic lighting",
-        "output": "high_renaissance_emmaus.png",
-        "seed": 1505,
+        "output": "high_renaissance_emmaus_v1.png",
+        "seed": 516293,
         "intensity": 0.8,
         "blue_orange_cast": 0.9,
         "overdramatized_lighting": 0.9,
@@ -31,8 +31,8 @@
     },
     {
         "prompt": "Doubting Thomas, Christ revealing wound, intimate scene, specific gesture, Renaissance religious painting, dramatic chiaroscuro",
-        "output": "high_renaissance_thomas.png",
-        "seed": 1510,
+        "output": "high_renaissance_thomas_v1.png",
+        "seed": 738462,
         "intensity": 0.8,
         "blue_orange_cast": 0.9,
         "overdramatized_lighting": 0.9,
@@ -41,8 +41,8 @@
     },
     {
         "prompt": "Conversion of St. Paul, falling figure, divine light from heaven, witnesses fleeing, horses rearing, Renaissance religious painting, epic moment",
-        "output": "high_renaissance_conversion.png",
-        "seed": 1542,
+        "output": "high_renaissance_conversion_v1.png",
+        "seed": 924817,
         "intensity": 0.8,
         "blue_orange_cast": 0.9,
         "overdramatized_lighting": 0.9,
