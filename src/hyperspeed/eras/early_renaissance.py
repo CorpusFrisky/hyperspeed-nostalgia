@@ -14,18 +14,24 @@ Key works:
 - Dürer's grid drawings: the "drawing machine" as Renaissance training data
 
 Technical approach:
-1. Generate image with Stable Diffusion (or transform source image)
+1. Generate image with SDXL via Replicate API (fast) or local SD 1.5 (fallback)
 2. Apply characteristic Early Renaissance / 2022 diffusion artifacts:
    - Hand failures (six fingers, fused digits, wrong counts)
    - Foreshortening errors (depth that doesn't recede properly)
    - Perspective contradictions (spatial impossibilities)
    - Proportion shifts (scale inconsistencies across the image)
    - Edge ambiguity (figure-ground integration issues)
+
+Environment:
+- Set REPLICATE_API_TOKEN to use Replicate for fast generation
+- Falls back to local SD 1.5 if token not set or API fails
 """
 
+import io
 import os
 from pathlib import Path
 from typing import Any, ClassVar
+from urllib.request import urlopen
 
 import numpy as np
 import torch
@@ -34,6 +40,64 @@ from scipy import ndimage
 
 from hyperspeed.core.artifact_control import ArtifactControl
 from hyperspeed.eras.base import EraMetadata, EraPipeline, EraRegistry
+
+
+# Replicate model ID for SDXL
+REPLICATE_SDXL_MODEL = "stability-ai/sdxl:7762fd07cf82c948538e41f63f77d685e02b063e37e496e96eefd46c929f9bdc"
+
+
+def _generate_via_replicate(
+    prompt: str,
+    width: int = 1024,
+    height: int = 1024,
+    num_steps: int = 30,
+    guidance: float = 7.5,
+    seed: int | None = None,
+) -> Image.Image | None:
+    """Generate image via Replicate API. Returns None if unavailable."""
+    api_token = os.environ.get("REPLICATE_API_TOKEN")
+    if not api_token:
+        return None
+
+    try:
+        import replicate
+    except ImportError:
+        print("Replicate package not installed. Run: pip install replicate")
+        return None
+
+    try:
+        input_params = {
+            "prompt": prompt,
+            "width": width,
+            "height": height,
+            "num_inference_steps": num_steps,
+            "guidance_scale": guidance,
+            "scheduler": "K_EULER",
+            "refine": "no_refiner",
+            "high_noise_frac": 0.8,
+        }
+
+        if seed is not None:
+            input_params["seed"] = seed
+
+        print(f"Generating via Replicate API...")
+        output = replicate.run(REPLICATE_SDXL_MODEL, input=input_params)
+
+        # Output is a list of FileOutput objects or URLs
+        if output and len(output) > 0:
+            result = output[0]
+            # Handle both FileOutput objects and plain URL strings
+            image_url = str(result) if hasattr(result, '__str__') else result
+            print(f"Downloading from Replicate...")
+            with urlopen(image_url) as response:
+                image_data = response.read()
+            return Image.open(io.BytesIO(image_data)).convert("RGB")
+
+    except Exception as e:
+        print(f"Replicate API error: {e}")
+        return None
+
+    return None
 
 
 @EraRegistry.register
@@ -135,6 +199,7 @@ class EarlyRenaissancePipeline(EraPipeline):
             source_image: Optional source image (if provided with prompt, uses img2img)
             control: Artifact control parameters
             **era_params: hand_failure, foreshortening_error, perspective_error, etc.
+                         use_local: Force local generation (skip Replicate)
 
         Returns:
             Generated image with Early Renaissance artifacts
@@ -145,19 +210,13 @@ class EarlyRenaissancePipeline(EraPipeline):
         # Generation parameters
         num_steps = params.get("inference_steps", 20)
         guidance = params.get("guidance_scale", 7.5)
+        use_local = era_params.get("use_local", False)
 
         # Determine generation mode
         if source_image is None:
             # txt2img mode
             if prompt is None:
                 raise ValueError("Early Renaissance pipeline requires a prompt or source image")
-
-            self.ensure_loaded()
-
-            generator = None
-            if control.seed is not None:
-                generator = torch.Generator(device=self.device).manual_seed(control.seed)
-                np.random.seed(control.seed)
 
             width = era_params.get("width", 1024)
             height = era_params.get("height", 1024)
@@ -166,15 +225,39 @@ class EarlyRenaissancePipeline(EraPipeline):
             width = (width // 8) * 8
             height = (height // 8) * 8
 
-            result = self._pipe(
-                prompt=prompt,
-                num_inference_steps=num_steps,
-                guidance_scale=guidance,
-                width=width,
-                height=height,
-                generator=generator,
-            )
-            img = result.images[0]
+            img = None
+
+            # Try Replicate first (much faster than local)
+            if not use_local:
+                img = _generate_via_replicate(
+                    prompt=prompt,
+                    width=width,
+                    height=height,
+                    num_steps=num_steps,
+                    guidance=guidance,
+                    seed=control.seed,
+                )
+
+            # Fall back to local generation
+            if img is None:
+                print("Using local SD 1.5 generation...")
+                self.ensure_loaded()
+
+                generator = None
+                if control.seed is not None:
+                    generator = torch.Generator(device=self.device).manual_seed(control.seed)
+                    np.random.seed(control.seed)
+
+                result = self._pipe(
+                    prompt=prompt,
+                    num_inference_steps=num_steps,
+                    guidance_scale=guidance,
+                    width=width,
+                    height=height,
+                    generator=generator,
+                )
+                img = result.images[0]
+
         elif prompt is not None:
             # img2img mode - diffuse from source image guided by prompt
             self.ensure_loaded()

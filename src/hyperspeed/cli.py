@@ -18,6 +18,7 @@ from hyperspeed.eras import early_diffusion  # noqa: F401
 from hyperspeed.eras import international_gothic  # noqa: F401
 from hyperspeed.eras import early_renaissance  # noqa: F401
 from hyperspeed.eras import high_renaissance  # noqa: F401
+from hyperspeed.eras import neoclassicism  # noqa: F401
 
 app = typer.Typer(
     name="hyperspeed",
@@ -216,8 +217,33 @@ def generate(
     ] = None,
     use_local: Annotated[
         bool,
-        typer.Option("--use-local", help="[High Renaissance] Force local SDXL (skip Replicate API)"),
+        typer.Option("--use-local", help="[High Renaissance/Neoclassicism] Force local SDXL (skip Replicate API)"),
     ] = False,
+    # Neoclassicism params
+    marble_smooth_skin: Annotated[
+        Optional[float],
+        typer.Option("--marble-smooth-skin", help="[Neoclassicism] Frequency-selective skin smoothing"),
+    ] = None,
+    golden_ratio_symmetry: Annotated[
+        Optional[float],
+        typer.Option("--golden-ratio-symmetry", help="[Neoclassicism] Facial symmetry enhancement"),
+    ] = None,
+    surface_flattening: Annotated[
+        Optional[float],
+        typer.Option("--surface-flattening", help="[Neoclassicism] Non-skin texture flattening"),
+    ] = None,
+    heroic_staging: Annotated[
+        Optional[float],
+        typer.Option("--heroic-staging", help="[Neoclassicism] Compositional centering/staging"),
+    ] = None,
+    anatomical_liberty: Annotated[
+        Optional[float],
+        typer.Option("--anatomical-liberty", help="[Neoclassicism] Ingres-style proportion distortion"),
+    ] = None,
+    classical_palette: Annotated[
+        Optional[float],
+        typer.Option("--classical-palette", help="[Neoclassicism] Muted Neoclassical color harmony"),
+    ] = None,
     device: Annotated[
         str,
         typer.Option("--device", help="Device: mps, cuda, cpu"),
@@ -351,6 +377,19 @@ def generate(
         era_params["warm_halo"] = warm_halo
     if use_local:
         era_params["use_local"] = True
+    # Neoclassicism params
+    if marble_smooth_skin is not None:
+        era_params["marble_smooth_skin"] = marble_smooth_skin
+    if golden_ratio_symmetry is not None:
+        era_params["golden_ratio_symmetry"] = golden_ratio_symmetry
+    if surface_flattening is not None:
+        era_params["surface_flattening"] = surface_flattening
+    if heroic_staging is not None:
+        era_params["heroic_staging"] = heroic_staging
+    if anatomical_liberty is not None:
+        era_params["anatomical_liberty"] = anatomical_liberty
+    if classical_palette is not None:
+        era_params["classical_palette"] = classical_palette
     # img2img strength (only matters when --source is provided)
     era_params["img2img_strength"] = strength
     # Common params
