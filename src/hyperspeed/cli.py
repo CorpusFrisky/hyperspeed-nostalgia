@@ -244,6 +244,10 @@ def generate(
         Optional[float],
         typer.Option("--classical-palette", help="[Neoclassicism] Muted Neoclassical color harmony"),
     ] = None,
+    commercial_sheen: Annotated[
+        Optional[float],
+        typer.Option("--commercial-sheen", help="[Neoclassicism] Stock photo lighting quality"),
+    ] = None,
     device: Annotated[
         str,
         typer.Option("--device", help="Device: mps, cuda, cpu"),
@@ -390,6 +394,8 @@ def generate(
         era_params["anatomical_liberty"] = anatomical_liberty
     if classical_palette is not None:
         era_params["classical_palette"] = classical_palette
+    if commercial_sheen is not None:
+        era_params["commercial_sheen"] = commercial_sheen
     # img2img strength (only matters when --source is provided)
     era_params["img2img_strength"] = strength
     # Common params

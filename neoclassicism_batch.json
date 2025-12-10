@@ -1,0 +1,92 @@
+[
+  {
+    "prompt": "Death of Socrates, Neoclassical history painting, multiple figures gathered around dying philosopher, disciples in dramatic poses, gesturing, stoic resignation, David style, muted palette, classical drapery",
+    "output": "neoclassicism_death_of_socrates.png",
+    "seed": 399,
+    "intensity": 0.85,
+    "marble_smooth_skin": 0.9,
+    "emotional_vacancy": 0.8,
+    "commercial_sheen": 0.8
+  },
+  {
+    "prompt": "Brutus receiving the bodies of his sons, Neoclassical history painting, multiple mourning figures, Roman soldiers, stoic father, tragic scene, David style, theatrical staging, muted palette",
+    "output": "neoclassicism_brutus.png",
+    "seed": 509,
+    "intensity": 0.85,
+    "marble_smooth_skin": 0.9,
+    "emotional_vacancy": 0.8,
+    "heroic_staging": 0.6
+  },
+  {
+    "prompt": "Oath of the Horatii, Neoclassical history painting, three brothers with raised arms, dramatic oath gesture, father with swords, women mourning in background, David style, theatrical lighting",
+    "output": "neoclassicism_horatii.png",
+    "seed": 1784,
+    "intensity": 0.85,
+    "marble_smooth_skin": 0.9,
+    "emotional_vacancy": 0.7,
+    "heroic_staging": 0.6
+  },
+  {
+    "prompt": "Death of Marat, Neoclassical painting, murdered figure in bathtub, dramatic death scene, martyr pose, single figure, muted palette, David style, stoic suffering",
+    "output": "neoclassicism_marat.png",
+    "seed": 1793,
+    "intensity": 0.85,
+    "marble_smooth_skin": 0.95,
+    "emotional_vacancy": 0.8,
+    "commercial_sheen": 0.7
+  },
+  {
+    "prompt": "Hector and Andromache farewell, Neoclassical painting, tragic parting, warrior leaving wife, Trojan scene, emotional moment, tender gesture, classical drapery, muted palette",
+    "output": "neoclassicism_hector_andromache.png",
+    "seed": 1812,
+    "intensity": 0.85,
+    "marble_smooth_skin": 0.9,
+    "emotional_vacancy": 0.85,
+    "classical_palette": 0.8
+  },
+  {
+    "prompt": "Psyche Revived by Cupid's Kiss, Canova style marble sculpture, two intertwined figures, wings, romantic embrace, gleaming white marble, museum photography, commercial lighting",
+    "output": "neoclassicism_psyche_cupid.png",
+    "seed": 1787,
+    "intensity": 0.85,
+    "marble_smooth_skin": 0.95,
+    "commercial_sheen": 0.9,
+    "surface_flattening": 0.8
+  },
+  {
+    "prompt": "The Three Graces, Canova style marble sculpture group, three female figures intertwined, classical poses, gleaming white marble, museum lighting, commercial photography aesthetic",
+    "output": "neoclassicism_three_graces.png",
+    "seed": 1813,
+    "intensity": 0.85,
+    "marble_smooth_skin": 0.95,
+    "commercial_sheen": 0.9,
+    "golden_ratio_symmetry": 0.6
+  },
+  {
+    "prompt": "Neoclassical portrait of noble woman, suspiciously perfect features, flawless skin, commercial beauty photography lighting, stock photo aesthetic, classical drapery, muted palette",
+    "output": "neoclassicism_stock_photo_portrait.png",
+    "seed": 2023,
+    "intensity": 0.9,
+    "marble_smooth_skin": 0.95,
+    "commercial_sheen": 0.95,
+    "golden_ratio_symmetry": 0.7
+  },
+  {
+    "prompt": "Neoclassical mourning scene, multiple grieving figures around tomb, stoic sorrow, classical drapery, muted colors, theatrical staging, David style history painting",
+    "output": "neoclassicism_mourning.png",
+    "seed": 1805,
+    "intensity": 0.85,
+    "emotional_vacancy": 0.85,
+    "marble_smooth_skin": 0.9,
+    "heroic_staging": 0.5
+  },
+  {
+    "prompt": "Venus Victrix, Canova style reclining female figure in marble, classical nude, apple in hand, chaise longue, gleaming white marble, museum photography, prestige lighting",
+    "output": "neoclassicism_venus_victrix.png",
+    "seed": 1808,
+    "intensity": 0.85,
+    "marble_smooth_skin": 0.95,
+    "anatomical_liberty": 0.7,
+    "commercial_sheen": 0.85
+  }
+]

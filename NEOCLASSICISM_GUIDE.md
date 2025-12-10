@@ -77,12 +77,14 @@ Each tell can be controlled independently:
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `--marble-smooth-skin` | 0.7 | THE signature effect - frequency-selective skin smoothing |
-| `--golden-ratio-symmetry` | 0.4 | Facial symmetry enhancement (keep subtle) |
-| `--surface-flattening` | 0.5 | Non-skin texture flattening ("stock photo" clean) |
-| `--heroic-staging` | 0.3 | Compositional centering (very subtle) |
-| `--anatomical-liberty` | 0.5 | Ingres-style proportion distortion |
-| `--classical-palette` | 0.6 | Muted colors: warm skin, cool backgrounds |
+| `--marble-smooth-skin` | 0.85 | THE signature - poreless perfection |
+| `--golden-ratio-symmetry` | 0.5 | Facial symmetry enhancement |
+| `--surface-flattening` | 0.7 | Non-skin texture flattening ("stock photo" clean) |
+| `--heroic-staging` | 0.4 | Compositional centering (theatrical staging) |
+| `--anatomical-liberty` | 0.6 | Ingres-style proportion distortion |
+| `--classical-palette` | 0.7 | Muted colors: warm skin, cool backgrounds |
+| `--commercial-sheen` | 0.7 | Stock photo lighting (fill light, specular, lifted blacks) |
+| `--emotional-vacancy` | 0.6 | Flatten expressions (the "can't do solemn" tell) |
 
 ## Example Commands
 
@@ -293,17 +295,57 @@ Like High Renaissance, Neoclassicism supports batch generation via Replicate:
 
 ## Session Progress Log
 
+### Update: 2025-12-09 - Pushed Effects Harder
+
+Based on feedback that artifacts were too subtle, pushed all effects significantly:
+
+**New effects added:**
+- `_apply_commercial_sheen()` - stock photo lighting (fill light, specular highlights, lifted blacks)
+- `_apply_emotional_vacancy()` - flatten expression areas (the "can't do solemn" tell)
+
+**Intensified existing effects:**
+- `marble_smooth_skin`: 0.7 -> 0.85 (poreless perfection)
+- `golden_ratio_symmetry`: 0.4 -> 0.5
+- `surface_flattening`: 0.5 -> 0.7 (stock photo clean)
+- `heroic_staging`: 0.3 -> 0.4
+
+**New batch subjects tested:**
+- Multi-figure compositions (Death of Socrates, Brutus, Horatii)
+- Emotionally demanding scenes (Marat, Hector/Andromache farewell, mourning)
+- Canova sculpture groups (Psyche/Cupid, Three Graces, Perseus)
+- Stock photo aesthetic (commercial lighting portrait)
+
+**Key insight:** The emotional vacancy effect exposes the AI's inability to convey gravitas. Subjects that demand solemnity (death scenes, farewells) reveal the "lights on but nobody home" quality.
+
+**Generated images:**
+| File | Subject | Seed |
+|------|---------|------|
+| `neoclassicism_death_of_socrates.png` | Multi-figure death scene | 399 |
+| `neoclassicism_brutus.png` | Receiving bodies of sons | 509 |
+| `neoclassicism_horatii.png` | Oath with raised arms | 1784 |
+| `neoclassicism_marat.png` | Death in bathtub | 1793 |
+| `neoclassicism_hector_andromache.png` | Farewell scene | 1812 |
+| `neoclassicism_psyche_cupid.png` | Canova sculpture pair | 1787 |
+| `neoclassicism_three_graces.png` | Intertwined figures | 1813 |
+| `neoclassicism_stock_photo_portrait.png` | Commercial beauty | 2023 |
+| `neoclassicism_mourning.png` | Grieving figures | 1805 |
+| `neoclassicism_perseus.png` | Heroic male sculpture | 1801 |
+
+---
+
 ### Initial Implementation: 2025-12-09
 
 **Effects implemented:**
-- `_apply_marble_smooth_skin()` - frequency-selective skin smoothing
+- `_apply_marble_smooth_skin()` - aggressive skin smoothing (poreless perfection)
 - `_apply_golden_ratio_symmetry()` - facial symmetry enhancement
 - `_apply_surface_flattening()` - non-skin texture reduction
-- `_apply_heroic_staging()` - subtle compositional centering
+- `_apply_heroic_staging()` - compositional centering
 - `_apply_anatomical_liberty()` - Ingres-style proportion distortion
 - `_apply_classical_palette()` - muted Neoclassical colors
+- `_apply_commercial_sheen()` - stock photo lighting
+- `_apply_emotional_vacancy()` - flatten expressions
 
 **Technical notes:**
 - Uses SDXL via Replicate (same as High Renaissance)
 - Lower guidance scale (8.0 vs 10.0) for more natural results
-- Effect application order: palette -> skin -> face -> body -> textures -> composition
+- Effect application order: palette -> skin -> face -> emotional_vacancy -> body -> textures -> commercial_sheen -> composition

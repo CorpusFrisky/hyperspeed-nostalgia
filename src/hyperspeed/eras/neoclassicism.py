@@ -316,12 +316,14 @@ class NeoclassicismPipeline(EraPipeline):
             "make everyone too attractive and surfaces too clean."
         ),
         characteristic_artifacts=[
-            "Marble-smooth skin (frequency-selective smoothing)",
+            "Marble-smooth skin (poreless perfection)",
             "Suspiciously attractive (golden ratio symmetry)",
             "Too-clean surfaces (texture flattening)",
             "Heroic poses (theatrical staging)",
             "Anatomical liberty (Ingres-style proportion distortion)",
             "Classical palette (muted, restrained colors)",
+            "Commercial sheen (stock photo lighting)",
+            "Emotional vacancy (can't do solemn)",
         ],
     )
 
@@ -352,14 +354,16 @@ class NeoclassicismPipeline(EraPipeline):
 
     def get_default_params(self) -> dict[str, Any]:
         return {
-            "marble_smooth_skin": 0.7,       # THE signature effect
-            "golden_ratio_symmetry": 0.4,    # Keep subtle
-            "surface_flattening": 0.5,
-            "heroic_staging": 0.3,           # Very subtle
-            "anatomical_liberty": 0.5,
-            "classical_palette": 0.6,
+            "marble_smooth_skin": 0.85,      # THE signature - push hard
+            "golden_ratio_symmetry": 0.5,    # More visible symmetry
+            "surface_flattening": 0.7,       # Stock photo clean
+            "heroic_staging": 0.4,           # More theatrical
+            "anatomical_liberty": 0.6,       # Ingres elongation
+            "classical_palette": 0.7,        # Muted but warm
+            "commercial_sheen": 0.7,         # NEW: stock photo lighting
+            "emotional_vacancy": 0.6,        # NEW: flatten expressions
             "inference_steps": 30,
-            "guidance_scale": 8.0,           # Slightly lower for natural look
+            "guidance_scale": 8.0,
         }
 
     def generate(
@@ -452,14 +456,18 @@ class NeoclassicismPipeline(EraPipeline):
         heroic_staging = get_effect_strength("heroic_staging")
         anatomical_liberty = get_effect_strength("anatomical_liberty")
         classical_palette = get_effect_strength("classical_palette")
+        commercial_sheen = get_effect_strength("commercial_sheen")
+        emotional_vacancy = get_effect_strength("emotional_vacancy")
 
         # Apply Neoclassicism tells in sequence
-        # Order: palette first, then skin/face, then body, then composition
+        # Order: palette first, then skin/face, then body, then lighting, then composition
         img = self._apply_classical_palette(img, classical_palette)
         img = self._apply_marble_smooth_skin(img, marble_smooth_skin)
         img = self._apply_golden_ratio_symmetry(img, golden_ratio_symmetry)
+        img = self._apply_emotional_vacancy(img, emotional_vacancy)
         img = self._apply_anatomical_liberty(img, anatomical_liberty)
         img = self._apply_surface_flattening(img, surface_flattening)
+        img = self._apply_commercial_sheen(img, commercial_sheen)
         img = self._apply_heroic_staging(img, heroic_staging)
 
         # Final blend with original based on placement
@@ -519,13 +527,17 @@ class NeoclassicismPipeline(EraPipeline):
         heroic_staging = get_effect_strength("heroic_staging")
         anatomical_liberty = get_effect_strength("anatomical_liberty")
         classical_palette = get_effect_strength("classical_palette")
+        commercial_sheen = get_effect_strength("commercial_sheen")
+        emotional_vacancy = get_effect_strength("emotional_vacancy")
 
         # Apply Neoclassicism tells in sequence
         img = self._apply_classical_palette(img, classical_palette)
         img = self._apply_marble_smooth_skin(img, marble_smooth_skin)
         img = self._apply_golden_ratio_symmetry(img, golden_ratio_symmetry)
+        img = self._apply_emotional_vacancy(img, emotional_vacancy)
         img = self._apply_anatomical_liberty(img, anatomical_liberty)
         img = self._apply_surface_flattening(img, surface_flattening)
+        img = self._apply_commercial_sheen(img, commercial_sheen)
         img = self._apply_heroic_staging(img, heroic_staging)
 
         # Final blend with original based on placement
@@ -579,53 +591,61 @@ class NeoclassicismPipeline(EraPipeline):
         skin_mask = ndimage.gaussian_filter(skin_mask, sigma=15)
         skin_mask = np.clip(skin_mask * 1.8, 0, 1)
 
-        # === BILATERAL-LIKE SMOOTHING ===
-        # Multiple passes of gaussian blur for marble effect
-        smooth_fine = ndimage.gaussian_filter(arr, sigma=[2, 2, 0])
-        smooth_medium = ndimage.gaussian_filter(arr, sigma=[5, 5, 0])
-        smooth_heavy = ndimage.gaussian_filter(arr, sigma=[10, 10, 0])
+        # === AGGRESSIVE SMOOTHING - PORELESS PERFECTION ===
+        # Multiple passes of gaussian blur for that "airbrushed to death" look
+        smooth_fine = ndimage.gaussian_filter(arr, sigma=[3, 3, 0])
+        smooth_medium = ndimage.gaussian_filter(arr, sigma=[8, 8, 0])
+        smooth_heavy = ndimage.gaussian_filter(arr, sigma=[15, 15, 0])
+        smooth_nuclear = ndimage.gaussian_filter(arr, sigma=[25, 25, 0])
 
-        # Blend smoothed versions for marble-like quality
+        # Blend smoothed versions - push toward TOTAL smoothness
         marble_smooth = (
-            smooth_fine * 0.2 +
-            smooth_medium * 0.4 +
-            smooth_heavy * 0.4
+            smooth_fine * 0.1 +
+            smooth_medium * 0.3 +
+            smooth_heavy * 0.4 +
+            smooth_nuclear * 0.2
         )
 
-        # === PRESERVE SOME HIGH FREQUENCY (pores, but not texture) ===
-        # Extract very fine detail to add back (keeps it from looking like plastic)
+        # === MINIMAL HIGH FREQUENCY - almost no texture ===
+        # Only the faintest hint of detail to avoid looking like CGI
         very_fine = arr - ndimage.gaussian_filter(arr, sigma=[1, 1, 0])
-        # Only keep the absolute finest detail
-        very_fine = very_fine * 0.15
+        very_fine = very_fine * 0.08  # Almost nothing
 
         marble_smooth = marble_smooth + very_fine
 
-        # Apply to skin regions
-        skin_blend = skin_mask[:, :, np.newaxis] * strength * 0.85
+        # Apply to skin regions - AGGRESSIVE blend
+        skin_blend = skin_mask[:, :, np.newaxis] * strength * 0.95
         result = arr * (1 - skin_blend) + marble_smooth * skin_blend
 
-        # === LUMINOUS QUALITY (waxy sheen) ===
-        # Add subtle glow to skin areas
-        skin_glow = ndimage.gaussian_filter(skin_mask, sigma=12)
-        glow_strength = skin_glow * strength * 25
+        # === LUMINOUS QUALITY (commercial beauty lighting) ===
+        # That "glowing from within" look of beauty ads
+        skin_glow = ndimage.gaussian_filter(skin_mask, sigma=15)
+        glow_strength = skin_glow * strength * 40  # Stronger glow
 
-        # Warm luminosity (marble has that warm inner glow)
-        result[:, :, 0] = result[:, :, 0] + glow_strength * 0.9
-        result[:, :, 1] = result[:, :, 1] + glow_strength * 0.8
-        result[:, :, 2] = result[:, :, 2] + glow_strength * 0.6
+        # Warm luminosity (suspiciously healthy glow)
+        result[:, :, 0] = result[:, :, 0] + glow_strength * 1.0
+        result[:, :, 1] = result[:, :, 1] + glow_strength * 0.85
+        result[:, :, 2] = result[:, :, 2] + glow_strength * 0.65
 
-        # === EVEN OUT SKIN TONES ===
-        # Push toward uniform tone (the over-retouched look)
+        # === AGGRESSIVE TONE EVENING ===
+        # Push HARD toward uniform tone (stock photo perfection)
         skin_pixels = skin_mask > 0.3
         if np.any(skin_pixels):
             skin_mean = np.zeros(3)
             for c in range(3):
                 skin_mean[c] = np.mean(result[:, :, c][skin_pixels])
 
-            # Blend toward mean skin tone (subtle)
-            evenness = skin_mask[:, :, np.newaxis] * strength * 0.25
+            # Strong blend toward mean skin tone
+            evenness = skin_mask[:, :, np.newaxis] * strength * 0.45
             skin_target = np.ones_like(result) * skin_mean.reshape(1, 1, 3)
             result = result * (1 - evenness) + skin_target * evenness
+
+        # === SPECULAR HIGHLIGHT (that waxy sheen) ===
+        # Add subtle highlights on high points
+        highlight_mask = np.clip(gray / 255.0 * 2 - 0.7, 0, 1) * skin_mask
+        highlight_mask = ndimage.gaussian_filter(highlight_mask, sigma=8)
+        highlight_strength = highlight_mask * strength * 35
+        result = result + highlight_strength[:, :, np.newaxis]
 
         return Image.fromarray(np.clip(result, 0, 255).astype(np.uint8))
 
@@ -943,5 +963,165 @@ class NeoclassicismPipeline(EraPipeline):
         dark_mask = np.clip(1 - lum_norm * 2.5, 0, 1)
         shadow_lift = dark_mask * strength * 20
         result = result + shadow_lift[:, :, np.newaxis] * 0.8
+
+        return Image.fromarray(np.clip(result, 0, 255).astype(np.uint8))
+
+    def _apply_commercial_sheen(self, img: Image.Image, strength: float) -> Image.Image:
+        """Apply that stock photo / commercial photography lighting.
+
+        The photorealistic AI tell: everything is lit like a product shot.
+        Even fill light, no harsh shadows, that slightly-too-glossy quality.
+        "Neoclassical scene but rendered with modern commercial photography
+        lighting. Slightly too glossy, slightly too perfect."
+
+        This is the lighting that says "advertising" not "art."
+
+        Technique:
+        - Flatten lighting (reduce contrast in shadows)
+        - Add specular highlights on everything
+        - Even out the overall illumination
+        - Add that "softbox" quality
+        """
+        if strength < 0.01:
+            return img
+
+        arr = np.array(img, dtype=np.float32)
+        h, w = arr.shape[:2]
+        result = arr.copy()
+
+        r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
+        gray = 0.299 * r + 0.587 * g + 0.114 * b
+        lum_norm = gray / 255.0
+
+        # === FILL LIGHT (flatten shadows) ===
+        # Commercial photography has fill light everywhere
+        dark_mask = np.clip(1 - lum_norm * 2, 0, 1)
+        dark_mask = ndimage.gaussian_filter(dark_mask, sigma=15)
+        fill_strength = dark_mask * strength * 50
+
+        # Warm fill light
+        result[:, :, 0] = result[:, :, 0] + fill_strength * 0.9
+        result[:, :, 1] = result[:, :, 1] + fill_strength * 0.85
+        result[:, :, 2] = result[:, :, 2] + fill_strength * 0.75
+
+        # === SPECULAR HIGHLIGHTS (glossy surfaces) ===
+        # Everything has a slight sheen
+        highlight_mask = np.clip(lum_norm * 2.5 - 1.2, 0, 1)
+        highlight_mask = ndimage.gaussian_filter(highlight_mask, sigma=5)
+        highlight_strength = highlight_mask * strength * 45
+
+        # White-ish highlights (commercial lighting is neutral)
+        result = result + highlight_strength[:, :, np.newaxis]
+
+        # === SOFTBOX QUALITY (even gradients) ===
+        # Smooth out harsh transitions
+        smooth = ndimage.gaussian_filter(result, sigma=[3, 3, 0])
+        # Detect harsh edges
+        edges_x = np.abs(ndimage.sobel(gray, axis=1))
+        edges_y = np.abs(ndimage.sobel(gray, axis=0))
+        edges = np.sqrt(edges_x**2 + edges_y**2)
+        if edges.max() > 0:
+            edges = edges / edges.max()
+        edge_mask = ndimage.gaussian_filter(edges, sigma=8)
+
+        # Soften harsh light transitions (but preserve object edges)
+        soften_blend = edge_mask[:, :, np.newaxis] * strength * 0.3
+        result = result * (1 - soften_blend) + smooth * soften_blend
+
+        # === LIFTED BLACKS (no true black in commercial photos) ===
+        # Blacks become dark gray
+        result = result * (1 - strength * 0.15) + strength * 15
+
+        # === GLOBAL BRIGHTNESS BOOST (commercial = bright) ===
+        result = result + strength * 12
+
+        return Image.fromarray(np.clip(result, 0, 255).astype(np.uint8))
+
+    def _apply_emotional_vacancy(self, img: Image.Image, strength: float) -> Image.Image:
+        """Flatten expression areas to create emotional vacancy.
+
+        Neoclassicism demanded stoic virtue, noble sacrifice, civic duty.
+        These require gravitas. But the AI can't do solemn - the faces
+        are technically correct but emotionally vacant.
+
+        "The slight smile on the Oath figure exposed that the model can't
+        do solemn."
+
+        This effect flattens the areas around eyes and mouth where
+        expression lives, creating that vacant "the lights are on but
+        nobody's home" quality.
+
+        Technique:
+        - Detect face region (upper portion of image)
+        - Target expression areas (eyes, mouth, brow)
+        - Smooth/flatten these regions
+        - Reduce contrast in expression muscles
+        """
+        if strength < 0.01:
+            return img
+
+        arr = np.array(img, dtype=np.float32)
+        h, w = arr.shape[:2]
+        result = arr.copy()
+
+        r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
+        gray = 0.299 * r + 0.587 * g + 0.114 * b
+
+        # === FACE REGION DETECTION ===
+        # Faces are typically in upper-center portion
+        y_coords, x_coords = np.meshgrid(np.arange(h), np.arange(w), indexing='ij')
+        y_norm = y_coords / h
+        x_norm = x_coords / w
+
+        # Face typically in top 60%, centered
+        face_y_mask = np.clip(1 - np.abs(y_norm - 0.3) * 3, 0, 1)
+        face_x_mask = np.clip(1 - np.abs(x_norm - 0.5) * 2.5, 0, 1)
+        face_mask = face_y_mask * face_x_mask
+
+        # Combine with skin detection for better targeting
+        skin_mask = (
+            (r > 60) & (g > 40) & (b > 20) &
+            (r > g * 0.8) & (g > b * 0.7)
+        ).astype(np.float32)
+        skin_mask = ndimage.gaussian_filter(skin_mask, sigma=10)
+
+        # Expression areas are face + skin
+        expression_mask = face_mask * skin_mask
+        expression_mask = ndimage.gaussian_filter(expression_mask, sigma=12)
+
+        # === EXPRESSION FLATTENING ===
+        # Smooth the areas where expression lives
+        smooth = ndimage.gaussian_filter(arr, sigma=[6, 6, 0])
+
+        # Detect micro-expressions (small local variations)
+        local_mean = ndimage.uniform_filter(arr, size=[15, 15, 1])
+        micro_variation = np.abs(arr - local_mean)
+        micro_strength = np.mean(micro_variation, axis=2)
+
+        # Flatten the variations
+        flatten_blend = expression_mask[:, :, np.newaxis] * strength * 0.6
+        result = arr * (1 - flatten_blend) + smooth * flatten_blend
+
+        # === REDUCE CONTRAST IN EXPRESSION MUSCLES ===
+        # The subtle shadows that convey emotion
+        local_contrast = np.std(arr.reshape(-1, 3), axis=0)
+        contrast_reduction = expression_mask * strength * 0.4
+
+        for c in range(3):
+            channel = result[:, :, c]
+            local_mean_ch = ndimage.uniform_filter(channel, size=20)
+            deviation = channel - local_mean_ch
+            # Reduce deviation (flatten contrast)
+            result[:, :, c] = local_mean_ch + deviation * (1 - contrast_reduction)
+
+        # === EYE AREA EXTRA SMOOTHING ===
+        # Eyes are in upper third of face region
+        eye_y_mask = np.clip(1 - np.abs(y_norm - 0.25) * 5, 0, 1)
+        eye_mask = eye_y_mask * face_x_mask * skin_mask
+        eye_mask = ndimage.gaussian_filter(eye_mask, sigma=8)
+
+        eye_smooth = ndimage.gaussian_filter(result, sigma=[4, 4, 0])
+        eye_blend = eye_mask[:, :, np.newaxis] * strength * 0.5
+        result = result * (1 - eye_blend) + eye_smooth * eye_blend
 
         return Image.fromarray(np.clip(result, 0, 255).astype(np.uint8))
