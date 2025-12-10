@@ -27,11 +27,9 @@ Environment:
 - Falls back to local SD 1.5 if token not set or API fails
 """
 
-import io
 import os
 from pathlib import Path
 from typing import Any, ClassVar
-from urllib.request import urlopen
 
 import numpy as np
 import torch
@@ -39,65 +37,8 @@ from PIL import Image, ImageFilter
 from scipy import ndimage
 
 from hyperspeed.core.artifact_control import ArtifactControl
+from hyperspeed.core.replicate_utils import generate_via_replicate
 from hyperspeed.eras.base import EraMetadata, EraPipeline, EraRegistry
-
-
-# Replicate model ID for SDXL
-REPLICATE_SDXL_MODEL = "stability-ai/sdxl:7762fd07cf82c948538e41f63f77d685e02b063e37e496e96eefd46c929f9bdc"
-
-
-def _generate_via_replicate(
-    prompt: str,
-    width: int = 1024,
-    height: int = 1024,
-    num_steps: int = 30,
-    guidance: float = 7.5,
-    seed: int | None = None,
-) -> Image.Image | None:
-    """Generate image via Replicate API. Returns None if unavailable."""
-    api_token = os.environ.get("REPLICATE_API_TOKEN")
-    if not api_token:
-        return None
-
-    try:
-        import replicate
-    except ImportError:
-        print("Replicate package not installed. Run: pip install replicate")
-        return None
-
-    try:
-        input_params = {
-            "prompt": prompt,
-            "width": width,
-            "height": height,
-            "num_inference_steps": num_steps,
-            "guidance_scale": guidance,
-            "scheduler": "K_EULER",
-            "refine": "no_refiner",
-            "high_noise_frac": 0.8,
-        }
-
-        if seed is not None:
-            input_params["seed"] = seed
-
-        print(f"Generating via Replicate API...")
-        output = replicate.run(REPLICATE_SDXL_MODEL, input=input_params)
-
-        # Output is a list of FileOutput objects or URLs
-        if output and len(output) > 0:
-            result = output[0]
-            # Handle both FileOutput objects and plain URL strings
-            image_url = str(result) if hasattr(result, '__str__') else result
-            print(f"Downloading from Replicate...")
-            with urlopen(image_url) as response:
-                image_data = response.read()
-            return Image.open(io.BytesIO(image_data)).convert("RGB")
-
-    except Exception as e:
-        print(f"Replicate API error: {e}")
-        return None
-
-    return None
 
 
 @EraRegistry.register
@@ -229,7 +170,7 @@ class EarlyRenaissancePipeline(EraPipeline):
 
             # Try Replicate first (much faster than local)
             if not use_local:
-                img = _generate_via_replicate(
+                img = generate_via_replicate(
                     prompt=prompt,
                     width=width,
                     height=height,
