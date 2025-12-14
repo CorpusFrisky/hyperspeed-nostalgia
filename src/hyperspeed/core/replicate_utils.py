@@ -32,6 +32,7 @@ def generate_via_replicate(
     num_steps: int = 30,
     guidance: float = 8.0,
     seed: int | None = None,
+    scheduler: str = "K_EULER",
 ) -> Image.Image | None:
     """Generate image via Replicate API. Returns None if unavailable.
 
@@ -42,6 +43,7 @@ def generate_via_replicate(
         num_steps: Number of inference steps (default 30)
         guidance: CFG guidance scale (default 8.0)
         seed: Random seed for reproducibility
+        scheduler: Scheduler type (K_EULER, K_EULER_ANCESTRAL, DDIM, etc.)
 
     Returns:
         PIL Image if successful, None if API unavailable or error
@@ -63,7 +65,7 @@ def generate_via_replicate(
             "height": height,
             "num_inference_steps": num_steps,
             "guidance_scale": guidance,
-            "scheduler": "K_EULER",
+            "scheduler": scheduler,
             "refine": "no_refiner",
             "high_noise_frac": 0.8,
         }
@@ -71,7 +73,7 @@ def generate_via_replicate(
         if seed is not None:
             input_params["seed"] = seed
 
-        print("Generating via Replicate API...")
+        print(f"Generating via Replicate API (steps={num_steps}, guidance={guidance}, scheduler={scheduler})...")
         output = replicate.run(REPLICATE_SDXL_MODEL, input=input_params)
 
         # Output is a list of FileOutput objects or URLs
@@ -98,6 +100,7 @@ def submit_replicate_async(
     num_steps: int = 30,
     guidance: float = 8.0,
     seed: int | None = None,
+    scheduler: str = "K_EULER",
 ) -> "replicate.prediction.Prediction | None":
     """Submit a generation job to Replicate without waiting.
 
@@ -108,6 +111,7 @@ def submit_replicate_async(
         num_steps: Number of inference steps (default 30)
         guidance: CFG guidance scale (default 8.0)
         seed: Random seed for reproducibility
+        scheduler: Scheduler type (K_EULER, K_EULER_ANCESTRAL, DDIM, etc.)
 
     Returns:
         Prediction object if successful, None if unavailable
@@ -129,7 +133,7 @@ def submit_replicate_async(
             "height": height,
             "num_inference_steps": num_steps,
             "guidance_scale": guidance,
-            "scheduler": "K_EULER",
+            "scheduler": scheduler,
             "refine": "no_refiner",
             "high_noise_frac": 0.8,
         }
@@ -232,6 +236,7 @@ def batch_generate_replicate(
             num_steps=job.get("num_steps", 30),
             guidance=job.get("guidance", 8.0),
             seed=job.get("seed"),
+            scheduler=job.get("scheduler", "K_EULER"),
         )
         if prediction:
             pending.append((job, prediction))

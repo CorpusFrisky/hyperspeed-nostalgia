@@ -293,6 +293,204 @@ Like High Renaissance, Neoclassicism supports batch generation via Replicate:
 
 ---
 
+## Reproducible Example Commands
+
+All generated images with their exact commands for reproduction.
+
+### David-Style History Paintings
+
+#### Death of Socrates (Multi-Figure Death Scene)
+
+```bash
+hyperspeed generate "Death of Socrates, Neoclassical history painting, multiple figures gathered around dying philosopher, disciples in dramatic poses, gesturing, stoic resignation, David style, muted palette, classical drapery" \
+  --era neoclassicism \
+  --intensity 0.85 \
+  --marble-smooth-skin 0.9 \
+  --emotional-vacancy 0.8 \
+  --commercial-sheen 0.8 \
+  --seed 399 \
+  --output examples/neoclassicism_death_of_socrates.png
+```
+
+**Why this works:** Multi-figure composition with emotionally demanding subject (death, grief). The `--emotional-vacancy 0.8` exposes the AI's inability to convey gravitas - the disciples should look solemn but instead look vacant.
+
+#### Brutus Receiving the Bodies of His Sons
+
+```bash
+hyperspeed generate "Brutus receiving the bodies of his sons, Neoclassical history painting, multiple mourning figures, Roman soldiers, stoic father, tragic scene, David style, theatrical staging, muted palette" \
+  --era neoclassicism \
+  --intensity 0.85 \
+  --marble-smooth-skin 0.9 \
+  --emotional-vacancy 0.8 \
+  --heroic-staging 0.6 \
+  --seed 509 \
+  --output examples/neoclassicism_brutus.png
+```
+
+**Why this works:** Tests stoic suffering - a father who has condemned his own sons should show complex emotion. The AI produces technically perfect but emotionally hollow results.
+
+#### Oath of the Horatii
+
+```bash
+hyperspeed generate "Oath of the Horatii, Neoclassical history painting, three brothers with raised arms, dramatic oath gesture, father with swords, women mourning in background, David style, theatrical lighting" \
+  --era neoclassicism \
+  --intensity 0.85 \
+  --marble-smooth-skin 0.9 \
+  --emotional-vacancy 0.7 \
+  --heroic-staging 0.6 \
+  --seed 1784 \
+  --output examples/neoclassicism_horatii.png
+```
+
+**Why this works:** The iconic Neoclassical composition. The raised-arm gesture should convey patriotic fervor; the AI produces the pose but not the conviction.
+
+#### Death of Marat
+
+```bash
+hyperspeed generate "Death of Marat, Neoclassical painting, murdered figure in bathtub, dramatic death scene, martyr pose, single figure, muted palette, David style, stoic suffering" \
+  --era neoclassicism \
+  --intensity 0.85 \
+  --marble-smooth-skin 0.95 \
+  --emotional-vacancy 0.8 \
+  --commercial-sheen 0.7 \
+  --seed 1793 \
+  --output examples/neoclassicism_marat.png
+```
+
+**Why this works:** Single-figure death scene. The marble-smooth skin at 0.95 creates that "too perfect corpse" quality - death rendered as stock photo.
+
+#### Hector and Andromache Farewell
+
+```bash
+hyperspeed generate "Hector and Andromache farewell, Neoclassical painting, tragic parting, warrior leaving wife, Trojan scene, emotional moment, tender gesture, classical drapery, muted palette" \
+  --era neoclassicism \
+  --intensity 0.85 \
+  --marble-smooth-skin 0.9 \
+  --emotional-vacancy 0.85 \
+  --classical-palette 0.8 \
+  --seed 1812 \
+  --output examples/neoclassicism_hector_andromache.png
+```
+
+**Why this works:** A farewell scene that should convey the weight of impending death. High emotional vacancy (0.85) reveals the "lights on but nobody home" quality.
+
+#### Mourning Scene
+
+```bash
+hyperspeed generate "Neoclassical mourning scene, multiple grieving figures around tomb, stoic sorrow, classical drapery, muted colors, theatrical staging, David style history painting" \
+  --era neoclassicism \
+  --intensity 0.85 \
+  --emotional-vacancy 0.85 \
+  --marble-smooth-skin 0.9 \
+  --heroic-staging 0.5 \
+  --seed 1805 \
+  --output examples/neoclassicism_mourning.png
+```
+
+**Why this works:** Grief is one of the hardest emotions for AI to convey. The figures look posed rather than devastated.
+
+### Canova-Style Sculptures
+
+#### Psyche Revived by Cupid's Kiss
+
+```bash
+hyperspeed generate "Psyche Revived by Cupid's Kiss, Canova style marble sculpture, two intertwined figures, wings, romantic embrace, gleaming white marble, museum photography, commercial lighting" \
+  --era neoclassicism \
+  --intensity 0.85 \
+  --marble-smooth-skin 0.95 \
+  --commercial-sheen 0.9 \
+  --surface-flattening 0.8 \
+  --seed 1787 \
+  --output examples/neoclassicism_psyche_cupid.png
+```
+
+**Why this works:** Intertwined figures in marble. The extreme marble-smooth-skin (0.95) + commercial-sheen (0.9) creates that CGI-waxy quality that no real marble has.
+
+#### The Three Graces
+
+```bash
+hyperspeed generate "The Three Graces, Canova style marble sculpture group, three female figures intertwined, classical poses, gleaming white marble, museum lighting, commercial photography aesthetic" \
+  --era neoclassicism \
+  --intensity 0.85 \
+  --marble-smooth-skin 0.95 \
+  --commercial-sheen 0.9 \
+  --golden-ratio-symmetry 0.6 \
+  --seed 1813 \
+  --output examples/neoclassicism_three_graces.png
+```
+
+**Why this works:** Three figures with "suspiciously attractive" symmetry. The golden-ratio-symmetry at 0.6 makes each face uncannily perfect.
+
+#### Perseus with the Head of Medusa
+
+```bash
+hyperspeed generate "Perseus with head of Medusa, Canova style marble sculpture, heroic male figure, classical pose, gleaming white marble, dramatic museum lighting, theatrical spotlight" \
+  --era neoclassicism \
+  --intensity 0.85 \
+  --marble-smooth-skin 0.95 \
+  --commercial-sheen 0.85 \
+  --heroic-staging 0.5 \
+  --seed 1801 \
+  --output examples/neoclassicism_perseus.png
+```
+
+**Why this works:** Heroic male figure - tests whether the "too perfect" effect works on male subjects. The theatrical lighting creates that prestige documentary feel.
+
+### Stock Photo Aesthetic
+
+#### Commercial Beauty Portrait
+
+```bash
+hyperspeed generate "Neoclassical portrait of noble woman, suspiciously perfect features, flawless skin, commercial beauty photography lighting, stock photo aesthetic, classical drapery, muted palette" \
+  --era neoclassicism \
+  --intensity 0.9 \
+  --marble-smooth-skin 0.95 \
+  --commercial-sheen 0.95 \
+  --golden-ratio-symmetry 0.7 \
+  --seed 2023 \
+  --output examples/neoclassicism_stock_photo_portrait.png
+```
+
+**Why this works:** Maximum "stock photo" energy. All the tells cranked to near-maximum. The seed 2023 is a deliberate nod to the era being mapped.
+
+### Early Examples
+
+#### Basic Portrait
+
+```bash
+hyperspeed generate "Neoclassical portrait, young woman, classical beauty, marble bust aesthetic" \
+  --era neoclassicism \
+  --intensity 0.7 \
+  --marble-smooth-skin 0.8 \
+  --seed 1814 \
+  --output examples/neoclassicism_portrait.png
+```
+
+#### Oath Scene
+
+```bash
+hyperspeed generate "Neoclassical oath scene, heroic figures, dramatic gestures, David style" \
+  --era neoclassicism \
+  --intensity 0.7 \
+  --heroic-staging 0.5 \
+  --seed 1784 \
+  --output examples/neoclassicism_oath.png
+```
+
+#### Odalisque
+
+```bash
+hyperspeed generate "Reclining odalisque, Ingres style, elegant proportions, classical beauty, draped fabric" \
+  --era neoclassicism \
+  --intensity 0.7 \
+  --anatomical-liberty 0.7 \
+  --marble-smooth-skin 0.8 \
+  --seed 1814 \
+  --output examples/neoclassicism_odalisque.png
+```
+
+---
+
 ## Session Progress Log
 
 ### Update: 2025-12-09 - Pushed Effects Harder

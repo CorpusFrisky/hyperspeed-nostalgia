@@ -19,6 +19,7 @@ from hyperspeed.eras import international_gothic  # noqa: F401
 from hyperspeed.eras import early_renaissance  # noqa: F401
 from hyperspeed.eras import high_renaissance  # noqa: F401
 from hyperspeed.eras import neoclassicism  # noqa: F401
+from hyperspeed.eras import impressionism  # noqa: F401
 
 app = typer.Typer(
     name="hyperspeed",
@@ -248,6 +249,31 @@ def generate(
         Optional[float],
         typer.Option("--commercial-sheen", help="[Neoclassicism] Stock photo lighting quality"),
     ] = None,
+    # Impressionism params
+    edge_dissolution: Annotated[
+        Optional[float],
+        typer.Option("--edge-dissolution", help="[Impressionism] Probabilistic boundaries"),
+    ] = None,
+    color_bleed: Annotated[
+        Optional[float],
+        typer.Option("--color-bleed", help="[Impressionism] Chromatic melding across edges"),
+    ] = None,
+    atmospheric_haze: Annotated[
+        Optional[float],
+        typer.Option("--atmospheric-haze", help="[Impressionism] Foggy, expectant emptiness"),
+    ] = None,
+    brushstroke_texture: Annotated[
+        Optional[float],
+        typer.Option("--brushstroke-texture", help="[Impressionism] Visible paint application"),
+    ] = None,
+    light_fragmentation: Annotated[
+        Optional[float],
+        typer.Option("--light-fragmentation", help="[Impressionism] Broken color, optical mixing"),
+    ] = None,
+    temporal_blur: Annotated[
+        Optional[float],
+        typer.Option("--temporal-blur", help="[Impressionism] Motion suggesting captured moment"),
+    ] = None,
     device: Annotated[
         str,
         typer.Option("--device", help="Device: mps, cuda, cpu"),
@@ -396,6 +422,19 @@ def generate(
         era_params["classical_palette"] = classical_palette
     if commercial_sheen is not None:
         era_params["commercial_sheen"] = commercial_sheen
+    # Impressionism params
+    if edge_dissolution is not None:
+        era_params["edge_dissolution"] = edge_dissolution
+    if color_bleed is not None:
+        era_params["color_bleed"] = color_bleed
+    if atmospheric_haze is not None:
+        era_params["atmospheric_haze"] = atmospheric_haze
+    if brushstroke_texture is not None:
+        era_params["brushstroke_texture"] = brushstroke_texture
+    if light_fragmentation is not None:
+        era_params["light_fragmentation"] = light_fragmentation
+    if temporal_blur is not None:
+        era_params["temporal_blur"] = temporal_blur
     # img2img strength (only matters when --source is provided)
     era_params["img2img_strength"] = strength
     # Common params
@@ -438,39 +477,18 @@ def batch(
         Path,
         typer.Argument(help="JSON file with batch job definitions"),
     ],
+    era: Annotated[
+        str,
+        typer.Option("--era", "-e", help="Era to use for generation"),
+    ] = "high_renaissance",
     output_dir: Annotated[
-        Path,
-        typer.Option("--output-dir", "-o", help="Output directory for generated images"),
-    ] = Path("examples"),
+        Optional[Path],
+        typer.Option("--output-dir", "-o", help="Output directory (default: examples/<era>)"),
+    ] = None,
     intensity: Annotated[
         float,
         typer.Option("--intensity", "-i", min=0.0, max=1.0, help="Default artifact intensity"),
     ] = 0.8,
-    # High Renaissance effect defaults (can be overridden per-job in JSON)
-    blue_orange_cast: Annotated[
-        float,
-        typer.Option("--blue-orange-cast", help="Default blue-orange cast"),
-    ] = 0.9,
-    overdramatized_lighting: Annotated[
-        float,
-        typer.Option("--overdramatized-lighting", help="Default overdramatized lighting"),
-    ] = 0.9,
-    hypersaturation: Annotated[
-        float,
-        typer.Option("--hypersaturation", help="Default hypersaturation"),
-    ] = 0.8,
-    warm_halo: Annotated[
-        float,
-        typer.Option("--warm-halo", help="Default warm halo"),
-    ] = 0.8,
-    epic_blur: Annotated[
-        float,
-        typer.Option("--epic-blur", help="Default epic blur"),
-    ] = 0.6,
-    textural_sharpening: Annotated[
-        float,
-        typer.Option("--textural-sharpening", help="Default textural sharpening"),
-    ] = 0.5,
     poll_interval: Annotated[
         float,
         typer.Option("--poll-interval", help="Seconds between Replicate status checks"),
@@ -484,35 +502,44 @@ def batch(
         typer.Option("--submit-delay", help="Seconds between job submissions (avoid rate limits)"),
     ] = 0.5,
 ):
-    """Batch generate High Renaissance images: parallel remote generation, sequential local processing.
+    """Batch generate images: parallel remote generation, sequential local processing.
 
     This command:
     1. Submits ALL generation jobs to Replicate in parallel (fast)
     2. Downloads results as they complete
-    3. Applies MJ v4 tells SEQUENTIALLY (won't crash your machine)
+    3. Applies era tells SEQUENTIALLY (won't crash your machine)
+
+    Output defaults to examples/<era>/ subdirectory.
 
     JSON file format:
     [
         {
-            "prompt": "The Last Supper, dramatic lighting...",
-            "output": "last_supper.png",
-            "seed": 1498,
+            "prompt": "Water lilies on pond...",
+            "output": "water_lilies.png",
+            "seed": 1872,
             "intensity": 0.8,
-            "blue_orange_cast": 0.9
+            "edge_dissolution": 0.9
         },
         ...
     ]
 
     Each job can override: prompt, output, seed, width, height, intensity,
-    blue_orange_cast, overdramatized_lighting, hypersaturation, epic_blur,
-    textural_sharpening, compositional_centering, warm_halo
+    plus any era-specific parameters (e.g., edge_dissolution for impressionism,
+    blue_orange_cast for high_renaissance).
 
     Example:
-        hyperspeed batch jobs.json --output-dir examples/ --intensity 0.8
+        hyperspeed batch jobs.json --era impressionism
     """
     import json
-    from hyperspeed.eras.high_renaissance import batch_generate_replicate, HighRenaissancePipeline
+    from hyperspeed.core.replicate_utils import batch_generate_replicate
     from hyperspeed.core.image_utils import save_image
+
+    # Get era pipeline
+    try:
+        pipeline_class = EraRegistry.get(era)
+    except ValueError as e:
+        console.print(f"[red]{e}[/red]")
+        raise typer.Exit(1)
 
     # Load jobs
     if not jobs_file.exists():
@@ -526,7 +553,12 @@ def batch(
         console.print("[red]Jobs file must contain a JSON array[/red]")
         raise typer.Exit(1)
 
-    console.print(f"[bold]Batch Generation: High Renaissance[/bold]")
+    # Default output directory to examples/<era>
+    if output_dir is None:
+        output_dir = Path("examples") / era.replace("_", "_")
+
+    console.print(f"[bold]Batch Generation: {pipeline_class.metadata.name}[/bold]")
+    console.print(f"[dim]{pipeline_class.metadata.art_historical_parallel}[/dim]")
     console.print(f"Jobs: {len(jobs)}")
     console.print(f"Output directory: {output_dir}")
     console.print()
@@ -534,15 +566,9 @@ def batch(
     # Create output directory
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Default era params from CLI
-    default_era_params = {
-        "blue_orange_cast": blue_orange_cast,
-        "overdramatized_lighting": overdramatized_lighting,
-        "hypersaturation": hypersaturation,
-        "warm_halo": warm_halo,
-        "epic_blur": epic_blur,
-        "textural_sharpening": textural_sharpening,
-    }
+    # Get default params from era pipeline
+    pipeline = pipeline_class()
+    default_era_params = pipeline.get_default_params()
 
     # Prepare jobs for batch submission
     batch_jobs = []
@@ -551,17 +577,19 @@ def batch(
             "prompt": job["prompt"],
             "width": job.get("width", 1024),
             "height": job.get("height", 1024),
-            "num_steps": job.get("inference_steps", 30),
-            "guidance": job.get("guidance_scale", 10.0),
+            "num_steps": job.get("inference_steps", default_era_params.get("inference_steps", 30)),
+            "guidance": job.get("guidance_scale", default_era_params.get("guidance_scale", 8.0)),
             "seed": job.get("seed"),
             "output_path": output_dir / job.get("output", f"batch_{len(batch_jobs)}.png"),
-            "era_params": {**default_era_params},
+            "era_params": {},
             "intensity": job.get("intensity", intensity),
         }
-        # Override era params from job
-        for key in default_era_params:
+        # Copy era params from job, using defaults for unspecified
+        for key, default_val in default_era_params.items():
             if key in job:
                 batch_job["era_params"][key] = job[key]
+            elif key not in ["inference_steps", "guidance_scale", "img2img_strength"]:
+                batch_job["era_params"][key] = default_val
 
         batch_jobs.append(batch_job)
 
@@ -577,8 +605,6 @@ def batch(
     # Phase 2: Apply tells sequentially
     console.print()
     console.print("[bold green]Phase 2: Local post-processing (sequential)[/bold green]")
-
-    pipeline = HighRenaissancePipeline()
     successful = 0
     failed = 0
 

@@ -104,25 +104,27 @@ The following timeline maps AI image generation eras (2015 to present) onto West
 
 **Deep Cut:** Ingres's odalisque has an impossibly long back. An "error" that served aesthetic purposes. AI's photorealistic phase similarly bends anatomy in service of beauty, producing bodies that are plausible but not quite real.
 
-### 8. IMPRESSIONISM (1860 to 1890)
+### 8. POST-IMPRESSIONISM (1886 to 1905)
 
 **↔ The Melting Zone**
 
-**The Connection:** Boundaries dissolving. Probabilistic edges. Light over form. Monet's Impression, Sunrise (1872) gave the movement its name, and critics called it "unfinished," a mere impression. Impressionists rendered "optical data" rather than "what we know about space, mass, and the other physical details of the world."
+**The Connection:** Forms already unstable, now amplified. Van Gogh's swirling skies, Cézanne's fractured planes, Seurat's pointillist dissolution. The Post-Impressionists pushed beyond optical fidelity into psychological intensity, and their forms already featured instability and fragmentation. AI's failure to hold edges and forms together amplifies what these painters were doing intentionally. The melting zone becomes an extension of the style rather than a contradiction.
 
-**Key Works:** Monet's series paintings (Haystacks, Rouen Cathedral, Water Lilies): the same subject at different times of day, boundaries between sky and water "hardly distinguishable." The paint "becomes the place" in its "foggy blankness, its featureless, expectant emptiness."
+**Key Works:** Cézanne's Mont Sainte-Victoire series: the mountain dissolving into geometric patches, "passage" between planes where boundaries blur. Van Gogh's Starry Night: forms swirling into each other, the cypress flame bleeding into the sky. Seurat's A Sunday Afternoon on the Island of La Grande Jatte: figures assembled from discrete dots, edges probabilistic by design.
 
-**Deep Cut:** Art historian's description of Impression, Sunrise: "colors melding together in its glooming, opalescent oneness." This is the melting zone perfectly described. Boundaries becoming probabilistic rather than defined, a new kind of sfumato.
+**Deep Cut:** Cézanne famously said he wanted to "treat nature by the cylinder, the sphere, the cone." His late work pushed this toward dissolution: planes that don't quite meet, edges that breathe. The melting zone is Cézanne's "passage" taken to its logical conclusion by a model that can't decide where one form ends and another begins.
 
-### 9. POST-IMPRESSIONISM / VAN GOGH (1886 to 1890)
+**Note on Impressionism:** We attempted to map Impressionism (1860-1890) to the Melting Zone extensively, but the model's priors proved too strong. It renders Degas ballerinas and Renoir cafes too competently. The Impressionist "look" has been absorbed so thoroughly into the training data that degradation doesn't register as failure. Our hard-subject experiments (pianist hands, playing cards, milliner's window, departure board, orchestra) are archived but the movement has been dropped from the main timeline.
+
+### 9. SYMBOLISM (1880 to 1910)
 
 **↔ Midjourney Stylization ("The Recognizable Swirl")**
 
-**The Connection:** Style as signature. The recognizable swirl. Van Gogh's brushstrokes are "instantly recognizable": rhythmic, patterned, emotionally charged. Similarly, Midjourney developed a "look" so distinctive it became a cultural shorthand. Dramatic lighting, saturated colors, that particular blue-orange palette.
+**The Connection:** Ornate, dreamlike, mysterious. Too beautiful, too stylized. Symbolism sought to evoke mood and meaning through imagery that was deliberately lush, decorative, and otherworldly. Moreau's jeweled fantasies, Redon's floating eyes and flower-heads, early Klimt's golden excess. Midjourney's signature failure mode is similar: over-polished fantasy-illustration gloss, everything rendered with maximum mystique. Against Symbolism, this excess becomes visible as error. The AI trying too hard to be mysterious tips into kitsch. Failure through excess rather than dissolution.
 
-**Key Works:** The Starry Night (1889): swirling brushstrokes that "transform a simple night sky into a cosmic vortex of energy." Café Terrace at Night, Bedroom in Arles. Each painting unmistakably Van Gogh regardless of subject.
+**Key Works:** Gustave Moreau's Jupiter and Semele (1895): a riot of ornament, every surface encrusted with detail, the mythological made opulent to the point of suffocation. Odilon Redon's The Cyclops (1914): dreamlike, soft-focused, a giant eye gazing with unsettling tenderness. Klimt's Pallas Athene (1898): gold leaf, geometric patterning, the decorative overwhelming the figurative.
 
-**Deep Cut:** The swirling brushstroke appeared specifically during Van Gogh's stay at the Saint-Rémy asylum. A distinct phase within an already-short career. Midjourney's "look" similarly crystallized during a specific version (v4 to v5), then evolved away. Both are period-specific signatures.
+**Deep Cut:** Symbolism was criticized in its time for being "literary" rather than painterly, more interested in mood than form. Midjourney faces the same critique: it produces "vibes" rather than images, atmosphere rather than substance. Both achieve mystery through accumulation of signifiers rather than restraint. The failure is not ugliness but excessive beauty, not confusion but too-obvious meaning.
 
 ### 10. FAUVISM (1904 to 1908)
 
@@ -218,6 +220,8 @@ Neither could have made this alone. The collaboration itself enacts the project'
 
 •
 
-*Document Version 1.2 • December 2025*
+*Document Version 1.3 • December 2025*
 
 *(Now with 100% fewer em dashes)*
+
+*v1.3 changes: Replaced Impressionism (Part 8) with Post-Impressionism; replaced Post-Impressionism/Van Gogh (Part 9) with Symbolism. Impressionism dropped due to model competency; archived experiments noted.*
