@@ -20,6 +20,7 @@ from hyperspeed.eras import early_renaissance  # noqa: F401
 from hyperspeed.eras import high_renaissance  # noqa: F401
 from hyperspeed.eras import neoclassicism  # noqa: F401
 from hyperspeed.eras import impressionism  # noqa: F401
+from hyperspeed.eras import post_impressionism  # noqa: F401
 
 app = typer.Typer(
     name="hyperspeed",
