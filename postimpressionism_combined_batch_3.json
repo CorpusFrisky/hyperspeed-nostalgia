@@ -1,0 +1,28 @@
+[
+  {
+    "prompt": "Bathers at riverbank, dozens of figures swimming wading lounging on grassy shore, geometric rocks and boulders, swirling water currents, trees with writhing branches, summer afternoon light, reflections on water surface, nude and clothed figures, atmospheric haze, pointillist light effects, oil painting texture",
+    "output": "postimpressionism_combined_bathers.png",
+    "seed": 1886,
+    "passage_dissolution": 0.85,
+    "swirl_distortion": 0.85,
+    "pointillist_breakup": 0.9,
+    "geometric_faceting": 0.8,
+    "color_intensity": 0.85,
+    "edge_ambiguity": 0.9,
+    "inference_steps": 25,
+    "guidance_scale": 6.5
+  },
+  {
+    "prompt": "Orchard in bloom with farmworkers picking fruit, many hands reaching into flowering branches, wooden ladders, baskets being filled, twisted gnarled tree trunks, swirling blossoms in wind, geometric stone walls, workers in peasant clothing, spring sunlight, visible brushstrokes, thick impasto oil painting",
+    "output": "postimpressionism_combined_orchard.png",
+    "seed": 1890,
+    "passage_dissolution": 0.85,
+    "swirl_distortion": 0.9,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.85,
+    "color_intensity": 0.9,
+    "edge_ambiguity": 0.85,
+    "inference_steps": 25,
+    "guidance_scale": 6.5
+  }
+]

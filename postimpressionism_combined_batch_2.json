@@ -1,0 +1,41 @@
+[
+  {
+    "prompt": "Fruit market stall overflowing with apples oranges pears, crowded with shoppers and vendors, woven baskets, wooden crates, striped awnings, morning light filtering through, hands reaching for fruit, geometric pyramids of produce, bustling atmosphere, thick painterly brushstrokes, oil on canvas texture",
+    "output": "postimpressionism_combined_fruit_market.png",
+    "seed": 1890,
+    "passage_dissolution": 0.9,
+    "swirl_distortion": 0.8,
+    "pointillist_breakup": 0.85,
+    "geometric_faceting": 0.9,
+    "color_intensity": 0.85,
+    "edge_ambiguity": 0.85,
+    "inference_steps": 25,
+    "guidance_scale": 6.5
+  },
+  {
+    "prompt": "Starry swirling night sky over train station with iron and glass architecture, departure board showing times and destinations, steam rising from locomotives, crowds of passengers on platform, gas lamps, geometric iron beams, text on signs, stars wheeling overhead, thick impasto oil painting",
+    "output": "postimpressionism_combined_train_station.png",
+    "seed": 1889,
+    "passage_dissolution": 0.85,
+    "swirl_distortion": 0.9,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.85,
+    "color_intensity": 0.9,
+    "edge_ambiguity": 0.9,
+    "inference_steps": 25,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Card players at outdoor café table, men in hats concentrating on hands of playing cards, pipe smoke swirling upward, dappled sunlight through leaves, geometric table and chairs, cards fanned in weathered hands, wine glasses, intense faces, thick brushwork visible, oil painting on canvas",
+    "output": "postimpressionism_combined_card_players.png",
+    "seed": 1892,
+    "passage_dissolution": 0.9,
+    "swirl_distortion": 0.8,
+    "pointillist_breakup": 0.75,
+    "geometric_faceting": 0.95,
+    "color_intensity": 0.8,
+    "edge_ambiguity": 0.85,
+    "inference_steps": 25,
+    "guidance_scale": 6.5
+  }
+]

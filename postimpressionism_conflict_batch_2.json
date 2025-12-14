@@ -1,0 +1,28 @@
+[
+  {
+    "prompt": "Chess tournament hall with multiple chess boards on tables, many hands mid-move holding pieces, black and white checkered boards, wooden chess pieces, players' concentrated faces, spectators watching, tournament clocks, geometric grid patterns, afternoon light, thick oil painting brushstrokes, painterly texture",
+    "output": "postimpressionism_conflict_chess.png",
+    "seed": 1894,
+    "passage_dissolution": 0.9,
+    "swirl_distortion": 0.85,
+    "pointillist_breakup": 0.85,
+    "geometric_faceting": 0.95,
+    "color_intensity": 0.8,
+    "edge_ambiguity": 0.9,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Fish market stall with silvery piles of fresh fish, mackerel sardines herring stacked in rows, handwritten price signs with numbers, fishmonger's hands arranging display, wet reflective scales, melting ice, morning light on silver surfaces, crowded market atmosphere, thick impasto oil painting, visible brushwork texture",
+    "output": "postimpressionism_conflict_fishmarket.png",
+    "seed": 1892,
+    "passage_dissolution": 0.9,
+    "swirl_distortion": 0.85,
+    "pointillist_breakup": 0.9,
+    "geometric_faceting": 0.85,
+    "color_intensity": 0.85,
+    "edge_ambiguity": 0.95,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  }
+]

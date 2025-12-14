@@ -1,0 +1,41 @@
+[
+  {
+    "prompt": "Clockmaker's workshop interior, dozens of pocket watches and clock faces on workbench, tiny gears and springs scattered, magnifying glass, watchmaker's hands holding tweezers, Roman numerals on dials, pendulums, brass mechanisms, afternoon light through dusty window, thick impasto oil painting, visible brushstrokes",
+    "output": "postimpressionism_conflict_clockmaker.png",
+    "seed": 1891,
+    "passage_dissolution": 0.95,
+    "swirl_distortion": 0.9,
+    "pointillist_breakup": 0.85,
+    "geometric_faceting": 0.95,
+    "color_intensity": 0.85,
+    "edge_ambiguity": 0.9,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Typesetter's hands arranging metal letterpress letters in wooden composing stick, rows of lead type in cases, individual letters A B C D visible, printer's ink stains, concentrated face leaning over work, metal and wood textures, workshop light, thick painterly brushstrokes, oil on canvas",
+    "output": "postimpressionism_conflict_typesetter.png",
+    "seed": 1893,
+    "passage_dissolution": 0.95,
+    "swirl_distortion": 0.85,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.9,
+    "color_intensity": 0.8,
+    "edge_ambiguity": 0.95,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Beehive cross-section showing hundreds of honeybees on hexagonal honeycomb cells, worker bees crawling over wax cells, larvae visible in cells, golden honey dripping, swarm of bees in motion, intricate organic pattern, warm golden light, thick oil paint texture, visible impasto brushwork",
+    "output": "postimpressionism_conflict_beehive.png",
+    "seed": 1895,
+    "passage_dissolution": 0.9,
+    "swirl_distortion": 0.9,
+    "pointillist_breakup": 0.95,
+    "geometric_faceting": 0.85,
+    "color_intensity": 0.9,
+    "edge_ambiguity": 0.9,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  }
+]

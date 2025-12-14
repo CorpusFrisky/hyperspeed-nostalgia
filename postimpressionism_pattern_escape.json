@@ -1,0 +1,54 @@
+[
+  {
+    "prompt": "Tile factory showroom interior, ceramic tile samples covering every surface, geometric patterns on walls floors tables displays, Moroccan tiles Portuguese azulejos Victorian encaustic tiles, patterns reflecting in mirrors, overwhelming visual density, samples overlapping and competing, afternoon light, thick impasto oil painting, visible brushstrokes",
+    "output": "postimpressionism_pattern_tile_factory.png",
+    "seed": 1888,
+    "passage_dissolution": 0.95,
+    "swirl_distortion": 0.85,
+    "pointillist_breakup": 0.9,
+    "geometric_faceting": 0.95,
+    "color_intensity": 0.9,
+    "edge_ambiguity": 0.9,
+    "inference_steps": 20,
+    "guidance_scale": 5.5
+  },
+  {
+    "prompt": "Wallpaper showroom interior, dozens of different wallpaper patterns hanging from ceiling to floor, William Morris florals next to geometric Art Nouveau next to damask, patterns competing at edges where rolls meet, overwhelming visual cacophony, no bare wall visible, gaslight interior, thick painterly brushstrokes, oil on canvas texture",
+    "output": "postimpressionism_pattern_wallpaper.png",
+    "seed": 1890,
+    "passage_dissolution": 0.9,
+    "swirl_distortion": 0.9,
+    "pointillist_breakup": 0.85,
+    "geometric_faceting": 0.9,
+    "color_intensity": 0.95,
+    "edge_ambiguity": 0.95,
+    "inference_steps": 20,
+    "guidance_scale": 5.5
+  },
+  {
+    "prompt": "Stained glass workshop interior, colored glass fragments covering work tables, geometric lead came patterns, light streaming through finished windows casting colored pattern shadows on walls floor ceiling, glass shards everywhere, kaleidoscopic light infection, craftsman's hands cutting glass, thick impasto oil painting texture",
+    "output": "postimpressionism_pattern_stained_glass.png",
+    "seed": 1892,
+    "passage_dissolution": 0.9,
+    "swirl_distortion": 0.85,
+    "pointillist_breakup": 0.95,
+    "geometric_faceting": 0.95,
+    "color_intensity": 0.95,
+    "edge_ambiguity": 0.9,
+    "inference_steps": 20,
+    "guidance_scale": 5.5
+  },
+  {
+    "prompt": "View through kaleidoscope, pure geometric fragmentation, triangular mirrors multiplying colored glass beads into infinite symmetrical pattern, no horizon no ground no sky only pattern, crystalline facets, jewel tones, mathematical precision dissolving into color, thick oil paint texture, visible brushwork",
+    "output": "postimpressionism_pattern_kaleidoscope.png",
+    "seed": 1894,
+    "passage_dissolution": 0.95,
+    "swirl_distortion": 0.8,
+    "pointillist_breakup": 0.95,
+    "geometric_faceting": 0.98,
+    "color_intensity": 0.95,
+    "edge_ambiguity": 0.85,
+    "inference_steps": 18,
+    "guidance_scale": 5.0
+  }
+]

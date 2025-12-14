@@ -1,0 +1,41 @@
+[
+  {
+    "prompt": "Butterfly conservatory interior, hundreds of butterflies in flight, monarch wings orange and black, swallowtails blue, wings everywhere becoming pattern becoming wallpaper becoming air itself, organic geometry overwhelming the greenhouse space, wings on glass walls on plants on ceiling, pattern escaping all containment, thick impasto oil painting, visible brushstrokes",
+    "output": "postimpressionism_pattern_butterfly.png",
+    "seed": 1891,
+    "passage_dissolution": 0.9,
+    "swirl_distortion": 0.85,
+    "pointillist_breakup": 0.9,
+    "geometric_faceting": 0.85,
+    "color_intensity": 0.95,
+    "edge_ambiguity": 0.95,
+    "inference_steps": 20,
+    "guidance_scale": 5.5
+  },
+  {
+    "prompt": "Persian rug merchant warehouse, hundreds of carpets stacked rolled hanging from ceiling, geometric patterns competing, crimson blue gold ornament layered upon ornament, patterns fighting patterns, the room drowning in competing geometry, no surface without decoration, overwhelming visual density, thick impasto oil painting texture, painterly brushwork",
+    "output": "postimpressionism_pattern_rugs.png",
+    "seed": 1893,
+    "passage_dissolution": 0.9,
+    "swirl_distortion": 0.8,
+    "pointillist_breakup": 0.85,
+    "geometric_faceting": 0.95,
+    "color_intensity": 0.95,
+    "edge_ambiguity": 0.9,
+    "inference_steps": 20,
+    "guidance_scale": 5.5
+  },
+  {
+    "prompt": "Mosaic restoration workshop, ancient Roman and Byzantine mosaic fragments spread across work tables, broken tesserae patterns trying to reassemble themselves, gold and blue and red glass pieces escaping their frames, crawling across table surfaces onto floor onto walls, pattern infection spreading, archaeologist hands sorting pieces, thick impasto oil painting, visible brushstrokes",
+    "output": "postimpressionism_pattern_mosaic.png",
+    "seed": 1892,
+    "passage_dissolution": 0.95,
+    "swirl_distortion": 0.8,
+    "pointillist_breakup": 0.95,
+    "geometric_faceting": 0.9,
+    "color_intensity": 0.9,
+    "edge_ambiguity": 0.95,
+    "inference_steps": 20,
+    "guidance_scale": 5.5
+  }
+]

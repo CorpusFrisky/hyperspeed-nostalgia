@@ -1,0 +1,41 @@
+[
+  {
+    "prompt": "Grand library interior with thousands of book spines on towering shelves, leather bound volumes floor to ceiling, rolling ladder, reading tables with open books, the entire room caught in swirling vortex motion, shelves bending and undulating, book spines becoming waves, impossible movement in still space, manic energy, thick impasto brushstrokes, oil painting",
+    "output": "postimpressionism_vangogh_library.png",
+    "seed": 1889,
+    "passage_dissolution": 0.85,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.7,
+    "geometric_faceting": 0.75,
+    "color_intensity": 0.9,
+    "edge_ambiguity": 0.9,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Mortuary chapel interior with dozens of funeral flower arrangements, white lilies chrysanthemums roses in wreaths and sprays, stillness of death, but flowers caught in swirling impossible wind, petals streaming upward, wreaths rotating, manic life force fighting deathly stillness, wrong energy, thick impasto oil painting, visible violent brushstrokes",
+    "output": "postimpressionism_vangogh_mortuary.png",
+    "seed": 1890,
+    "passage_dissolution": 0.85,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.75,
+    "geometric_faceting": 0.7,
+    "color_intensity": 0.85,
+    "edge_ambiguity": 0.9,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Frozen lake at dusk with ice fishermen, geometric cracks in thick ice, fishing holes cut in surface, figures huddled still against cold, but sky swirling violently overhead, stars wheeling, impossible aurora movement, static frozen ground vs manic swirling heavens, cold stillness fighting cosmic energy, thick impasto oil painting brushwork",
+    "output": "postimpressionism_vangogh_frozen_lake.png",
+    "seed": 1888,
+    "passage_dissolution": 0.8,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.85,
+    "color_intensity": 0.9,
+    "edge_ambiguity": 0.85,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  }
+]

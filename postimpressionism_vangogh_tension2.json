@@ -1,0 +1,41 @@
+[
+  {
+    "prompt": "Cemetery at twilight, rows of stone headstones and grave markers stretching into distance, cypress trees, but everything caught in swirling motion, headstones bending and warping, sky consuming the landscape in spiraling clouds, manic life force fighting death and permanence, stones that should be rigid now undulating, thick impasto oil painting, violent brushstrokes",
+    "output": "postimpressionism_vangogh_cemetery.png",
+    "seed": 1890,
+    "passage_dissolution": 0.85,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.7,
+    "geometric_faceting": 0.75,
+    "color_intensity": 0.9,
+    "edge_ambiguity": 0.9,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Museum gallery at night, marble statues on pedestals, classical figures frozen in stone, but the space swirling around them, pedestals warping and bending, walls breathing and undulating, frozen figures caught in manic vortex, ceiling spiraling, floor rippling, stillness of sculpture vs cosmic motion, thick impasto oil painting, visible violent brushstrokes",
+    "output": "postimpressionism_vangogh_museum.png",
+    "seed": 1889,
+    "passage_dissolution": 0.85,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.7,
+    "geometric_faceting": 0.8,
+    "color_intensity": 0.85,
+    "edge_ambiguity": 0.9,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Snowbound cabin interior at night, frost patterns on window panes, wooden walls and floor, oil lamp light, deep winter isolation and stillness, but wood grain swirling and writhing with manic energy, frost patterns spiraling, warmth trying to escape into cold, the stillness fighting impossible movement, thick impasto oil painting, violent expressive brushwork",
+    "output": "postimpressionism_vangogh_cabin.png",
+    "seed": 1888,
+    "passage_dissolution": 0.85,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.75,
+    "geometric_faceting": 0.7,
+    "color_intensity": 0.85,
+    "edge_ambiguity": 0.9,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  }
+]

@@ -1,0 +1,15 @@
+[
+  {
+    "prompt": "Sunday afternoon at the riverbank in the style of Seurat, dozens of figures in period bathing costumes and summer dresses relaxing on grassy shore, geometric rocks and boulders, swirling water currents, trees with writhing branches, summer afternoon light, reflections on water surface, families picnicking, children playing, atmospheric haze, pointillist light effects, thick oil paint texture",
+    "output": "postimpressionism_combined_bathers.png",
+    "seed": 1886,
+    "passage_dissolution": 0.85,
+    "swirl_distortion": 0.85,
+    "pointillist_breakup": 0.9,
+    "geometric_faceting": 0.8,
+    "color_intensity": 0.85,
+    "edge_ambiguity": 0.9,
+    "inference_steps": 25,
+    "guidance_scale": 6.5
+  }
+]

@@ -1,0 +1,15 @@
+[
+  {
+    "prompt": "Kaleidoscope view fragmenting a Gothic cathedral rose window, sacred geometry shattering and multiplying, Christ and saints and angels broken into triangular facets, stained glass reds blues golds repeated in infinite symmetry, religious imagery dissolved into pure pattern, divine figures becoming abstract geometry, thick oil paint texture, visible impasto brushwork",
+    "output": "postimpressionism_pattern_cathedral_kaleidoscope.png",
+    "seed": 1894,
+    "passage_dissolution": 0.9,
+    "swirl_distortion": 0.85,
+    "pointillist_breakup": 0.9,
+    "geometric_faceting": 0.98,
+    "color_intensity": 0.95,
+    "edge_ambiguity": 0.85,
+    "inference_steps": 18,
+    "guidance_scale": 5.0
+  }
+]
