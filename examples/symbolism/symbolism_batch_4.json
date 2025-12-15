@@ -1,0 +1,54 @@
+[
+  {
+    "prompt": "Narcissus gazing at his reflection in a dark pool, but the reflection shows something different, wrong face in the water, Greek mythology, Symbolist painting, unsettling beauty",
+    "output": "symbolism_narcissus_wrong.png",
+    "seed": 1903,
+    "ornamental_encrustation": 0.6,
+    "mystery_gloss": 0.85,
+    "golden_overflow": 0.35,
+    "ethereal_softening": 0.6,
+    "symbolic_saturation": 0.7,
+    "decorative_overwhelm": 0.4,
+    "inference_steps": 30,
+    "guidance_scale": 8.0
+  },
+  {
+    "prompt": "Daphne transforming into a laurel tree to escape Apollo, her fingers becoming branches, her skin becoming bark, caught mid-transformation, Greek mythology, Symbolist painting",
+    "output": "symbolism_daphne_tree.png",
+    "seed": 1898,
+    "ornamental_encrustation": 0.75,
+    "mystery_gloss": 0.7,
+    "golden_overflow": 0.4,
+    "ethereal_softening": 0.5,
+    "symbolic_saturation": 0.65,
+    "decorative_overwhelm": 0.6,
+    "inference_steps": 30,
+    "guidance_scale": 8.5
+  },
+  {
+    "prompt": "Charon the ferryman rowing his boat across the river Styx, boat crowded with pale souls of the dead, dark waters, underworld, Greek mythology, Symbolist painting, Gustave Dore style",
+    "output": "symbolism_charon_styx.png",
+    "seed": 1888,
+    "ornamental_encrustation": 0.65,
+    "mystery_gloss": 0.85,
+    "golden_overflow": 0.3,
+    "ethereal_softening": 0.65,
+    "symbolic_saturation": 0.55,
+    "decorative_overwhelm": 0.5,
+    "inference_steps": 30,
+    "guidance_scale": 8.0
+  },
+  {
+    "prompt": "A medieval knight playing chess with Death, the Grim Reaper as his opponent, hourglass on the table, allegorical scene, Bergman's Seventh Seal, Symbolist painting",
+    "output": "symbolism_chess_death.png",
+    "seed": 1901,
+    "ornamental_encrustation": 0.7,
+    "mystery_gloss": 0.8,
+    "golden_overflow": 0.45,
+    "ethereal_softening": 0.5,
+    "symbolic_saturation": 0.6,
+    "decorative_overwhelm": 0.55,
+    "inference_steps": 30,
+    "guidance_scale": 8.5
+  }
+]

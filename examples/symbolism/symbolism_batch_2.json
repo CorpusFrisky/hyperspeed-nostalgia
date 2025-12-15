@@ -1,0 +1,54 @@
+[
+  {
+    "prompt": "A woman's face emerging from the center of a giant blooming flower, petals becoming hair, eyes dreaming, Odilon Redon style, pastel colors, strange and tender",
+    "output": "symbolism_face_flower.png",
+    "seed": 1890,
+    "ornamental_encrustation": 0.5,
+    "mystery_gloss": 0.75,
+    "golden_overflow": 0.3,
+    "ethereal_softening": 0.85,
+    "symbolic_saturation": 0.6,
+    "decorative_overwhelm": 0.5,
+    "inference_steps": 30,
+    "guidance_scale": 7.5
+  },
+  {
+    "prompt": "Portrait of a woman in Gustav Klimt style, but the gold leaf patterns are growing over her face like a disease, consuming her features, ornamental becoming predatory, Byzantine gold overwhelming flesh",
+    "output": "symbolism_klimt_consuming.png",
+    "seed": 1908,
+    "ornamental_encrustation": 0.9,
+    "mystery_gloss": 0.7,
+    "golden_overflow": 0.95,
+    "ethereal_softening": 0.3,
+    "symbolic_saturation": 0.65,
+    "decorative_overwhelm": 0.85,
+    "inference_steps": 30,
+    "guidance_scale": 8.5
+  },
+  {
+    "prompt": "A sleeping figure on a bed, their translucent soul rising from the body as a ghostly double, dream imagery floating around them, night sky visible through window, allegorical Symbolist painting",
+    "output": "symbolism_soul_leaving.png",
+    "seed": 1895,
+    "ornamental_encrustation": 0.5,
+    "mystery_gloss": 0.9,
+    "golden_overflow": 0.4,
+    "ethereal_softening": 0.8,
+    "symbolic_saturation": 0.55,
+    "decorative_overwhelm": 0.4,
+    "inference_steps": 30,
+    "guidance_scale": 8.0
+  },
+  {
+    "prompt": "A peacock with tail feathers made entirely of human eyes, each eye watching in different directions, iridescent blues and greens, symbolic and unsettling, ornate Symbolist painting",
+    "output": "symbolism_peacock_eyes.png",
+    "seed": 1884,
+    "ornamental_encrustation": 0.85,
+    "mystery_gloss": 0.8,
+    "golden_overflow": 0.5,
+    "ethereal_softening": 0.4,
+    "symbolic_saturation": 0.8,
+    "decorative_overwhelm": 0.7,
+    "inference_steps": 30,
+    "guidance_scale": 8.5
+  }
+]

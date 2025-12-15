@@ -1,0 +1,54 @@
+[
+  {
+    "prompt": "Salome holding the severed head of John the Baptist on a silver platter, blood dripping, jeweled costume, moonlit palace interior, Gustave Moreau style, mysterious and decadent",
+    "output": "symbolism_salome_head.png",
+    "seed": 1876,
+    "ornamental_encrustation": 0.8,
+    "mystery_gloss": 0.85,
+    "golden_overflow": 0.6,
+    "ethereal_softening": 0.4,
+    "symbolic_saturation": 0.7,
+    "decorative_overwhelm": 0.5,
+    "inference_steps": 30,
+    "guidance_scale": 8.5
+  },
+  {
+    "prompt": "The angel of death as a dark winged figure standing over a sleeping child in a crib, Victorian nursery, moonlight through window, tender yet ominous, allegorical painting",
+    "output": "symbolism_angel_death_child.png",
+    "seed": 1886,
+    "ornamental_encrustation": 0.5,
+    "mystery_gloss": 0.9,
+    "golden_overflow": 0.4,
+    "ethereal_softening": 0.7,
+    "symbolic_saturation": 0.6,
+    "decorative_overwhelm": 0.4,
+    "inference_steps": 30,
+    "guidance_scale": 8.0
+  },
+  {
+    "prompt": "Ophelia drowning in a stream, flowers tangled in her floating hair, white dress billowing in dark water, lilies and roses, Pre-Raphaelite Symbolist painting",
+    "output": "symbolism_ophelia_drowning.png",
+    "seed": 1852,
+    "ornamental_encrustation": 0.7,
+    "mystery_gloss": 0.8,
+    "golden_overflow": 0.3,
+    "ethereal_softening": 0.8,
+    "symbolic_saturation": 0.65,
+    "decorative_overwhelm": 0.6,
+    "inference_steps": 30,
+    "guidance_scale": 8.0
+  },
+  {
+    "prompt": "Oedipus confronting the Sphinx on a rocky cliff, the Sphinx a woman-lion hybrid with knowing eyes, bones of failed travelers below, twilight sky, Gustave Moreau style",
+    "output": "symbolism_oedipus_sphinx.png",
+    "seed": 1864,
+    "ornamental_encrustation": 0.75,
+    "mystery_gloss": 0.8,
+    "golden_overflow": 0.5,
+    "ethereal_softening": 0.5,
+    "symbolic_saturation": 0.7,
+    "decorative_overwhelm": 0.45,
+    "inference_steps": 30,
+    "guidance_scale": 8.5
+  }
+]

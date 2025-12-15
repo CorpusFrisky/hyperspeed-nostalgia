@@ -1,0 +1,54 @@
+[
+  {
+    "prompt": "Medusa with living snakes for hair, her gaze turning a man to stone before her, serpents writhing and hissing, Greek mythology, Symbolist painting, beautiful and terrifying",
+    "output": "symbolism_medusa_snakes.png",
+    "seed": 1892,
+    "ornamental_encrustation": 0.8,
+    "mystery_gloss": 0.75,
+    "golden_overflow": 0.4,
+    "ethereal_softening": 0.35,
+    "symbolic_saturation": 0.75,
+    "decorative_overwhelm": 0.7,
+    "inference_steps": 30,
+    "guidance_scale": 8.5
+  },
+  {
+    "prompt": "Icarus falling from the sky, wax wings melting, feathers scattering, blazing sun above, ocean far below, tragic Greek mythology, Symbolist painting, dramatic and doomed",
+    "output": "symbolism_icarus_falling.png",
+    "seed": 1894,
+    "ornamental_encrustation": 0.6,
+    "mystery_gloss": 0.85,
+    "golden_overflow": 0.7,
+    "ethereal_softening": 0.5,
+    "symbolic_saturation": 0.8,
+    "decorative_overwhelm": 0.45,
+    "inference_steps": 30,
+    "guidance_scale": 8.0
+  },
+  {
+    "prompt": "The three Norns weaving the threads of fate, each thread becoming a human life, tangled destinies, cosmic loom, Norse mythology, Symbolist allegorical painting",
+    "output": "symbolism_norns_weaving.png",
+    "seed": 1889,
+    "ornamental_encrustation": 0.85,
+    "mystery_gloss": 0.8,
+    "golden_overflow": 0.5,
+    "ethereal_softening": 0.4,
+    "symbolic_saturation": 0.65,
+    "decorative_overwhelm": 0.8,
+    "inference_steps": 30,
+    "guidance_scale": 8.5
+  },
+  {
+    "prompt": "A Gothic cathedral rising from the sea at twilight, half-submerged, drowned architecture, waves lapping at stained glass windows, sacred ruin, Debussy's sunken cathedral, Symbolist painting",
+    "output": "symbolism_drowned_cathedral.png",
+    "seed": 1905,
+    "ornamental_encrustation": 0.7,
+    "mystery_gloss": 0.9,
+    "golden_overflow": 0.45,
+    "ethereal_softening": 0.7,
+    "symbolic_saturation": 0.6,
+    "decorative_overwhelm": 0.5,
+    "inference_steps": 30,
+    "guidance_scale": 8.0
+  }
+]

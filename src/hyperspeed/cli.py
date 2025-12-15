@@ -21,6 +21,7 @@ from hyperspeed.eras import high_renaissance  # noqa: F401
 from hyperspeed.eras import neoclassicism  # noqa: F401
 from hyperspeed.eras import impressionism  # noqa: F401
 from hyperspeed.eras import post_impressionism  # noqa: F401
+from hyperspeed.eras import symbolism  # noqa: F401
 
 app = typer.Typer(
     name="hyperspeed",
@@ -275,6 +276,52 @@ def generate(
         Optional[float],
         typer.Option("--temporal-blur", help="[Impressionism] Motion suggesting captured moment"),
     ] = None,
+    # Post-Impressionism params
+    passage_dissolution: Annotated[
+        Optional[float],
+        typer.Option("--passage-dissolution", help="[Post-Impressionism] Cezanne's planes that don't meet"),
+    ] = None,
+    swirl_distortion: Annotated[
+        Optional[float],
+        typer.Option("--swirl-distortion", help="[Post-Impressionism] Van Gogh's energy fields"),
+    ] = None,
+    pointillist_breakup: Annotated[
+        Optional[float],
+        typer.Option("--pointillist-breakup", help="[Post-Impressionism] Seurat's discrete dots"),
+    ] = None,
+    geometric_faceting: Annotated[
+        Optional[float],
+        typer.Option("--geometric-faceting", help="[Post-Impressionism] Forms break into patches"),
+    ] = None,
+    color_intensity: Annotated[
+        Optional[float],
+        typer.Option("--color-intensity", help="[Post-Impressionism] Psychological saturation"),
+    ] = None,
+    # Symbolism params
+    ornamental_encrustation: Annotated[
+        Optional[float],
+        typer.Option("--ornamental-encrustation", help="[Symbolism] Moreau's surfaces encrusted with detail"),
+    ] = None,
+    mystery_gloss: Annotated[
+        Optional[float],
+        typer.Option("--mystery-gloss", help="[Symbolism] Ethereal sheen, everything glows"),
+    ] = None,
+    golden_overflow: Annotated[
+        Optional[float],
+        typer.Option("--golden-overflow", help="[Symbolism] Klimt's gold spreading everywhere"),
+    ] = None,
+    ethereal_softening: Annotated[
+        Optional[float],
+        typer.Option("--ethereal-softening", help="[Symbolism] Redon's dreamlike blur"),
+    ] = None,
+    symbolic_saturation: Annotated[
+        Optional[float],
+        typer.Option("--symbolic-saturation", help="[Symbolism] Unnaturally intense colors"),
+    ] = None,
+    decorative_overwhelm: Annotated[
+        Optional[float],
+        typer.Option("--decorative-overwhelm", help="[Symbolism] Pattern invading form"),
+    ] = None,
     device: Annotated[
         str,
         typer.Option("--device", help="Device: mps, cuda, cpu"),
@@ -436,6 +483,30 @@ def generate(
         era_params["light_fragmentation"] = light_fragmentation
     if temporal_blur is not None:
         era_params["temporal_blur"] = temporal_blur
+    # Post-Impressionism params
+    if passage_dissolution is not None:
+        era_params["passage_dissolution"] = passage_dissolution
+    if swirl_distortion is not None:
+        era_params["swirl_distortion"] = swirl_distortion
+    if pointillist_breakup is not None:
+        era_params["pointillist_breakup"] = pointillist_breakup
+    if geometric_faceting is not None:
+        era_params["geometric_faceting"] = geometric_faceting
+    if color_intensity is not None:
+        era_params["color_intensity"] = color_intensity
+    # Symbolism params
+    if ornamental_encrustation is not None:
+        era_params["ornamental_encrustation"] = ornamental_encrustation
+    if mystery_gloss is not None:
+        era_params["mystery_gloss"] = mystery_gloss
+    if golden_overflow is not None:
+        era_params["golden_overflow"] = golden_overflow
+    if ethereal_softening is not None:
+        era_params["ethereal_softening"] = ethereal_softening
+    if symbolic_saturation is not None:
+        era_params["symbolic_saturation"] = symbolic_saturation
+    if decorative_overwhelm is not None:
+        era_params["decorative_overwhelm"] = decorative_overwhelm
     # img2img strength (only matters when --source is provided)
     era_params["img2img_strength"] = strength
     # Common params
