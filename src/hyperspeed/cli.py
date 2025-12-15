@@ -22,6 +22,8 @@ from hyperspeed.eras import neoclassicism  # noqa: F401
 from hyperspeed.eras import impressionism  # noqa: F401
 from hyperspeed.eras import post_impressionism  # noqa: F401
 from hyperspeed.eras import symbolism  # noqa: F401
+from hyperspeed.eras import fauvism  # noqa: F401
+from hyperspeed.eras import cubism  # noqa: F401
 
 app = typer.Typer(
     name="hyperspeed",
@@ -322,6 +324,56 @@ def generate(
         Optional[float],
         typer.Option("--decorative-overwhelm", help="[Symbolism] Pattern invading form"),
     ] = None,
+    # Fauvism params
+    saturation_violence: Annotated[
+        Optional[float],
+        typer.Option("--saturation-violence", help="[Fauvism] Push all colors toward maximum"),
+    ] = None,
+    hue_distortion: Annotated[
+        Optional[float],
+        typer.Option("--hue-distortion", help="[Fauvism] Shift colors away from naturalism"),
+    ] = None,
+    teal_orange_cast: Annotated[
+        Optional[float],
+        typer.Option("--teal-orange-cast", help="[Fauvism] THE Golden Age signature color grading"),
+    ] = None,
+    color_clash: Annotated[
+        Optional[float],
+        typer.Option("--color-clash", help="[Fauvism] Complementary colors forced together"),
+    ] = None,
+    chromatic_intensity: Annotated[
+        Optional[float],
+        typer.Option("--chromatic-intensity", help="[Fauvism] Luminosity pushed to extremes"),
+    ] = None,
+    pigment_expressiveness: Annotated[
+        Optional[float],
+        typer.Option("--pigment-expressiveness", help="[Fauvism] Colors straight from the tube"),
+    ] = None,
+    # Cubism params
+    perspective_fracture: Annotated[
+        Optional[float],
+        typer.Option("--perspective-fracture", help="[Cubism] Multiple viewpoints simultaneously"),
+    ] = None,
+    cubist_faceting: Annotated[
+        Optional[float],
+        typer.Option("--cubist-faceting", help="[Cubism] Forms break into angular planes"),
+    ] = None,
+    spatial_contradiction: Annotated[
+        Optional[float],
+        typer.Option("--spatial-contradiction", help="[Cubism] Conflicting depth cues"),
+    ] = None,
+    plane_slippage: Annotated[
+        Optional[float],
+        typer.Option("--plane-slippage", help="[Cubism] Surfaces that don't align"),
+    ] = None,
+    edge_multiplication: Annotated[
+        Optional[float],
+        typer.Option("--edge-multiplication", help="[Cubism] Forms shown from multiple angles"),
+    ] = None,
+    shallow_depth: Annotated[
+        Optional[float],
+        typer.Option("--shallow-depth", help="[Cubism] Compressed Z-axis, flattening"),
+    ] = None,
     device: Annotated[
         str,
         typer.Option("--device", help="Device: mps, cuda, cpu"),
@@ -507,6 +559,32 @@ def generate(
         era_params["symbolic_saturation"] = symbolic_saturation
     if decorative_overwhelm is not None:
         era_params["decorative_overwhelm"] = decorative_overwhelm
+    # Fauvism params
+    if saturation_violence is not None:
+        era_params["saturation_violence"] = saturation_violence
+    if hue_distortion is not None:
+        era_params["hue_distortion"] = hue_distortion
+    if teal_orange_cast is not None:
+        era_params["teal_orange_cast"] = teal_orange_cast
+    if color_clash is not None:
+        era_params["color_clash"] = color_clash
+    if chromatic_intensity is not None:
+        era_params["chromatic_intensity"] = chromatic_intensity
+    if pigment_expressiveness is not None:
+        era_params["pigment_expressiveness"] = pigment_expressiveness
+    # Cubism params
+    if perspective_fracture is not None:
+        era_params["perspective_fracture"] = perspective_fracture
+    if cubist_faceting is not None:
+        era_params["geometric_faceting"] = cubist_faceting
+    if spatial_contradiction is not None:
+        era_params["spatial_contradiction"] = spatial_contradiction
+    if plane_slippage is not None:
+        era_params["plane_slippage"] = plane_slippage
+    if edge_multiplication is not None:
+        era_params["edge_multiplication"] = edge_multiplication
+    if shallow_depth is not None:
+        era_params["shallow_depth"] = shallow_depth
     # img2img strength (only matters when --source is provided)
     era_params["img2img_strength"] = strength
     # Common params
