@@ -1,0 +1,47 @@
+[
+  {
+    "prompt": "Frozen lake at dusk with ice fishermen, sharp angular geometric cracks in thick ice like broken glass, jagged ice plates, fishing holes cut in surface, figures huddled still against cold, single thin bare tree with skeletal branches on far left, sky dominated by tight spiral vortex around glowing moon, concentric circles of swirling energy, extreme contrast between static angular ice below and curved spiral movement above, muted blue grey, thick impasto oil painting brushwork",
+    "output": "postimpressionism_vangogh_frozen_lake_5x4_e.png",
+    "width": 1024,
+    "height": 1280,
+    "seed": 1888,
+    "passage_dissolution": 0.8,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.95,
+    "color_intensity": 0.85,
+    "edge_ambiguity": 0.8,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Frozen lake at dusk with ice fishermen, sharp angular geometric cracks in thick ice like broken glass, jagged ice plates, fishing holes cut in surface, figures huddled still against cold, single thin bare tree with skeletal branches on far left, sky dominated by tight spiral vortex around glowing moon, concentric circles of swirling energy, extreme contrast between static angular ice below and curved spiral movement above, muted blue grey, thick impasto oil painting brushwork",
+    "output": "postimpressionism_vangogh_frozen_lake_5x4_f.png",
+    "width": 1024,
+    "height": 1280,
+    "seed": 1887,
+    "passage_dissolution": 0.8,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.95,
+    "color_intensity": 0.85,
+    "edge_ambiguity": 0.8,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Frozen lake at dusk with ice fishermen, sharp angular geometric cracks in thick ice like broken glass, jagged ice plates, fishing holes cut in surface, figures huddled still against cold, single thin bare tree with skeletal branches on far left, sky dominated by tight spiral vortex around glowing moon, concentric circles of swirling energy, extreme contrast between static angular ice below and curved spiral movement above, muted blue grey, thick impasto oil painting brushwork",
+    "output": "postimpressionism_vangogh_frozen_lake_5x4_g.png",
+    "width": 1024,
+    "height": 1280,
+    "seed": 1891,
+    "passage_dissolution": 0.8,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.95,
+    "color_intensity": 0.85,
+    "edge_ambiguity": 0.8,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  }
+]

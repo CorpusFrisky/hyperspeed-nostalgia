@@ -1,0 +1,41 @@
+[
+    {
+        "prompt": "Cubist still life with guitar, newspaper, and wine glass on a cafe table, fragmented into geometric planes, Picasso and Braque Analytic Cubism, brown and gray palette, the objects shatter but cohere, multiple angles visible simultaneously, oil painting",
+        "output": "cubism_guitar_newspaper_glass.png",
+        "seed": 1907,
+        "perspective_fracture": 0.8,
+        "geometric_faceting": 0.85,
+        "spatial_contradiction": 0.65,
+        "plane_slippage": 0.6,
+        "edge_multiplication": 0.7,
+        "shallow_depth": 0.75,
+        "inference_steps": 30,
+        "guidance_scale": 7.5
+    },
+    {
+        "prompt": "Cubist portrait showing three angles of the same face simultaneously, profile and frontal and three-quarter view merged into one image, the identity holds despite fragmentation, Picasso portrait style, angular planes, the nose from the side while the eyes face forward",
+        "output": "cubism_three_angle_portrait.png",
+        "seed": 1908,
+        "perspective_fracture": 0.9,
+        "geometric_faceting": 0.8,
+        "spatial_contradiction": 0.7,
+        "plane_slippage": 0.55,
+        "edge_multiplication": 0.8,
+        "shallow_depth": 0.7,
+        "inference_steps": 30,
+        "guidance_scale": 8.0
+    },
+    {
+        "prompt": "Figure descending a staircase, motion captured through fractured time, Duchamp Nude Descending a Staircase inspired, the body multiplied across moments of descent, mechanical and human merged, brown ochre palette, Cubist-Futurist motion study",
+        "output": "cubism_figure_descending_staircase.png",
+        "seed": 1912,
+        "perspective_fracture": 0.85,
+        "geometric_faceting": 0.75,
+        "spatial_contradiction": 0.6,
+        "plane_slippage": 0.7,
+        "edge_multiplication": 0.9,
+        "shallow_depth": 0.65,
+        "inference_steps": 30,
+        "guidance_scale": 7.5
+    }
+]

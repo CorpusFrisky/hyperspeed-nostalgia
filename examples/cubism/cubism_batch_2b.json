@@ -1,0 +1,15 @@
+[
+    {
+        "prompt": "Two clothed figures in a tender embrace rendered in Cubist style, their forms fragmented and merged into one geometric composition, impossible to tell where one person ends and the other begins, Picasso lovers in angular planes, bodies and clothing intertwined through fragmentation, intimate geometry of connection",
+        "output": "cubism_embracing_figures_merged.png",
+        "seed": 1913,
+        "perspective_fracture": 0.85,
+        "geometric_faceting": 0.85,
+        "spatial_contradiction": 0.75,
+        "plane_slippage": 0.8,
+        "edge_multiplication": 0.7,
+        "shallow_depth": 0.7,
+        "inference_steps": 30,
+        "guidance_scale": 8.0
+    }
+]

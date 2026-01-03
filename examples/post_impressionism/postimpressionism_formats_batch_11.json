@@ -1,0 +1,62 @@
+[
+  {
+    "prompt": "Frozen lake at dusk with ice fishermen, geometric cracks in thick ice, fishing holes cut in surface, figures huddled still against cold, but sky swirling violently overhead, stars wheeling, impossible aurora movement, static frozen ground vs manic swirling heavens, cold stillness fighting cosmic energy, thick impasto oil painting brushwork",
+    "output": "postimpressionism_vangogh_frozen_lake_5x4_a.png",
+    "width": 1024,
+    "height": 1280,
+    "seed": 1888,
+    "passage_dissolution": 0.8,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.85,
+    "color_intensity": 0.9,
+    "edge_ambiguity": 0.85,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Frozen lake at dusk with ice fishermen, geometric cracks in thick ice, fishing holes cut in surface, figures huddled still against cold, but sky swirling violently overhead, stars wheeling, impossible aurora movement, static frozen ground vs manic swirling heavens, cold stillness fighting cosmic energy, thick impasto oil painting brushwork",
+    "output": "postimpressionism_vangogh_frozen_lake_5x4_b.png",
+    "width": 1024,
+    "height": 1280,
+    "seed": 1889,
+    "passage_dissolution": 0.8,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.85,
+    "color_intensity": 0.9,
+    "edge_ambiguity": 0.85,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Frozen lake at dusk with ice fishermen, geometric cracks in thick ice, fishing holes cut in surface, figures huddled still against cold, but sky swirling violently overhead, stars wheeling, impossible aurora movement, static frozen ground vs manic swirling heavens, cold stillness fighting cosmic energy, thick impasto oil painting brushwork",
+    "output": "postimpressionism_vangogh_frozen_lake_5x4_c.png",
+    "width": 1024,
+    "height": 1280,
+    "seed": 1890,
+    "passage_dissolution": 0.8,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.85,
+    "color_intensity": 0.9,
+    "edge_ambiguity": 0.85,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Frozen lake at dusk with ice fishermen, geometric cracks in thick ice, fishing holes cut in surface, figures huddled still against cold, but sky swirling violently overhead, stars wheeling, impossible aurora movement, static frozen ground vs manic swirling heavens, cold stillness fighting cosmic energy, thick impasto oil painting brushwork",
+    "output": "postimpressionism_vangogh_frozen_lake_5x4_d.png",
+    "width": 1024,
+    "height": 1280,
+    "seed": 1886,
+    "passage_dissolution": 0.8,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.85,
+    "color_intensity": 0.9,
+    "edge_ambiguity": 0.85,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  }
+]

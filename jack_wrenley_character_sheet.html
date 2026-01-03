@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jack "Empty Cup" Wrenley - D&D 5e Character Sheet</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=IM+Fell+DW+Pica:ital@0;1&family=Spectral:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --parchment: #f4f1e8;
+            --dark-red: #8b1a1a;
+            --gold: #c9a227;
+            --dark-brown: #3d2914;
+            --medium-brown: #5c4033;
+            --light-brown: #8b7355;
+            --accent-blue: #1a3a5c;
+        }
+
+        @page {
+            size: letter;
+            margin: 0.5in;
+        }
+
+        body {
+            font-family: 'Spectral', Georgia, serif;
+            font-size: 9pt;
+            line-height: 1.3;
+            color: var(--dark-brown);
+            background: var(--parchment);
+            padding: 0.25in;
+        }
+
+        .page {
+            width: 7.5in;
+            min-height: 10in;
+            margin: 0 auto 0.5in auto;
+            background: var(--parchment);
+            page-break-after: always;
+            position: relative;
+        }
+
+        .page:last-child {
+            page-break-after: avoid;
+        }
+
+        /* Header Styling */
+        .character-header {
+            text-align: center;
+            border-bottom: 3px double var(--dark-red);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .character-name {
+            font-family: 'IM Fell DW Pica', serif;
+            font-size: 28pt;
+            color: var(--dark-red);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .character-subtitle {
+            font-family: 'Crimson Text', serif;
+            font-size: 12pt;
+            font-style: italic;
+            color: var(--medium-brown);
+        }
+
+        /* Section Headers */
+        h2 {
+            font-family: 'IM Fell DW Pica', serif;
+            font-size: 14pt;
+            color: var(--dark-red);
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 3px;
+            margin: 12px 0 8px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h3 {
+            font-family: 'Spectral', serif;
+            font-size: 10pt;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin: 8px 0 4px 0;
+        }
+
+        /* Grid Layouts */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* Stat Blocks */
+        .stat-block {
+            border: 2px solid var(--dark-red);
+            border-radius: 5px;
+            padding: 8px;
+            background: linear-gradient(135deg, #fff9f0 0%, #f4f1e8 100%);
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-block.highlight {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, #fffbf0 0%, #fff5e0 100%);
+        }
+
+        .stat-block.combat {
+            border-color: var(--accent-blue);
+            background: linear-gradient(135deg, #f0f5ff 0%, #e8eef8 100%);
+        }
+
+        /* Ability Scores */
+        .ability-scores {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .ability-box {
+            text-align: center;
+            border: 2px solid var(--dark-red);
+            border-radius: 5px;
+            padding: 5px 3px;
+            background: #fff;
+        }
+
+        .ability-name {
+            font-size: 8pt;
+            font-weight: 700;
+            color: var(--dark-red);
+            text-transform: uppercase;
+        }
+
+        .ability-score {
+            font-size: 18pt;
+            font-weight: 700;
+            color: var(--dark-brown);
+        }
+
+        .ability-mod {
+            font-size: 10pt;
+            color: var(--medium-brown);
+            background: var(--parchment);
+            border-radius: 3px;
+            padding: 1px 4px;
+        }
+
+        /* Core Stats Row */
+        .core-stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin: 10px 0;
+        }
+
+        .core-stat {
+            text-align: center;
+            border: 2px solid var(--gold);
+            border-radius: 5px;
+            padding: 8px 5px;
+            background: linear-gradient(to bottom, #fff 0%, #f9f5e8 100%);
+        }
+
+        .core-stat-label {
+            font-size: 7pt;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--medium-brown);
+        }
+
+        .core-stat-value {
+            font-size: 16pt;
+            font-weight: 700;
+            color: var(--dark-red);
+        }
+
+        /* Lists */
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        li {
+            padding: 2px 0;
+            padding-left: 12px;
+            position: relative;
+        }
+
+        li::before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-size: 6pt;
+            top: 5px;
+        }
+
+        /* Attack Table */
+        .attack-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 5px 0;
+            font-size: 8.5pt;
+        }
+
+        .attack-table th {
+            background: var(--dark-red);
+            color: #fff;
+            padding: 4px 6px;
+            text-align: left;
+            font-size: 8pt;
+            text-transform: uppercase;
+        }
+
+        .attack-table td {
+            padding: 4px 6px;
+            border-bottom: 1px solid var(--light-brown);
+        }
+
+        .attack-table tr:nth-child(even) {
+            background: rgba(201, 162, 39, 0.1);
+        }
+
+        /* Feature Box */
+        .feature-box {
+            border-left: 3px solid var(--gold);
+            padding: 5px 10px;
+            margin: 5px 0;
+            background: rgba(201, 162, 39, 0.05);
+        }
+
+        .feature-name {
+            font-weight: 700;
+            color: var(--dark-red);
+        }
+
+        /* Combat Reference */
+        .combat-ref {
+            border: 3px solid var(--accent-blue);
+            border-radius: 8px;
+            padding: 10px;
+            background: linear-gradient(135deg, #f0f5ff 0%, #e5ecf8 100%);
+            margin: 10px 0;
+        }
+
+        .combat-ref h3 {
+            color: var(--accent-blue);
+            font-size: 11pt;
+            margin-bottom: 8px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .combo-step {
+            display: flex;
+            align-items: flex-start;
+            margin: 4px 0;
+        }
+
+        .step-num {
+            background: var(--accent-blue);
+            color: #fff;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9pt;
+            font-weight: 700;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Ki Tracker */
+        .ki-tracker {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 5px 0;
+        }
+
+        .ki-point {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--dark-red);
+            border-radius: 50%;
+            background: #fff;
+        }
+
+        /* Quote Box */
+        .quote-box {
+            font-family: 'Crimson Text', serif;
+            font-style: italic;
+            font-size: 10pt;
+            text-align: center;
+            color: var(--medium-brown);
+            padding: 10px 20px;
+            border-top: 1px solid var(--gold);
+            border-bottom: 1px solid var(--gold);
+            margin: 15px 0;
+        }
+
+        /* Page Footer */
+        .page-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 8pt;
+            color: var(--light-brown);
+            padding: 5px;
+            border-top: 1px solid var(--light-brown);
+        }
+
+        /* Compact text */
+        .compact {
+            font-size: 8pt;
+            line-height: 1.25;
+        }
+
+        .tiny {
+            font-size: 7pt;
+        }
+
+        /* Inline stats */
+        .inline-stat {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .stat-label {
+            font-weight: 600;
+            color: var(--dark-red);
+        }
+
+        /* Personality Section */
+        .personality-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .personality-box {
+            border: 1px solid var(--medium-brown);
+            border-radius: 4px;
+            padding: 6px;
+            background: #fff;
+        }
+
+        .personality-label {
+            font-size: 7pt;
+            text-transform: uppercase;
+            color: var(--dark-red);
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        /* Proficiency dots */
+        .prof-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--dark-brown);
+            margin-right: 3px;
+        }
+
+        .prof-dot.empty {
+            background: transparent;
+            border: 1px solid var(--dark-brown);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .page {
+                width: 100%;
+                min-height: auto;
+                margin: 0;
+                box-shadow: none;
+            }
+
+            .page-footer {
+                position: relative;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- PAGE 1: Core Stats & Combat -->
+<div class="page">
+    <header class="character-header">
+        <h1 class="character-name">Jack "Empty Cup" Wrenley</h1>
+        <div class="character-subtitle">Level 5 Monk — Way of the Drunken Master</div>
+    </header>
+
+    <div class="two-column">
+        <div class="stat-block">
+            <h3>Basic Information</h3>
+            <div class="compact">
+                <span class="inline-stat"><span class="stat-label">Race:</span> Human (Variant)</span>
+                <span class="inline-stat"><span class="stat-label">Background:</span> Sage</span><br>
+                <span class="inline-stat"><span class="stat-label">Alignment:</span> Chaotic Good</span>
+                <span class="inline-stat"><span class="stat-label">Age:</span> 46</span><br>
+                <span class="inline-stat"><span class="stat-label">Height:</span> 5'10"</span>
+                <span class="inline-stat"><span class="stat-label">Weight:</span> 165 lbs</span>
+            </div>
+        </div>
+        <div class="stat-block">
+            <h3>Proficiency Bonus: +3</h3>
+            <div class="compact">
+                <span class="inline-stat"><span class="stat-label">Languages:</span> Common, Draconic, Sylvan</span><br>
+                <span class="inline-stat"><span class="stat-label">Tools:</span> Brewer's supplies, Calligrapher's</span><br>
+                <span class="inline-stat"><span class="stat-label">Weapons:</span> Simple, shortswords</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="ability-scores">
+        <div class="ability-box">
+            <div class="ability-name">STR</div>
+            <div class="ability-score">10</div>
+            <div class="ability-mod">+0</div>
+        </div>
+        <div class="ability-box">
+            <div class="ability-name">DEX</div>
+            <div class="ability-score">18</div>
+            <div class="ability-mod">+4</div>
+        </div>
+        <div class="ability-box">
+            <div class="ability-name">CON</div>
+            <div class="ability-score">14</div>
+            <div class="ability-mod">+2</div>
+        </div>
+        <div class="ability-box">
+            <div class="ability-name">INT</div>
+            <div class="ability-score">13</div>
+            <div class="ability-mod">+1</div>
+        </div>
+        <div class="ability-box">
+            <div class="ability-name">WIS</div>
+            <div class="ability-score">16</div>
+            <div class="ability-mod">+3</div>
+        </div>
+        <div class="ability-box">
+            <div class="ability-name">CHA</div>
+            <div class="ability-score">10</div>
+            <div class="ability-mod">+0</div>
+        </div>
+    </div>
+
+    <div class="core-stats">
+        <div class="core-stat">
+            <div class="core-stat-label">Armor Class</div>
+            <div class="core-stat-value">17</div>
+        </div>
+        <div class="core-stat">
+            <div class="core-stat-label">Hit Points</div>
+            <div class="core-stat-value">38</div>
+        </div>
+        <div class="core-stat">
+            <div class="core-stat-label">Speed</div>
+            <div class="core-stat-value">40 ft</div>
+        </div>
+        <div class="core-stat">
+            <div class="core-stat-label">Initiative</div>
+            <div class="core-stat-value">+4</div>
+        </div>
+        <div class="core-stat">
+            <div class="core-stat-label">Ki Points</div>
+            <div class="core-stat-value">5</div>
+        </div>
+    </div>
+
+    <div class="two-column">
+        <div class="stat-block">
+            <h3>Saving Throws</h3>
+            <div class="compact">
+                <span class="prof-dot"></span><span class="inline-stat"><span class="stat-label">STR:</span> +3</span>
+                <span class="prof-dot"></span><span class="inline-stat"><span class="stat-label">DEX:</span> +7</span><br>
+                <span class="prof-dot empty"></span><span class="inline-stat"><span class="stat-label">CON:</span> +2</span>
+                <span class="prof-dot empty"></span><span class="inline-stat"><span class="stat-label">INT:</span> +1</span><br>
+                <span class="prof-dot empty"></span><span class="inline-stat"><span class="stat-label">WIS:</span> +6</span>
+                <span class="prof-dot empty"></span><span class="inline-stat"><span class="stat-label">CHA:</span> +0</span>
+            </div>
+        </div>
+        <div class="stat-block">
+            <h3>Skills</h3>
+            <div class="compact">
+                <span class="prof-dot"></span><span class="inline-stat"><span class="stat-label">Acrobatics:</span> +7</span>
+                <span class="prof-dot"></span><span class="inline-stat"><span class="stat-label">Arcana:</span> +4</span><br>
+                <span class="prof-dot"></span><span class="inline-stat"><span class="stat-label">History:</span> +4</span>
+                <span class="prof-dot"></span><span class="inline-stat"><span class="stat-label">Perception:</span> +6</span><br>
+                <span class="prof-dot"></span><span class="inline-stat"><span class="stat-label">Performance:</span> +3</span>
+                <span class="prof-dot"></span><span class="inline-stat"><span class="stat-label">Stealth:</span> +7</span>
+            </div>
+        </div>
+    </div>
+
+    <h2>⚔ Attacks</h2>
+    <table class="attack-table">
+        <tr>
+            <th>Attack</th>
+            <th>Hit</th>
+            <th>Damage</th>
+            <th>Notes</th>
+        </tr>
+        <tr>
+            <td><strong>Unarmed Strike</strong></td>
+            <td>+7</td>
+            <td>1d6+4 bludg.</td>
+            <td>Martial Arts die; 2 attacks (Extra Attack)</td>
+        </tr>
+        <tr>
+            <td><strong>Quarterstaff</strong></td>
+            <td>+7</td>
+            <td>1d6+4 bludg.</td>
+            <td>Monk weapon; uses Martial Arts die</td>
+        </tr>
+        <tr>
+            <td><strong>Darts (10)</strong></td>
+            <td>+7</td>
+            <td>1d6+4 pierc.</td>
+            <td>Range 20/60 ft.</td>
+        </tr>
+        <tr>
+            <td><strong>Stunning Strike</strong></td>
+            <td>—</td>
+            <td>—</td>
+            <td>1 ki on hit; DC 14 CON or stunned</td>
+        </tr>
+    </table>
+
+    <div class="combat-ref">
+        <h3>⚡ Signature Combo: "The Drunken Dance"</h3>
+        <div class="combo-step">
+            <span class="step-num">1</span>
+            <span><strong>Attack Action:</strong> Make 2 attacks (+7, 1d6+4 each)</span>
+        </div>
+        <div class="combo-step">
+            <span class="step-num">2</span>
+            <span><strong>Flurry of Blows (1 ki):</strong> 2 more unarmed strikes (+7, 1d6+4 each)</span>
+        </div>
+        <div class="combo-step">
+            <span class="step-num">3</span>
+            <span><strong>Drunken Technique:</strong> FREE Disengage + 10 ft. bonus speed</span>
+        </div>
+        <div class="combo-step">
+            <span class="step-num">4</span>
+            <span><strong>Movement:</strong> Up to 50 feet without provoking opportunity attacks</span>
+        </div>
+        <div class="combo-step">
+            <span class="step-num">5</span>
+            <span><strong>Optional:</strong> Stunning Strike on priority target (1 ki, DC 14 CON)</span>
+        </div>
+        <div style="text-align: center; margin-top: 8px; font-weight: 700; color: var(--accent-blue);">
+            TOTAL: 4 attacks, move 50 ft., slip away untouched | Ki Cost: 1-2
+        </div>
+    </div>
+
+    <h2>✦ Ki Abilities (5 points, short/long rest)</h2>
+    <div class="ki-tracker">
+        <span class="stat-label">Ki Points:</span>
+        <span class="ki-point"></span>
+        <span class="ki-point"></span>
+        <span class="ki-point"></span>
+        <span class="ki-point"></span>
+        <span class="ki-point"></span>
+    </div>
+    <div class="three-column compact">
+        <div class="feature-box">
+            <span class="feature-name">Flurry of Blows</span> (1 ki)<br>
+            Bonus: 2 unarmed strikes
+        </div>
+        <div class="feature-box">
+            <span class="feature-name">Patient Defense</span> (1 ki)<br>
+            Bonus: Dodge action
+        </div>
+        <div class="feature-box">
+            <span class="feature-name">Step of the Wind</span> (1 ki)<br>
+            Bonus: Disengage/Dash, 2× jump
+        </div>
+    </div>
+
+    <div class="page-footer">Jack "Empty Cup" Wrenley — Level 5 Drunken Master Monk — Page 1</div>
+</div>
+
+<!-- PAGE 2: Features & Equipment -->
+<div class="page">
+    <header class="character-header" style="padding-bottom: 5px; margin-bottom: 10px;">
+        <h1 class="character-name" style="font-size: 20pt;">Jack "Empty Cup" Wrenley</h1>
+        <div class="character-subtitle">Features & Equipment</div>
+    </header>
+
+    <h2>Monk Features</h2>
+    <div class="two-column">
+        <div>
+            <div class="feature-box">
+                <span class="feature-name">Martial Arts (d6)</span><br>
+                <span class="compact">Use DEX for monk weapons/unarmed. Unarmed strikes deal 1d6. Bonus action unarmed strike after Attack with monk weapon/unarmed.</span>
+            </div>
+            <div class="feature-box">
+                <span class="feature-name">Unarmored Defense</span><br>
+                <span class="compact">AC = 10 + DEX (+4) + WIS (+3) = <strong>17</strong></span>
+            </div>
+            <div class="feature-box">
+                <span class="feature-name">Unarmored Movement</span><br>
+                <span class="compact">+10 ft. speed when unarmored (40 ft. total)</span>
+            </div>
+        </div>
+        <div>
+            <div class="feature-box">
+                <span class="feature-name">Extra Attack</span><br>
+                <span class="compact">Attack twice when taking Attack action</span>
+            </div>
+            <div class="feature-box">
+                <span class="feature-name">Deflect Missiles</span> (Reaction)<br>
+                <span class="compact">Reduce ranged damage by 1d10+9. If reduced to 0, catch it. Spend 1 ki to throw back (+7, 1d6+4, 20/60 ft.)</span>
+            </div>
+            <div class="feature-box">
+                <span class="feature-name">Slow Fall</span> (Reaction)<br>
+                <span class="compact">Reduce falling damage by 25 (5 × level)</span>
+            </div>
+        </div>
+    </div>
+
+    <h2>Drunken Master Features</h2>
+    <div class="stat-block highlight">
+        <div class="feature-box" style="border-left-color: var(--dark-red);">
+            <span class="feature-name">Drunken Technique</span> (Level 3)<br>
+            <span class="compact">When you use <strong>Flurry of Blows</strong>: Gain benefit of Disengage action AND walking speed increases by 10 ft. until end of turn. <em>This is what makes Jack incredibly mobile!</em></span>
+        </div>
+        <div class="compact" style="margin-top: 8px;">
+            <span class="inline-stat"><span class="stat-label">Bonus Proficiencies:</span> Performance skill, Brewer's supplies</span>
+        </div>
+    </div>
+
+    <h2>Feat: Mobile</h2>
+    <div class="stat-block">
+        <ul class="compact">
+            <li>Speed +10 ft. (included in 40 ft. total)</li>
+            <li>Dash through difficult terrain costs no extra movement</li>
+            <li>When you attack a creature, don't provoke opportunity attacks from it (hit or miss)</li>
+        </ul>
+    </div>
+
+    <h2>Background: Sage (Researcher)</h2>
+    <div class="feature-box">
+        <span class="feature-name">Feature: Researcher</span><br>
+        <span class="compact">When attempting to learn/recall lore, if you don't know it, you often know where and from whom to obtain it (library, sage, university, etc.).</span>
+    </div>
+    <div class="compact" style="margin-top: 5px;">
+        <span class="stat-label">Specialty:</span> Ancient temple ruins, guardian-Thornbrood lore, druidic history. Knows more about the old pact between guardians and Thornbrood than almost anyone living.
+    </div>
+
+    <h2>Equipment</h2>
+    <div class="two-column">
+        <div class="stat-block">
+            <h3>Weapons & Gear</h3>
+            <ul class="compact">
+                <li>Quarterstaff</li>
+                <li>10 Darts</li>
+                <li>Explorer's pack (backpack, bedroll, mess kit, tinderbox, 10 torches, 10 days rations, waterskin, 50 ft. rope)</li>
+                <li>Brewer's supplies</li>
+                <li>Calligrapher's supplies</li>
+                <li><strong>Flask</strong> (iconic, always contains alcohol)</li>
+                <li>Research notes (temple ruins, guardian-Thornbrood lore)</li>
+                <li>Simple traveler's clothes (worn, patched)</li>
+                <li>Belt pouch with <strong>15 gp</strong></li>
+            </ul>
+        </div>
+        <div class="stat-block highlight">
+            <h3>Magic Items</h3>
+            <div class="feature-box" style="border-left-color: var(--dark-red);">
+                <span class="feature-name">Windcaller's Cloak</span> (Uncommon)<br>
+                <span class="compact">• Advantage on saves vs. wind effects<br>• Resistance to thunder damage</span>
+            </div>
+        </div>
+    </div>
+
+    <h2>Defensive Options Quick Reference</h2>
+    <div class="combat-ref">
+        <div class="three-column compact">
+            <div>
+                <strong>Patient Defense</strong> (1 ki)<br>
+                Bonus: Dodge — all attacks have disadvantage
+            </div>
+            <div>
+                <strong>Step of the Wind</strong> (1 ki)<br>
+                Bonus: Disengage or Dash + double jump
+            </div>
+            <div>
+                <strong>Mobile Feat</strong><br>
+                No OA from anyone you attacked
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 8px;">
+            <strong>Deflect Missiles:</strong> Reaction, reduce ranged by 1d10+9, catch if 0, throw back (1 ki)
+        </div>
+    </div>
+
+    <h2>Level 6 Preview: Tipsy Sway</h2>
+    <div class="stat-block" style="border-style: dashed;">
+        <div class="two-column compact">
+            <div>
+                <span class="feature-name">Leap to Your Feet:</span> Stand from prone costs only 5 ft. movement
+            </div>
+            <div>
+                <span class="feature-name">Redirect Attack</span> (Reaction, 1 ki):<br>
+                When creature misses you with melee, make it hit another creature within 5 ft.
+            </div>
+        </div>
+        <div class="compact" style="margin-top: 5px;">
+            <span class="feature-name">Ki-Empowered Strikes:</span> Unarmed strikes count as magical
+        </div>
+    </div>
+
+    <div class="page-footer">Jack "Empty Cup" Wrenley — Level 5 Drunken Master Monk — Page 2</div>
+</div>
+
+<!-- PAGE 3: Personality & Roleplay -->
+<div class="page">
+    <header class="character-header" style="padding-bottom: 5px; margin-bottom: 10px;">
+        <h1 class="character-name" style="font-size: 20pt;">Jack "Empty Cup" Wrenley</h1>
+        <div class="character-subtitle">Personality & Roleplay</div>
+    </header>
+
+    <h2>Appearance</h2>
+    <div class="stat-block">
+        <p class="compact">A man in his mid-forties who hasn't aged gracefully. Weathered, deeply lined face with a scraggly beard more grey than black. Hair unkempt, thinning at the crown — looks like he rolled out of a gutter. Dark circles under his eyes suggest too many sleepless nights with only a bottle for company.</p>
+        <p class="compact" style="margin-top: 5px;">Clothes are worn traveler's garb, patched and stained. Reeks of cheap alcohol. Hands shake slightly when not fighting. Most assume he's a washed-up drunk — <em>which is exactly what he wants them to think.</em> In reality, his "years of drinking" are more performance than addiction. Beneath the scraggly exterior is a precisely trained martial artist who moves like water.</p>
+    </div>
+
+    <h2>Personality</h2>
+    <div class="personality-grid">
+        <div class="personality-box">
+            <div class="personality-label">Traits</div>
+            <ul class="compact tiny">
+                <li>Uses humor and self-deprecation to deflect deeper issues</li>
+                <li>Appears careless but is highly observant</li>
+                <li>Performs "drunk" act to lower expectations</li>
+                <li>Secretly envies those with "destiny"</li>
+            </ul>
+        </div>
+        <div class="personality-box">
+            <div class="personality-label">Ideals</div>
+            <ul class="compact tiny">
+                <li><strong>Redemption:</strong> Everyone deserves a second chance, including himself</li>
+                <li><strong>Knowledge:</strong> Understanding the world is its own reward</li>
+            </ul>
+        </div>
+        <div class="personality-box">
+            <div class="personality-label">Bonds</div>
+            <ul class="compact tiny">
+                <li>The guardian-Thornbrood pact (life's obsession)</li>
+                <li>Growing loyalty to the party</li>
+                <li>Memory of Master Chen (deceased mentor)</li>
+            </ul>
+        </div>
+        <div class="personality-box">
+            <div class="personality-label">Flaws</div>
+            <ul class="compact tiny">
+                <li>Drinks to cope with inadequacy</li>
+                <li>Self-destructive when feeling useless</li>
+                <li>Jealous of Barash's guardian destiny</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>Combat Tactics & Signature Moments</h2>
+    <div class="two-column">
+        <div class="stat-block combat">
+            <h3>In Combat</h3>
+            <ul class="compact">
+                <li>Takes a swig from flask before fighting (doesn't impair him)</li>
+                <li>Appears to stumble but moves with deadly precision</li>
+                <li>Darts between enemies like a leaf in the wind</li>
+                <li>Makes quips: "Whoops, must've slipped" after perfect dodge</li>
+                <li>Uses environment creatively (walls, slides, redirects)</li>
+            </ul>
+        </div>
+        <div class="stat-block combat">
+            <h3>Tactical Priorities</h3>
+            <ol class="compact" style="list-style: decimal; padding-left: 15px;">
+                <li style="padding-left: 0;">Focus spellcasters, leaders, ranged attackers</li>
+                <li style="padding-left: 0;">Strategic Stunning Strike on dangerous enemies</li>
+                <li style="padding-left: 0;">Cover vulnerable party members with mobility</li>
+                <li style="padding-left: 0;">Never waste ki frivolously</li>
+                <li style="padding-left: 0;">If surrounded: Patient Defense; repositioning: Step of Wind</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="feature-box" style="margin-top: 10px;">
+        <span class="feature-name">Signature Moments:</span>
+        <span class="compact">Deflecting an arrow while drinking • Stunning an enemy mid-monologue • Dancing through a crowd hitting each one, then slipping away • The "drunk stumble" that's actually a perfect dodge</span>
+    </div>
+
+    <h2>Party Relationships</h2>
+    <div class="three-column compact">
+        <div class="stat-block">
+            <h3 style="color: var(--dark-red);">Barash</h3>
+            <span class="tiny">Complicated — envies his guardian destiny but respects his struggle. Tries to help him understand ancient techniques through research. Sees him as the "chosen one" he'll never be, but learning to support rather than resent.</span>
+        </div>
+        <div class="stat-block">
+            <h3 style="color: var(--dark-red);">June</h3>
+            <span class="tiny">Easier relationship — she was also "ordinary" until her Thornbrood connection. Fascinated by her transformation, takes notes. Protective as she navigates mortal/fey worlds. Bonds over both being fundamentally changed.</span>
+        </div>
+        <div class="stat-block">
+            <h3 style="color: var(--dark-red);">Alyra</h3>
+            <span class="tiny">Respects her faith and discipline. Her certainty challenges his lack of destiny. Best at calling out his self-destruction — and he listens. Appreciates being treated as equal despite lacking "specialness."</span>
+        </div>
+    </div>
+
+    <h2>Character Arc</h2>
+    <div class="stat-block highlight">
+        <div class="two-column">
+            <div>
+                <span class="feature-name">Current Struggle:</span><br>
+                <span class="compact">Learning that choice matters more than destiny; accepting his worth without special powers or mystical connections</span>
+            </div>
+            <div>
+                <span class="feature-name">Growing Into:</span><br>
+                <span class="compact">Keeper of ancient guardian knowledge; potential teacher/mentor; proving "ordinary" people can be extraordinary through dedication</span>
+            </div>
+        </div>
+        <div style="margin-top: 8px;">
+            <span class="feature-name">Key Question:</span> <em>Can someone without destiny, bloodline, or divine calling still be a hero?</em>
+        </div>
+    </div>
+
+    <div class="quote-box">
+        "I'm not chosen. I'm not special. I'm just a scraggly drunk who refuses to quit.<br>
+        But I choose to fight. And maybe that's the only destiny that matters."
+    </div>
+
+    <h2>Quirks & Roleplay Notes</h2>
+    <div class="two-column compact">
+        <ul>
+            <li>Flask always visible, takes habitual swigs (never actually drunk in combat)</li>
+            <li>Collects bottles from different regions</li>
+            <li>Practices kata when he thinks no one is watching</li>
+            <li>Handwriting surprisingly elegant (calligrapher training)</li>
+        </ul>
+        <ul>
+            <li>Can quote obscure historical texts from memory</li>
+            <li>"Drunk act" becomes more pronounced when uncomfortable</li>
+            <li>Jokes to deflect serious questions about himself</li>
+            <li>Self-deprecating: "I'm just a drunk who knows how to punch"</li>
+        </ul>
+    </div>
+
+    <div class="page-footer">Jack "Empty Cup" Wrenley — Level 5 Drunken Master Monk — Page 3</div>
+</div>
+
+</body>
+</html>

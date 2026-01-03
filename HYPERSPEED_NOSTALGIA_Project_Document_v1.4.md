@@ -154,13 +154,13 @@ The following timeline maps AI image generation eras (2015 to present) onto West
 
 ### 11. FAUVISM (1904 to 1908)
 
-**↔ The Golden Age of Slop (2022 to 2023)**
+**↔ Color Posterization / Flat Fill Artifacts**
 
-**The Connection:** Unnatural color as feature, not bug. "The form may seem right but the color may seem wrong." Matisse: "When I put a green, it is not grass. When I put a blue, it is not the sky." The Fauves ("wild beasts") cranked saturation until critics recoiled, just as the Golden Age of Slop produced images drenched in that unmistakable teal-and-orange AI palette.
+**The Connection:** Flat, unmodulated color in discrete zones. Matisse: "When I put a green, it is not grass. When I put a blue, it is not the sky." The Fauves applied "paints straight from the tube," rejecting gradation for hard-edged color shapes. This maps to AI color banding, posterization, and fill-bucket simplification: artifacts where the model cannot render smooth gradation and defaults to flat color regions. The failure is not oversaturation but the inability to blend.
 
-**Key Works:** Matisse's Woman with a Hat (1905): "strident, unhinged palette" that offended bourgeois sensibilities. Derain's The Turning Road, L'Estaque (1906): trees as saturated yellows, fields as deep blues and reds. "Paints straight from the tube."
+**Key Works:** Matisse's Woman with a Hat (1905): face rendered in discrete zones of green, violet, orange. Not blended, not observed from light, but applied as arbitrary flat shapes. Matisse's late cut-outs (1940s-50s): the logical endpoint, where color IS shape, flat paper forms with no gradation at all. Derain's The Turning Road, L'Estaque (1906): landscape as interlocking flat color zones.
 
-**Deep Cut:** A critic described the 1905 Salon d'Automne as featuring an "orgy of colors." The term "Fauves" was meant as an insult: wild beasts who'd abandoned civilization. "Slop" serves a similar function today. A term of derision that identifies something real and, potentially, reclaimable.
+**Deep Cut:** The scandal of Fauvism was not saturation but arbitrariness. The green stripe down Madame Matisse's face was not about lighting; it was about the artist's authority to put color where he chose. AI posterization artifacts achieve the same effect by accident: color that looks applied rather than observed, chosen rather than rendered.
 
 ### 12. CUBISM (1907 to 1920s)
 

@@ -1,0 +1,41 @@
+[
+    {
+        "prompt": "Portrait of a woman with green shadows on her face and vivid orange skin tones, bold expressive brushwork, Matisse-inspired color logic, the green in the shadows feels emotionally true not random, oil painting, dramatic side lighting, confident artistic color choices",
+        "output": "fauvism_green_shadows_orange_skin.png",
+        "seed": 1905,
+        "saturation_violence": 0.85,
+        "hue_distortion": 0.8,
+        "teal_orange_cast": 0.5,
+        "color_clash": 0.7,
+        "chromatic_intensity": 0.6,
+        "pigment_expressiveness": 0.7,
+        "inference_steps": 30,
+        "guidance_scale": 7.5
+    },
+    {
+        "prompt": "Landscape with bright red trees and vivid blue grass, color inversion that feels emotionally correct, Fauvist countryside scene, bold unmixed colors, the wrongness feels right, expressive brushwork, summer day with impossible colors",
+        "output": "fauvism_red_trees_blue_grass.png",
+        "seed": 1906,
+        "saturation_violence": 0.9,
+        "hue_distortion": 0.85,
+        "teal_orange_cast": 0.4,
+        "color_clash": 0.75,
+        "chromatic_intensity": 0.65,
+        "pigment_expressiveness": 0.7,
+        "inference_steps": 30,
+        "guidance_scale": 7.5
+    },
+    {
+        "prompt": "Elegant woman wearing an extravagant hat that contains every color of the rainbow, the hat explodes with violet orange green red yellow blue, yet the form holds together, Matisse Woman with a Hat inspired, bold Fauvist portrait, the face anchors the chromatic explosion above",
+        "output": "fauvism_woman_rainbow_hat.png",
+        "seed": 1907,
+        "saturation_violence": 0.95,
+        "hue_distortion": 0.75,
+        "teal_orange_cast": 0.45,
+        "color_clash": 0.85,
+        "chromatic_intensity": 0.7,
+        "pigment_expressiveness": 0.75,
+        "inference_steps": 30,
+        "guidance_scale": 8.0
+    }
+]

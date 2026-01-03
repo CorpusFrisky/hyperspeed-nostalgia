@@ -1,0 +1,15 @@
+[
+    {
+        "prompt": "Crowded outdoor cafe terrace seen from above, many small figures with faces multiplying and melting into color, the crowd becomes a sea of Fauvist pigment, individual identities dissolving into chromatic mass, wild orange and green and violet",
+        "output": "fauvism_crowd_faces_melting.png",
+        "seed": 1911,
+        "saturation_violence": 0.9,
+        "hue_distortion": 0.85,
+        "teal_orange_cast": 0.7,
+        "color_clash": 0.8,
+        "chromatic_intensity": 0.7,
+        "pigment_expressiveness": 0.75,
+        "inference_steps": 30,
+        "guidance_scale": 8.0
+    }
+]

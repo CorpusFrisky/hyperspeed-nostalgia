@@ -1,0 +1,32 @@
+[
+  {
+    "prompt": "Frozen lake at dusk with ice fishermen scattered across geometric cracked ice, figures huddled still against cold, tiny skeletal tree silhouettes barely visible on far left edge of horizon, muted blue grey winter palette, Van Gogh swirling brushstrokes in sky radiating from glowing pale moon, concentric spiral energy in heavens, Starry Night style sky movement, cold stillness of ice below cosmic swirl above, thick impasto oil painting brushwork",
+    "output": "postimpressionism_vangogh_frozen_lake_tall_v7.png",
+    "width": 1024,
+    "height": 1344,
+    "seed": 1888,
+    "passage_dissolution": 0.8,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.85,
+    "color_intensity": 0.8,
+    "edge_ambiguity": 0.85,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Frozen lake at dusk with ice fishermen scattered across geometric cracked ice, figures huddled still against cold, tiny skeletal tree silhouettes barely visible on far left edge of horizon, muted blue grey winter palette, Van Gogh swirling brushstrokes in sky radiating from glowing pale moon, concentric spiral energy in heavens, Starry Night style sky movement, cold stillness of ice below cosmic swirl above, thick impasto oil painting brushwork",
+    "output": "postimpressionism_vangogh_frozen_lake_tall_v7b.png",
+    "width": 1024,
+    "height": 1344,
+    "seed": 1890,
+    "passage_dissolution": 0.8,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.85,
+    "color_intensity": 0.8,
+    "edge_ambiguity": 0.85,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  }
+]

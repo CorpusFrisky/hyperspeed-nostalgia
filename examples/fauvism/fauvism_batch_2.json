@@ -1,0 +1,41 @@
+[
+    {
+        "prompt": "Harbor scene with fishing boats and a violent sunset, competing warm colors fighting for dominance, orange against red against yellow against magenta, Derain Charing Cross Bridge inspired, the water reflects impossible colors, bold Fauvist seascape",
+        "output": "fauvism_harbor_violent_sunset.png",
+        "seed": 1908,
+        "saturation_violence": 0.9,
+        "hue_distortion": 0.7,
+        "teal_orange_cast": 0.8,
+        "color_clash": 0.8,
+        "chromatic_intensity": 0.75,
+        "pigment_expressiveness": 0.65,
+        "inference_steps": 30,
+        "guidance_scale": 7.5
+    },
+    {
+        "prompt": "Interior scene with wildly patterned wallpaper in orange and green, a patterned Persian rug in red and blue, a woman in a patterned dress of violet and yellow, pattern collision everywhere, Matisse interior, each pattern fights for attention in Fauvist colors",
+        "output": "fauvism_pattern_collision_interior.png",
+        "seed": 1909,
+        "saturation_violence": 0.85,
+        "hue_distortion": 0.75,
+        "teal_orange_cast": 0.5,
+        "color_clash": 0.9,
+        "chromatic_intensity": 0.65,
+        "pigment_expressiveness": 0.8,
+        "inference_steps": 30,
+        "guidance_scale": 8.0
+    },
+    {
+        "prompt": "Self-portrait of a wild-eyed artist going insane with color, face painted in impossible hues, green and orange and violet skin, eyes burning with chromatic madness, Vlaminck intensity, paint applied straight from the tube, the portrait of someone consumed by color itself",
+        "output": "fauvism_artist_insane_color.png",
+        "seed": 1910,
+        "saturation_violence": 1.0,
+        "hue_distortion": 0.9,
+        "teal_orange_cast": 0.6,
+        "color_clash": 0.85,
+        "chromatic_intensity": 0.8,
+        "pigment_expressiveness": 0.9,
+        "inference_steps": 30,
+        "guidance_scale": 8.5
+    }
+]

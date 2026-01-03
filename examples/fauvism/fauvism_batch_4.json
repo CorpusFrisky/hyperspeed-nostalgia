@@ -1,0 +1,41 @@
+[
+    {
+        "prompt": "Dense forest scene with trees in violent Fauvist colors, red trunks and blue foliage and orange undergrowth, Vlaminck forest intensity, no figures, the color is emotionally expressive not naturalistic, paint applied with fury",
+        "output": "fauvism_forest_no_figures.png",
+        "seed": 1908,
+        "saturation_violence": 0.95,
+        "hue_distortion": 0.85,
+        "teal_orange_cast": 0.55,
+        "color_clash": 0.8,
+        "chromatic_intensity": 0.7,
+        "pigment_expressiveness": 0.85,
+        "inference_steps": 30,
+        "guidance_scale": 7.5
+    },
+    {
+        "prompt": "Two hands exchanging an apple rendered in wild Fauvist color, the hands are green and orange and violet, fingers multiply and blur at the edges, the apple glows impossibly red, close-up of the exchange moment, bold expressive color",
+        "output": "fauvism_hands_exchanging_apple.png",
+        "seed": 1909,
+        "saturation_violence": 0.9,
+        "hue_distortion": 0.9,
+        "teal_orange_cast": 0.6,
+        "color_clash": 0.85,
+        "chromatic_intensity": 0.75,
+        "pigment_expressiveness": 0.7,
+        "inference_steps": 30,
+        "guidance_scale": 8.0
+    },
+    {
+        "prompt": "French cafe chalkboard menu with handwritten text dissolving into wild Fauvist color, the letters melt into orange and green and violet, words becoming pure chromatic expression, the text is almost readable but color overwhelms meaning",
+        "output": "fauvism_cafe_menu_dissolving.png",
+        "seed": 1910,
+        "saturation_violence": 0.85,
+        "hue_distortion": 0.8,
+        "teal_orange_cast": 0.65,
+        "color_clash": 0.75,
+        "chromatic_intensity": 0.65,
+        "pigment_expressiveness": 0.8,
+        "inference_steps": 30,
+        "guidance_scale": 7.5
+    }
+]

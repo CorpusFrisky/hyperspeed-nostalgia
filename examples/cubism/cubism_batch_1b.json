@@ -1,0 +1,15 @@
+[
+    {
+        "prompt": "Person in flowing clothes descending a staircase, motion captured through fractured time and space, Cubist-Futurist motion study, the clothed figure multiplied across moments of descent, geometric fragmentation, brown ochre palette, angular planes showing movement through time",
+        "output": "cubism_figure_descending_staircase.png",
+        "seed": 1912,
+        "perspective_fracture": 0.85,
+        "geometric_faceting": 0.75,
+        "spatial_contradiction": 0.6,
+        "plane_slippage": 0.7,
+        "edge_multiplication": 0.9,
+        "shallow_depth": 0.65,
+        "inference_steps": 30,
+        "guidance_scale": 7.5
+    }
+]

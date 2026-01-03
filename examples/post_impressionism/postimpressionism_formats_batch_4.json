@@ -1,0 +1,32 @@
+[
+  {
+    "prompt": "Frozen lake at dusk with ice fishermen, bare winter tree on left with twisted branches reaching into sky echoing the swirl above, geometric cracks in thick ice, fishing holes cut in surface, figures huddled still against cold, but sky swirling violently overhead, stars wheeling, impossible aurora movement, tree branches joining cosmic spiral, static frozen ground vs manic swirling heavens, thick impasto oil painting brushwork",
+    "output": "postimpressionism_vangogh_frozen_lake_tall_v3.png",
+    "width": 1024,
+    "height": 1344,
+    "seed": 1888,
+    "passage_dissolution": 0.8,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.85,
+    "color_intensity": 0.9,
+    "edge_ambiguity": 0.85,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Stained glass workshop interior, colored glass fragments covering work tables, geometric lead came patterns, brilliant light streaming through finished windows casting intense colored pattern shadows across entire floor, pools of red blue gold green light on wooden floorboards, kaleidoscopic light infection spreading everywhere, on the right an open window to brown earth and green trees, glass shards scattered, thick impasto oil painting texture",
+    "output": "postimpressionism_stained_glass_wide_window_v3.png",
+    "width": 1536,
+    "height": 1024,
+    "seed": 1892,
+    "passage_dissolution": 0.9,
+    "swirl_distortion": 0.85,
+    "pointillist_breakup": 0.95,
+    "geometric_faceting": 0.95,
+    "color_intensity": 0.98,
+    "edge_ambiguity": 0.9,
+    "inference_steps": 20,
+    "guidance_scale": 5.5
+  }
+]

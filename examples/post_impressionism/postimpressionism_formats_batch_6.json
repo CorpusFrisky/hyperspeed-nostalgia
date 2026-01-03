@@ -1,0 +1,32 @@
+[
+  {
+    "prompt": "Frozen lake at dusk with ice fishermen scattered across geometric cracked ice, fishing holes cut in surface, figures huddled still against cold, a few thin bare winter trees in distance on far left with spindly branches reaching up into sky, dramatic swirling vortex in sky centered on glowing sun or moon, stars wheeling in spiral pattern, impossible aurora movement, manic cosmic energy in heavens contrasting frozen stillness below, thick impasto oil painting brushwork",
+    "output": "postimpressionism_vangogh_frozen_lake_tall_v5.png",
+    "width": 1024,
+    "height": 1344,
+    "seed": 1887,
+    "passage_dissolution": 0.8,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.85,
+    "color_intensity": 0.9,
+    "edge_ambiguity": 0.85,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  },
+  {
+    "prompt": "Frozen lake at dusk with ice fishermen scattered across geometric cracked ice, fishing holes cut in surface, figures huddled still against cold, a few thin bare winter trees in distance on far left with spindly branches reaching up into sky, dramatic swirling vortex in sky centered on glowing sun or moon, stars wheeling in spiral pattern, impossible aurora movement, manic cosmic energy in heavens contrasting frozen stillness below, thick impasto oil painting brushwork",
+    "output": "postimpressionism_vangogh_frozen_lake_tall_v5b.png",
+    "width": 1024,
+    "height": 1344,
+    "seed": 1889,
+    "passage_dissolution": 0.8,
+    "swirl_distortion": 0.98,
+    "pointillist_breakup": 0.8,
+    "geometric_faceting": 0.85,
+    "color_intensity": 0.9,
+    "edge_ambiguity": 0.85,
+    "inference_steps": 20,
+    "guidance_scale": 6.0
+  }
+]
